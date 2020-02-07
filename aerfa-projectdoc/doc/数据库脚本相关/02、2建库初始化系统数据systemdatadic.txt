@@ -1,0 +1,97 @@
+/*==========初始化数据字典aefsys_data_dic数据==========*/
+/*通用数据字典*/
+insert into aefsys_data_dic values (1, 'default_status', '默认状态', null, null, null, 1, 1, null, 1, '默认状态数据字典', null, null, null, null);
+insert into aefsys_data_dic values (2, 'default_status', '默认状态', '1', '默认', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (3, 'default_status', '默认状态', '0', '-', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (4, 'useable_status', '可用状态', null, null, null, 1, 1, null, 1, '可用状态数据字典', null, null, null, null);
+insert into aefsys_data_dic values (5, 'useable_status', '可用状态', '1', '正常', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (6, 'useable_status', '可用状态', '0', '停用', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (7, 'whether_status', '是否状态', null, null, null, 1, 1, null, 1, '是否状态数据字典', null, null, null, null);
+insert into aefsys_data_dic values (8, 'whether_status', '是否状态', '1', '是', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (9, 'whether_status', '是否状态', '0', '否', null, 2, 0, null, 1, null, null, null, null, null);
+
+/*非通用数据字典*/
+insert into aefsys_data_dic values (101, 'resource_type', '资源类型', null, null, null, 1, 1, null, 1, '资源类型数据字典', null, null, null, null);
+insert into aefsys_data_dic values (102, 'resource_type', '资源类型', 'system', '系统', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (103, 'resource_type', '资源类型', 'content', '目录', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (104, 'resource_type', '资源类型', 'menu', '菜单', null, 3, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (105, 'resource_type', '资源类型', 'button', '按钮', null, 4, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (106, 'org_status', '部门状态', null, null, null, 2, 1, null, 1, '部门状态数据字典', null, null, null, null);
+insert into aefsys_data_dic values (107, 'org_status', '部门状态', '1', '正常', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (108, 'org_status', '部门状态', '0', '停用', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (109, 'person_status', '人员状态', null, null, null, 3, 1, null, 1, '人员状态数据字典', null, null, null, null);
+insert into aefsys_data_dic values (110, 'person_status', '人员状态', '1', '正常', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (111, 'person_status', '人员状态', '0', '注销', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (112, 'person_status', '人员状态', '2', '锁定', null, 3, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (113, 'dic_status', '字典状态', null, null, null, 1, 1, null, 1, '字典状态数据字典', null, null, null, null);
+insert into aefsys_data_dic values (114, 'dic_status', '字典状态', '1', '正常', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (115, 'dic_status', '字典状态', '0', '停用', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (116, 'role_status', '角色状态', null, null, null, 1, 1, null, 1, '角色状态数据字典', null, null, null, null);
+insert into aefsys_data_dic values (117, 'role_status', '角色状态', '1', '正常', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (118, 'role_status', '角色状态', '0', '停用', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (119, 'log_type', '日志类型', null, null, null, 1, 1, null, 1, '日志类型数据字典', null, null, null, null);
+insert into aefsys_data_dic values (120, 'log_type', '日志类型', 'debug', '调试', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (121, 'log_type', '日志类型', 'info',  '提示', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (122, 'log_type', '日志类型', 'warn',  '警告', null, 3, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (123, 'log_type', '日志类型', 'error', '错误', null, 4, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (124, 'login_status', '登录状态', null, null, null, 1, 1, null, 1, '登录状态数据字典', null, null, null, null);
+insert into aefsys_data_dic values (125, 'login_status', '登录状态', '1', '在线', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (126, 'login_status', '登录状态', '0', '离线', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (127, 'division_level', '区划等级', null, null, null, 1, 1, null, 1, '区划等级数据字典', null, null, null, null);
+insert into aefsys_data_dic values (128, 'division_level', '区划等级', '0', '国家级', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (129, 'division_level', '区划等级', '1', '省级', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (130, 'division_level', '区划等级', '2', '市级', null, 3, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (131, 'division_level', '区划等级', '3', '区县级', null, 4, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (132, 'division_level', '区划等级', '4', '乡镇街道级', null, 5, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (133, 'division_mark', '区划标示', null, null, null, 1, 1, null, 1, '区划标示数据字典', null, null, null, null);
+insert into aefsys_data_dic values (134, 'division_mark', '区划标示', '1', '首都', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (135, 'division_mark', '区划标示', '2', '省会', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (136, 'division_mark', '区划标示', '3', '市直管区', null, 3, 0, null, 1, null, null, null, null, null);
+
+/*报表和展示相关数据字典*/
+insert into aefsys_data_dic values (137, 'data_show_type', '数据显示类型', null, null, null, 1, 1, null, 1, '数据界面显示类型字典', null, null, null, null);
+insert into aefsys_data_dic values (138, 'data_show_type', '数据显示类型', 'string', '字符串', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (139, 'data_show_type', '数据显示类型', 'image', '图片', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (140, 'data_show_type', '数据显示类型', 'rqcode', '二维码', null, 3, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (141, 'data_show_type', '数据显示类型', 'barcode', '条形码', null, 4, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (142, 'data_horizontal_align', '数据显示位置', null, null, null, 1, 1, null, 1, '数据界面显示位置左右居中字典', null, null, null, null);
+insert into aefsys_data_dic values (143, 'data_horizontal_align', '数据显示位置', 'left', '靠左', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (144, 'data_horizontal_align', '数据显示位置', 'center', '居中', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (145, 'data_horizontal_align', '数据显示位置', 'right', '靠右', null, 3, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (146, 'data_font_name', '数据显示字体', null, null, null, 1, 1, null, 1, '数据界面显示字体名称字典', null, null, null, null);
+insert into aefsys_data_dic values (147, 'data_font_name', '数据显示字体', 'SimSun', '宋体', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (148, 'data_font_name', '数据显示字体', 'SimHei', '黑体', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (149, 'data_font_name', '数据显示字体', 'KaiTi', '楷体', null, 3, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (150, 'data_font_size', '数据显示字号', null, null, null, 1, 1, null, 1, '数据界面显示字体名称字典', null, null, null, null);
+insert into aefsys_data_dic values (151, 'data_font_size', '数据显示字号', '8', '8', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (152, 'data_font_size', '数据显示字号', '10', '10', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (153, 'data_font_size', '数据显示字号', '12', '12', null, 3, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (154, 'data_font_size', '数据显示字号', '14', '14', null, 4, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (155, 'data_font_size', '数据显示字号', '16', '16', null, 5, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (156, 'data_font_size', '数据显示字号', '20', '20', null, 6, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (157, 'data_font_size', '数据显示字号', '26', '26', null, 7, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (158, 'data_font_size', '数据显示字号', '34', '34', null, 8, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (159, 'data_font_size', '数据显示字号', '44', '44', null, 9, 0, null, 1, null, null, null, null, null);
+
+/*后续添加字典*/
+insert into aefsys_data_dic values (160, 'person_sex', '人员性别', null, null, null, 1, 1, null, 1, '人员性别数据字典', null, null, null, null);
+insert into aefsys_data_dic values (161, 'person_sex', '人员性别', '1', '男', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (162, 'person_sex', '人员性别', '0', '女', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (163, 'person_blood_type', '人员血型', null, null, null, 1, 1, null, 1, '人员血型数据字典', null, null, null, null);
+insert into aefsys_data_dic values (164, 'person_blood_type', '人员血型', 'A型', 'A型', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (165, 'person_blood_type', '人员血型', 'B型', 'B型', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (166, 'person_blood_type', '人员血型', 'AB型', 'AB型', null, 3, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (167, 'person_blood_type', '人员血型', 'O型', 'O型', null, 4, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (168, 'person_blood_type', '人员血型', '其他血型', '其他血型', null, 5, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (169, 'person_job', '人员职业', null, null, null, 1, 1, null, 1, '人员职业数据字典', null, null, null, null);
+insert into aefsys_data_dic values (170, 'person_job', '人员职业', '1', '计算机/互联网/通信', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (171, 'person_job', '人员职业', '2', '生产/工艺/制造', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (172, 'person_job', '人员职业', '3', '医疗/护理/制药', null, 3, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (173, 'person_job', '人员职业', '4', '金融/投资/保险', null, 4, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (174, 'person_job', '人员职业', '5', '商业/服务业/个体经营', null, 5, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (175, 'person_job', '人员职业', '6', '文化/广告/传媒', null, 6, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (176, 'person_job', '人员职业', '7', '娱乐/艺术/表演', null, 7, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (177, 'person_job', '人员职业', '8', '教育/培训/学生', null, 8, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (178, 'person_job', '人员职业', '9', '公务员/行政/事业单位 ', null, 9, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (179, 'person_job', '人员职业', '10', '其他职业', null, 10, 0, null, 1, null, null, null, null, null);
+

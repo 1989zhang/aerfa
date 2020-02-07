@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property resource="application.properties" />
+
+  <appender name="consoleout" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} %5level %c:%L - %msg%n</pattern>
+    </encoder>
+  </appender>
+  <appender name="fileout" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+          <fileNamePattern>${logback.logfilepath}${logback.logfilename}_%d{yyyy-MM-dd}.log</fileNamePattern>
+      </rollingPolicy>
+      <encoder>
+          <!--格式化输出：%d表示日期，%5level：级别从右显示5个字符宽度，%c%L：class和line，%msg：日志消息，%n是换行符-->
+          <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5level %c:%L - %msg%n</pattern>
+      </encoder>
+  </appender>
+  
+  <root level="${logback.loglevel}">
+    <appender-ref ref="${logback.logtype}"/>
+  </root>
+  
+</configuration>

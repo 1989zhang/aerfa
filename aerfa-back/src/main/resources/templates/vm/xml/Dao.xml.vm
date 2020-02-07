@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="${package}.dao.${className}Dao">
+    
+    <!--返回对象映射-->
+    <resultMap id="${classname}Result" type="${doclassName}" >
+#foreach ($column in $columns)
+        <result property="${column.attrname}"    column="${column.columnName}"    />
+#end
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="select${className}">
+        select#foreach($column in $columns) $column.columnName#if($velocityCount != $columns.size()),#end#end from ${tableName}
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="get${className}ById" parameterType="${primaryKey.attrType}" resultMap="${classname}Result">
+        <include refid="select${className}"/>
+        where ${primaryKey.columnName} = #{${primaryKey.attrname}}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="list${className}" parameterType="${doclassName}" resultMap="${classname}Result">
+        <include refid="select${className}"/>
+        <where>  
+#foreach($column in $columns)
+##Date日期类型和Long数字类型的数据不能用字符串!=''判断##
+##是查询列且类型为string的组装用like查询，其他用=查询
+#if(${column.searchColumn} && $column.attrType == 'String')
+			<if test="${column.attrname} != null and ${column.attrname} != ''"> and ${column.columnName} like concat('%',#{${column.attrname}},'%')  </if>
+#else
+            <if test="${column.attrname} != null #if(${column.attrType} == 'String' ) and ${column.attrname} != '' #end "> and ${column.columnName} = #{${column.attrname}}</if>
+#end
+#end
+        </where>
+    </select>
+
+    <!--根据主键查询多个对象-->
+	<select id="listBypks${className}" parameterType="String" resultMap="${classname}Result">
+        <include refid="select${className}"/>
+        where ${primaryKey.columnName} in 
+        <foreach item="${primaryKey.attrname}" collection="array" open="(" separator="," close=")">
+            #{${primaryKey.attrname}}
+        </foreach>
+    </select>
+
+#foreach($column in $columns)
+#if(${column.onlyCheckColumn})
+	<!--${tableComment}${column.columnComment}唯一性字符检测-->
+	<select id="check${column.attrName}Unique" parameterType="${doclassName}" resultMap="${classname}Result">
+        <include refid="select${className}"/>
+		<where>
+		    <if test="id != null ">and id != #{id}</if>
+			<if test="${column.attrname} != null and ${column.attrname} != ''"> and $column.columnName = #{${column.attrname}} </if>
+		</where>
+	</select>
+#end
+#end
+
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insert${className}" parameterType="${doclassName}" useGeneratedKeys="true" keyProperty="${primaryKey.columnName}">
+        insert into ${tableName}
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+#foreach($column in $columns)
+##先判断不是主键和参数的才映射##
+#if(${column.columnName} != ${primaryKey.columnName} && ${column.columnName} !='operParam')
+##Date日期类型和Long数字类型的数据不能用字符串!=''判断##
+			<if test="${column.attrname} != null #if(${column.attrType} == 'String' ) and ${column.attrname} != '' #end ">${column.columnName},</if>
+#end
+#end
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+#foreach($column in $columns)
+##先判断不是主键和参数的才映射##
+#if(${column.columnName} != ${primaryKey.columnName} && ${column.columnName} !='operParam')
+##Date日期类型和Long数字类型的数据不能用字符串!=''判断##
+			<if test="${column.attrname} != null #if(${column.attrType} == 'String' ) and ${column.attrname} != '' #end ">#{${column.attrname}},</if>
+#end			
+#end
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="update${className}" parameterType="${doclassName}">
+        update ${tableName}
+        <trim prefix="SET" suffixOverrides=",">
+#foreach($column in $columns)
+##先判断不是主键和参数的才映射##
+#if(${column.columnName} != ${primaryKey.columnName} && ${column.columnName} !='operParam')
+##Date日期类型和Long数字类型的数据不能用字符串!=''判断##
+            <if test="${column.attrname} != null #if(${column.attrType} == 'String' ) and ${column.attrname} != '' #end ">${column.columnName} = #{${column.attrname}},</if>
+#end
+#end
+        </trim>
+        where ${primaryKey.columnName} = #{${primaryKey.attrname}}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="delete${className}ById" parameterType="${primaryKey.attrType}">
+        delete from ${tableName} where ${primaryKey.columnName} = #{${primaryKey.attrname}}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="delete${className}ByIds" parameterType="String">
+        delete from ${tableName} where ${primaryKey.columnName} in 
+        <foreach item="${primaryKey.attrname}" collection="array" open="(" separator="," close=")">
+            #{${primaryKey.attrname}}
+        </foreach>
+    </delete> 
+</mapper>

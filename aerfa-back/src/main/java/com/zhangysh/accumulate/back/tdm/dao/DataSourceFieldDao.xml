@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.tdm.dao.DataSourceFieldDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="dataSourceFieldResult" type="AeftdmDataSourceField" >
+        <result property="id"    column="id"    />
+        <result property="templateId"    column="template_id"    />
+        <result property="sqlId"    column="sql_id"    />
+        <result property="fieldName"    column="field_name"    />
+        <result property="fieldAlias"    column="field_alias"    />
+        <result property="indexNumber"    column="index_number"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectDataSourceField">
+        select id, template_id, sql_id, field_name, field_alias, index_number, create_by, create_time, update_by, update_time from aeftdm_data_source_field
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getDataSourceFieldById" parameterType="Long" resultMap="dataSourceFieldResult">
+        <include refid="selectDataSourceField"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listDataSourceField" parameterType="AeftdmDataSourceField" resultMap="dataSourceFieldResult">
+        <include refid="selectDataSourceField"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="templateId != null  "> and template_id = #{templateId}</if>
+            <if test="sqlId != null  "> and sql_id = #{sqlId}</if>
+            <if test="fieldName != null  and fieldName != ''  "> and field_name = #{fieldName}</if>
+            <if test="fieldAlias != null  and fieldAlias != ''  "> and field_alias = #{fieldAlias}</if>
+            <if test="indexNumber != null  "> and index_number = #{indexNumber}</if>
+            <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
+            <if test="createTime != null  "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null  "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+
+    <!--根据主键查询多个对象-->
+	<select id="listBypksDataSourceField" parameterType="String" resultMap="dataSourceFieldResult">
+        <include refid="selectDataSourceField"/>
+        where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertDataSourceField" parameterType="AeftdmDataSourceField">
+        insert into aeftdm_data_source_field
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="templateId != null  ">template_id,</if>
+			<if test="sqlId != null  ">sql_id,</if>
+			<if test="fieldName != null  and fieldName != ''  ">field_name,</if>
+			<if test="fieldAlias != null  and fieldAlias != ''  ">field_alias,</if>
+			<if test="indexNumber != null  ">index_number,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="templateId != null  ">#{templateId},</if>
+			<if test="sqlId != null  ">#{sqlId},</if>
+			<if test="fieldName != null  and fieldName != ''  ">#{fieldName},</if>
+			<if test="fieldAlias != null  and fieldAlias != ''  ">#{fieldAlias},</if>
+			<if test="indexNumber != null  ">#{indexNumber},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateDataSourceField" parameterType="AeftdmDataSourceField">
+        update aeftdm_data_source_field
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="templateId != null  ">template_id = #{templateId},</if>
+            <if test="sqlId != null  ">sql_id = #{sqlId},</if>
+            <if test="fieldName != null  and fieldName != ''  ">field_name = #{fieldName},</if>
+            <if test="fieldAlias != null  and fieldAlias != ''  ">field_alias = #{fieldAlias},</if>
+            <if test="indexNumber != null  ">index_number = #{indexNumber},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteDataSourceFieldById" parameterType="Long">
+        delete from aeftdm_data_source_field where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deleteDataSourceFieldByIds" parameterType="String">
+        delete from aeftdm_data_source_field where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>

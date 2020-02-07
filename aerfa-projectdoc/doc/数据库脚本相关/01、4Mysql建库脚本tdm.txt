@@ -1,0 +1,73 @@
+/*====================================================================*/
+/* table: aeftdm_template  模板定义表                                                                                               */
+/*====================================================================*/
+create table aeftdm_template (
+  id             int(11)    not null  auto_increment   comment 'id标识',
+  explain_name   varchar(128)                          comment '说明名称',
+  file_name      varchar(128)                          comment '传入文件名称',
+  save_name      varchar(128)                          comment '存储文件名称',
+  file_type      varchar(16)                           comment '文件类型',
+  remark         varchar(256)                          comment '备注描述',
+  create_by      varchar(64)                           comment '创建人员名称',
+  create_time    timestamp                             comment '创建时间',
+  update_by      varchar(64)                           comment '更新人员名称',
+  update_time    timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='模板定义表';
+
+/*====================================================================*/
+/* table: aeftdm_data_source_sql  数据源SQL定义表                                                            */
+/*====================================================================*/
+create table aeftdm_data_source_sql (
+  id             int(11)    not null  auto_increment   comment 'id标识',
+  template_id    int(11)                               comment '模板id',
+  explain_name   varchar(128)                          comment '说明名称',
+  sql_text       varchar(3000)                         comment '定义sql内容',
+  fill_type      varchar(128)                          comment '填充类型', 
+  remark         varchar(256)                          comment '备注描述',
+  create_by      varchar(64)                           comment '创建人员名称',
+  create_time    timestamp                             comment '创建时间',
+  update_by      varchar(64)                           comment '更新人员名称',
+  update_time    timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='数据源SQL定义表';
+
+/*====================================================================*/
+/* table: aeftdm_data_source_field  数据源字段映射表                                                       */
+/*====================================================================*/
+create table aeftdm_data_source_field (
+  id             int(11)    not null  auto_increment   comment 'id标识',
+  template_id    int(11)                               comment '模板id',
+  sql_id         int(11)                               comment '数据源SQLid',
+  field_name     varchar(64)                           comment 'sql的key名',
+  field_alias    varchar(64)						   comment 'key别名模板显示',
+  index_number   int(11) 							   comment '排序序号',
+  create_by      varchar(64)                           comment '创建人员名称',
+  create_time    timestamp                             comment '创建时间',
+  update_by      varchar(64)                           comment '更新人员名称',
+  update_time    timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='数据源字段映射表';
+
+/*====================================================================*/
+/* table: aeftdm_fill_rule  模板填充规则表                                                                              */
+/*====================================================================*/
+create table aeftdm_fill_rule (
+  id               int(11)    not null  auto_increment   comment 'id标识',
+  template_id      int(11)                               comment '模板id',
+  sql_id           int(11)                               comment '数据源SQLid',
+  field_id         int(11)                               comment '数据源映射id',
+  fill_row_number  int(11)                               comment 'excel填充行',
+  fill_col_number  int(11)                               comment 'excel填充列',
+  replace_char     varchar(64)                           comment 'word替换文字',
+  show_type        varchar(16)                           comment '值填充类型',
+  horizontal_align varchar(16)                           comment '水平排列',
+  font_name        varchar(16)                           comment '字体',
+  font_size        int(11)                               comment '字体大小',
+  is_block         int(11)                               comment '是否加粗',
+  create_by        varchar(64)                           comment '创建人员名称',
+  create_time      timestamp                             comment '创建时间',
+  update_by        varchar(64)                           comment '更新人员名称',
+  update_time      timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='模板填充规则表';

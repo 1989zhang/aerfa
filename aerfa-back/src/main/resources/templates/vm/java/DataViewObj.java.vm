@@ -1,0 +1,14 @@
+package ${package}.viewobj;
+import ${package}.dataobj.${doclassName};
+
+/**
+ * ${tableComment}前台展示对象
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+public class ${doclassName}Vo extends ${doclassName}{
+
+	private static final long serialVersionUID = 1L;
+
+}

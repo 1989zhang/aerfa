@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.RoleDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="roleResult" type="AefsysRole" >
+        <result property="id"    column="id"    />
+        <result property="roleName"    column="role_name"    />
+        <result property="roleCode"    column="role_code"    />
+        <result property="status"    column="status"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectRole">
+        select id, role_name, role_code, status, order_no, remark, create_by, create_time, update_by, update_time from aefsys_role
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getRoleById" parameterType="Long" resultMap="roleResult">
+        <include refid="selectRole"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listRole" parameterType="AefsysRole" resultMap="roleResult">
+        <include refid="selectRole"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="roleName != null  and roleName != ''  "> and role_name like concat('%',#{roleName},'%')</if>
+            <if test="roleCode != null  and roleCode != ''  "> and role_code like concat('%',#{roleCode},'%')</if>
+            <if test="status != null  "> and status = #{status}</if>
+            <if test="orderNo != null  "> and order_no = #{orderNo}</if>
+            <if test="remark != null  and remark != ''  "> and remark = #{remark}</if>
+            <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
+            <if test="createTime != null  "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null  "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+     
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertRole" parameterType="AefsysRole">
+        insert into aefsys_role
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="roleName != null  and roleName != ''  ">role_name,</if>
+			<if test="roleCode != null  and roleCode != ''  ">role_code,</if>
+			<if test="status != null  ">status,</if>
+			<if test="orderNo != null  ">order_no,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="roleName != null  and roleName != ''  ">#{roleName},</if>
+			<if test="roleCode != null  and roleCode != ''  ">#{roleCode},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="orderNo != null  ">#{orderNo},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateRole" parameterType="AefsysRole">
+        update aefsys_role
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roleName != null  and roleName != ''  ">role_name = #{roleName},</if>
+            <if test="roleCode != null  and roleCode != ''  ">role_code = #{roleCode},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="orderNo != null  ">order_no = #{orderNo},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteRoleById" parameterType="Long">
+        delete from aefsys_role where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deleteRoleByIds" parameterType="String">
+        delete from aefsys_role where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>

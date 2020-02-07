@@ -1,0 +1,131 @@
+package com.zhangysh.accumulate.ui.sys.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.alibaba.fastjson.JSON;
+
+import com.zhangysh.accumulate.common.constant.CacheConstant;
+import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
+import com.zhangysh.accumulate.common.util.HttpStorageUtil;
+import ${package}.dataobj.${doclassName};
+import ${package}.viewobj.${doclassName}Vo;
+import ${package}.transobj.${doclassName}Dto;
+import com.zhangysh.accumulate.ui.sys.service.I${className}Service;
+
+/**
+ * ${tableComment}调用相关方法
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Controller
+@RequestMapping("/sys/${removePrefixTableName}")
+public class ${className}Controller {
+
+    private String prefix="/sys/${removePrefixTableName}";//返回界面路径即前缀
+
+	@Autowired
+	private I${className}Service ${classname}Service;
+	
+	/**
+	 * 跳转到sys${tableComment}页面
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @return templates下的${tableComment}页面
+	 ****/
+	@RequestMapping(value="/to_${removePrefixTableName}")
+	public String toSys${className}(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("prefix",prefix);
+		return prefix+"/${removePrefixTableName}";
+	}
+	
+	/****
+	 * 获取展示${tableComment}列表，且分页显示
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @return Bootstrap的table对象
+	 ****/
+	@RequestMapping(value="/list")
+    @ResponseBody
+	public String getList(HttpServletRequest request, ModelMap modelMap,BsTablePageInfo pageInfo,${doclassName} ${classname}) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		${doclassName}Dto ${classname}Dto=new ${doclassName}Dto();
+		${classname}Dto.setPageInfo(pageInfo);${classname}Dto.set${className}(${classname});
+		return ${classname}Service.getList(aerfatoken,${classname}Dto);
+	}
+	
+	/**
+	 * 跳转到sys${tableComment}新增页面
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @return templates下的单位新增页面
+	 ****/
+	@RequestMapping(value="/to_add")
+	public String toAdd(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("prefix",prefix);
+		return prefix+"/add";
+	}
+	
+#foreach($column in $columns)
+#if(${column.onlyCheckColumn})
+	/*****
+	 * 验证${tableComment}${column.columnComment}唯一性 
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象 
+	 * @param ${classname} 要验证的对象内含${column.columnComment}属性和id,id为了排除自己
+	 ****/
+	@RequestMapping(value="/check_${column.columnName}_unique")
+    @ResponseBody
+	public String check${column.attrName}Unique(HttpServletRequest request, ModelMap modelMap,${doclassName} ${classname}) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return ${classname}Service.check${column.attrName}Unique(aerfatoken,${classname});
+	}
+#end
+#end	
+    /***
+	 * 保存填写的${tableComment}对象
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象 
+	 * @param ${classname} 保存的对象
+	 ******/
+	@RequestMapping(value="/save_add")
+    @ResponseBody
+    public String saveAdd(HttpServletRequest request, ModelMap modelMap,${doclassName} ${classname}) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return ${classname}Service.saveAdd(aerfatoken, ${classname});
+	}
+	
+	/****
+	 * 修改${tableComment}，先获取${tableComment}信息
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象 
+	 * @return templates下的页面
+	 ****/
+	@RequestMapping(value="/to_edit/{${primaryKey.attrname}}")
+	public String toEdit(HttpServletRequest request, ModelMap modelMap,@PathVariable("${primaryKey.attrname}") ${primaryKey.attrType} ${primaryKey.attrname}) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		String ret${className}Str=${classname}Service.getSingle(aerfatoken, id);
+		${doclassName}Vo ${classname}Vo=JSON.parseObject(ret${className}Str,${doclassName}Vo.class);
+		modelMap.put("prefix", prefix);
+		modelMap.put("${classname}", ${classname}Vo);
+		return prefix+"/edit";
+	}
+	
+	/***
+	 * 删除${tableComment}对象，可以删除多个，中间英文,隔开
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象 
+	 * @param ids 要删除的ids集合，是路径获取参数
+	 ***/
+	@RequestMapping(value="/remove/{ids}")
+    @ResponseBody
+    public String remove(HttpServletRequest request, ModelMap modelMap,@PathVariable("${primaryKey.attrname}s") String ids){   
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return ${classname}Service.delete${className}ByIds(aerfatoken, ids);
+    }
+}

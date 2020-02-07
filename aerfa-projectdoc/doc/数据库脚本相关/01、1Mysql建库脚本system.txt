@@ -1,0 +1,207 @@
+/*====================================================================*/
+/* table: aefsys_org  组织单位表                                      */
+/*====================================================================*/
+create table aefsys_org (
+  id             int(11)   not null auto_increment    comment 'id标识',
+  parent_id      int(11)                              comment '父单位id',
+  full_name      varchar(128)                         comment '部门全称',
+  short_name     varchar(64)                          comment '部门简称',
+  order_no       int(11)                              comment '排序号',
+  card_type      varchar(64)                          comment '证件类别',
+  card_no        varchar(64)                          comment '证件号码',
+  phone_no       varchar(32)                          comment '电话号码',
+  address        varchar(64)                          comment '联系地址',
+  status         int(11)                              comment '状态1正常0停用',
+  remark         varchar(256)                         comment '备注描述',
+  create_by      varchar(64)                          comment '创建人员名称',
+  create_time    timestamp                            comment '创建时间',
+  update_by      varchar(64)                          comment '更新人员名称',
+  update_time    timestamp                            comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='组织单位表';
+
+/*====================================================================*/
+/* table: aefsys_person  用户信息表                                   */
+/*====================================================================*/
+create table aefsys_person (
+  id             int(11)   not null auto_increment    comment 'id标识',
+  org_id         int(11)                              comment '组织id',
+  account        varchar(64)                          comment '登陆账号',
+  password       varchar(128)                         comment '登陆密码',
+  salt           varchar(32)                          comment '密码盐加密字符',
+  phone_no       varchar(32)                          comment '电话号码',
+  email          varchar(32)                          comment '邮箱地址',
+  person_type    varchar(32)                          comment '人员类型',
+  person_name    varchar(64)                          comment '人员名称',
+  person_sex     varchar(8)                           comment '人员性别男女',
+  nick_name      varchar(64)                          comment '显示昵称',
+  head_pic       varchar(128)                         comment '头像路径',
+  card_type      varchar(64)                          comment '证件类别',
+  card_no        varchar(64)                          comment '证件号码',
+  order_no       int(11)                              comment '排序号',
+  status         int(11)                              comment '状态1正常0注销2锁定',
+  remark         varchar(256)                         comment '备注描述',
+  create_by      varchar(64)                          comment '创建人员名称',
+  create_time    timestamp                            comment '创建时间',
+  update_by      varchar(64)                          comment '更新人员名称',
+  update_time    timestamp                            comment '更新时间',
+  primary key (id)
+) engine=innodb auto_increment=101 default charset=utf8mb4 collate=utf8mb4_general_ci comment='用户信息表';
+
+/*====================================================================*/
+/* table: aefsys_person_login_info  个人登录信息                      */
+/*====================================================================*/
+create table aefsys_person_login_info (
+  id                int(11)   not null auto_increment   comment 'id标识',
+  person_id         int(11)                             comment '个人id',
+  person_name       varchar(64)                         comment '人员名称',
+  nick_name         varchar(32)                         comment '显示昵称',
+  login_voucher     varchar(64)                         comment '登录凭证',
+  login_ip          varchar(32)                         comment '登录ip',
+  server_ui_ip      varchar(32)                         comment '服务器ui端ip',
+  login_location    varchar(32)                         comment '登录地点',
+  login_in_time     timestamp                           comment '登录时间',
+  login_out_time    timestamp                           comment '退出时间',
+  browser_type      varchar(64)                         comment '浏览器类型',
+  os_type           varchar(64)                         comment '操作系统',
+  pass_fail_num     int(11)                             comment '密码错误次数',
+  last_access_time  timestamp                           comment '最新操作时间',
+  expire_time       int(11)                             comment '超时无操作时间单位是秒',
+  login_status      int(11)                             comment '登录状态1在线0不在线',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='个人登录信息';
+
+/*====================================================================*/
+/* table: aefsys_person_address  个人联系地址信息                            */
+/*====================================================================*/
+create table aefsys_person_address (
+  id               int(11)   not null auto_increment   comment 'id标识',
+  person_id        int(11)                             comment '个人id',
+  province         varchar(16)						   comment '联系地址省',
+  city             varchar(32)						   comment '联系地址市',
+  district         varchar(32)						   comment '联系地址县',
+  town			   varchar(32)						   comment '联系地址镇',
+  detail_address   varchar(64)						   comment '详细地址',
+  full_address	   varchar(128)						   comment '全部地址',
+  is_default       int(11)                             comment '是否默认1是0否',
+  create_by        varchar(64)                         comment '创建人员名称',
+  create_time      timestamp                           comment '创建时间',
+  update_by        varchar(64)                         comment '更新人员名称',
+  update_time      timestamp                           comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='个人联系地址信息';
+
+/*====================================================================*/
+/* table: aefsys_resource  资源信息                                   */
+/*====================================================================*/
+create table aefsys_resource (
+  id              int(11)    not null auto_increment    comment 'id标识',
+  parent_id       int(11)                               comment '父级id',
+  resource_name   varchar(128)                          comment '资源名称',
+  resource_type   varchar(16)                           comment '资源类型scmb',
+  status          int(11)                               comment '可见状态1显示0隐藏',
+  identify        varchar(64)                           comment '资源权限标示例system:user:add',
+  url             varchar(256)                          comment '访问路径默认#',
+  icon            varchar(256)                          comment '资源图标',
+  order_no        int(11)                               comment '排序号',
+  remark          varchar(256)                          comment '备注描述',
+  create_by       varchar(64)                           comment '创建人员名称',
+  create_time     timestamp                             comment '创建时间',
+  update_by       varchar(64)                           comment '更新人员名称',
+  update_time     timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='资源信息';
+
+/*====================================================================*/
+/* table: aefsys_role  角色信息                                       */
+/*====================================================================*/
+create table aefsys_role (
+  id             int(11)   not null auto_increment      comment 'id标识',
+  role_name      varchar(64)                            comment '角色名称',
+  role_code      varchar(64)                            comment '标识编码',
+  status         int(11)                                comment '状态1正常0停用',
+  order_no       int(11)                                comment '排序号',
+  remark         varchar(256)                           comment '备注描述',
+  create_by      varchar(64)                            comment '创建人员名称',
+  create_time    timestamp                              comment '创建时间',
+  update_by      varchar(64)                            comment '更新人员名称',
+  update_time    timestamp                              comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='角色信息';
+
+/*====================================================================*/
+/* table: aefsys_role_resource  角色资源关系                          */
+/*====================================================================*/
+create table aefsys_role_resource (
+  role_id        int(11)                             comment '角色id',
+  resource_id    int(11)                             comment '资源id'
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='角色资源关系';
+
+/*====================================================================*/
+/* table: aefsys_person_role  人员角色关系                            */
+/*====================================================================*/
+create table aefsys_person_role (
+  person_id      int(11)                             comment '个人id',
+  role_id        int(11)                             comment '角色id'
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='人员角色关系';
+
+/*====================================================================*/
+/* table: aefsys_config_data  配置信息表                              */
+/*====================================================================*/
+create table aefsys_config_data (
+  id             int(11)   not null auto_increment    comment 'id标识',
+  data_code      varchar(64)                          comment '参数编码',
+  data_value     varchar(64)                          comment '参数值',
+  order_no       int(11)                              comment '排序号',
+  remark         varchar(256)                         comment '备注描述',
+  create_by      varchar(64)                          comment '创建人员名称',
+  create_time    timestamp                            comment '创建时间',
+  update_by      varchar(64)                          comment '更新人员名称',
+  update_time    timestamp                            comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='配置信息表';
+
+/*====================================================================*/
+/* table: aefsys_data_dic 数据字典表                                  */
+/*====================================================================*/
+create table aefsys_data_dic (
+  id            int(11)   not null auto_increment     comment 'id标识',
+  type_code     varchar(64)                           comment '类型编码',
+  type_name     varchar(128)                          comment '类型名称',
+  code          varchar(64)                           comment '编码',
+  full_name     varchar(128)                          comment '全称',
+  short_name    varchar(64)                           comment '简称',
+  order_no      int(11)                               comment '排序号',
+  is_type       int(11)                               comment '是否字典类型1是0否',
+  is_default    int(11)                               comment '是否为默认1是0否',
+  status        int(11)                               comment '状态1正常0停用',
+  remark        varchar(256)                          comment '备注描述',
+  create_by     varchar(64)                           comment '创建人员名称',
+  create_time   timestamp                             comment '创建时间',
+  update_by     varchar(64)                           comment '更新人员名称',
+  update_time   timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='数据字典表';
+
+/*====================================================================*/
+/* table: aefsys_oper_log 操作日志表                                  */
+/*====================================================================*/
+create table aefsys_oper_log (
+  id              int(11)   not null auto_increment     comment 'id标识',
+  log_type        varchar(32)                           comment '日志类型',
+  channel         varchar(32)                           comment '日志来源',
+  log_content     varchar(2048)                         comment '日志详细信息',
+  oper_name       varchar(64)                           comment '操作人员',
+  org_name        varchar(64)                           comment '部门名称',
+  oper_time       timestamp                             comment '操作时间',
+  oper_url        varchar(256)                          comment '请求url',
+  oper_system     varchar(64)                           comment '系统名称',
+  oper_module    varchar(64)                           comment '模块名称',
+  oper_menu       varchar(64)                           comment '菜单名称',
+  oper_button     varchar(64)                           comment '方法名称',
+  oper_ip         varchar(32)                           comment '请求ip',
+  oper_location   varchar(32)                           comment '请求所在地',
+  oper_method     varchar(128)                          comment '请求方法',
+  oper_param      varchar(2048)                         comment '请求参数',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='操作日志表';

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>aerfa-parentversion</artifactId>
+        <groupId>com.zhangysh.accumulate</groupId>
+        <version>1.0.0</version>
+        <relativePath>../aerfa-parentversion/pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.zhangysh.accumulate</groupId>
+    <artifactId>aerfa-pojo</artifactId>
+    <version>1.0.0</version>
+    <description>数据模型对象，为了前后台用单独列出来了。</description>
+    <dependencies>
+        <!---instance自己的工具类依赖 -->
+        <dependency>
+            <groupId>com.zhangysh.accumulate</groupId>
+            <artifactId>aerfa-common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+
+    <!--发布到nexus配置-->
+    <distributionManagement>
+        <!--说明1：id要和settings.xml的server的id相同maven在发布时，会根据此id来查找相应的用户名密码进行登录验证并上传文件-->
+        <!--说明2：maven会判断版本后面是否带了-SNAPSHOT，如果带了就发布到snapshots仓库，否则发布到release仓库-->
+        <repository>
+            <id>vm-nexus</id>
+            <url>http://192.168.195.50:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>vm-nexus</id>
+            <url>http://192.168.195.50:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>

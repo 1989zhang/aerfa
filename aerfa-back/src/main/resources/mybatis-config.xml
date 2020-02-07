@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- 打印查询语句 -->
+        <setting name="logImpl" value="STDOUT_LOGGING" />
+        <!-- 执行sql等待数据库时间单位秒，等10分钟 -->
+        <setting name="defaultStatementTimeout" value="600" />
+        <!-- 数据库表字段下划线与java类驼峰自动转 -->
+        <setting name="mapUnderscoreToCamelCase" value="true" />
+  		<!--解决，查询返回结果含null没有对应字段问题-->
+  		<setting name="callSettersOnNulls" value="true"/>
+    </settings>
+    
+    <plugins>
+        <!--pagehelper分页插件拦截器-->
+		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+    		<property name="reasonable" value="true"/>
+		</plugin>
+		<!--自定义拦截器，最好用pagehelper-->
+		<!--<plugin interceptor="com.zhangysh.accumulate.back.sys.base.interceptor.PageInterceptor"/>-->
+	</plugins>
+</configuration>

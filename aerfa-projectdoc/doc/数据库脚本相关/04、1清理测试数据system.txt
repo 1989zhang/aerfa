@@ -1,0 +1,9 @@
+/*==========清理操作日志aefsys_oper_log测试数据==========*/
+delete from aefsys_oper_log;
+
+/*==========清理部门aefsys_org测试数据==========*/
+delete from aefsys_org where id=2;
+delete from aefsys_org where id=3;
+delete from aefsys_org where id=4;
+delete from aefsys_org where id=5;
+

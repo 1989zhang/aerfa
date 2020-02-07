@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.MybatisQuerySqlDao">
+    <select id="customQuerySqlSelect" parameterType="String" resultType="java.util.LinkedHashMap"> 
+		${value} 
+	</select>
+    <insert id="customQuerySqlInsert" parameterType="String"> 
+		${value} 
+	</insert>
+	<update id="customQuerySqlUpdate" parameterType="String"> 
+		${value} 
+	</update>
+	<delete id="customQuerySqlDelete" parameterType="String"> 
+		${value} 
+	</delete>
+	<select id="customQuerySqlSelectWithParam" resultType="java.util.LinkedHashMap"> 
+		${sql} 
+	</select>
+	<insert id="customQuerySqlInsertWithParam"> 
+		${sql} 
+	</insert>
+	<update id="customQuerySqlUpdateWithParam"> 
+		${sql} 
+	</update>
+	<delete id="customQuerySqlDeleteWithParam"> 
+		${sql} 
+	</delete>
+</mapper>

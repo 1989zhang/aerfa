@@ -1,0 +1,65 @@
+package com.zhangysh.accumulate.ui.sys.service;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.zhangysh.accumulate.common.constant.CacheConstant;
+import ${package}.dataobj.${doclassName};
+import ${package}.transobj.${doclassName}Dto;
+
+
+/*****
+ * ${tableComment}相关调用后台方法
+ * @author ${author}
+ * @date ${datetime}
+ *****/
+@FeignClient(name = "${feign.back.name}")
+public interface I${className}Service {
+
+	/****
+	 * 分页显示${tableComment}信息
+	 * @param aerfatoken token对象
+	 * @param ${className}Dto 查询条件
+	 ***/
+	@RequestMapping(value = "/sys/${removePrefixTableName}/list",method = RequestMethod.POST)
+	public String getList(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody ${doclassName}Dto ${className}Dto);
+
+	/****
+	 * 获取单个${tableComment}信息
+	 * @param aerfatoken token对象
+	 * @param ${primaryKey.attrname} ${tableComment}的${primaryKey.attrname}
+	 ***/
+	@RequestMapping(value = "/sys/${removePrefixTableName}/single",method = RequestMethod.POST)
+	public String getSingle(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody ${primaryKey.attrType} ${primaryKey.attrname});
+
+#foreach($column in $columns)
+#if(${column.onlyCheckColumn})
+	/****
+	 * 验证${tableComment}${column.columnComment}唯一性 
+	 * @param aerfatoken token对象
+	 * @param ${classname} 要验证的对象内含${column.columnComment}属性和id,id为了排除自己
+	 ***/
+	@RequestMapping(value = "/sys/${removePrefixTableName}/check_${column.columnName}_unique",method = RequestMethod.POST)
+	public String check${column.attrName}Unique(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody ${doclassName} ${classname});
+#end
+#end
+	/****
+	 * 保存新增的${tableComment}信息 
+	 * @param aerfatoken token对象
+	 * @param ${className} 要保存的${tableComment}对象
+	 ***/
+	@RequestMapping(value = "/sys/${removePrefixTableName}/save",method = RequestMethod.POST)
+	public String saveAdd(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody ${doclassName} ${classname});
+
+	/****
+	 * 删除${tableComment}对象，可以删除多个，中间英文,隔开
+	 * @param aerfatoken token对象
+	 * @param ids 要删除的${tableComment}ids集合，是路径获取参数
+	 ***/
+	@RequestMapping(value = "/sys/${removePrefixTableName}/delete",method = RequestMethod.POST)
+	public String delete${className}ByIds(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody String ids);
+
+}

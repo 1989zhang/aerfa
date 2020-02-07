@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.DataDicDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="dataDicResult" type="AefsysDataDic" >
+        <result property="id"    column="id"    />
+        <result property="typeCode"    column="type_code"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="code"    column="code"    />
+        <result property="fullName"    column="full_name"    />
+        <result property="shortName"    column="short_name"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="isType"    column="is_type"    />
+        <result property="isDefault"    column="is_default"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectDataDic">
+        select id, type_code, type_name, code, full_name, short_name, order_no, is_type, is_default, status, remark, create_by, create_time, update_by, update_time from aefsys_data_dic
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getDataDicById" parameterType="Long" resultMap="dataDicResult">
+        <include refid="selectDataDic"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listDataDic" parameterType="AefsysDataDic" resultMap="dataDicResult">
+        <include refid="selectDataDic"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="typeCode != null  and typeCode != ''  "> and type_code = #{typeCode}</if>
+            <if test="typeName != null  and typeName != ''  "> and type_name = #{typeName}</if>
+            <if test="code != null  and code != ''  "> and code = #{code}</if>
+            <if test="fullName != null  and fullName != ''  "> and full_name = #{fullName}</if>
+            <if test="shortName != null  and shortName != ''  "> and short_name = #{shortName}</if>
+            <if test="orderNo != null  "> and order_no = #{orderNo}</if>
+            <if test="isType != null  "> and is_type = #{isType}</if>
+            <if test="isDefault != null  "> and is_default = #{isDefault}</if>
+            <if test="status != null  "> and status = #{status}</if>
+            <if test="remark != null  and remark != ''  "> and remark = #{remark}</if>
+            <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
+            <if test="createTime != null  "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null  "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="checkDataDicUnique" parameterType="AefsysDataDic" resultMap="dataDicResult">
+        <include refid="selectDataDic"/>
+		<where>
+		    <if test="id != null ">and id != #{id}</if>
+		    <if test="isType != null ">and is_type != #{isType}</if>
+			<if test="typeCode != null and typeCode != ''"> and type_code = #{typeCode} </if>
+			<if test="code != null and code != ''"> and code = #{code} </if>
+		</where>
+	</select>
+	
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertDataDic" parameterType="AefsysDataDic">
+        insert into aefsys_data_dic
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="typeCode != null  and typeCode != ''  ">type_code,</if>
+			<if test="typeName != null  and typeName != ''  ">type_name,</if>
+			<if test="code != null  and code != ''  ">code,</if>
+			<if test="fullName != null  and fullName != ''  ">full_name,</if>
+			<if test="shortName != null  and shortName != ''  ">short_name,</if>
+			<if test="orderNo != null  ">order_no,</if>
+			<if test="isType != null  ">is_type,</if>
+			<if test="isDefault != null  ">is_default,</if>
+			<if test="status != null  ">status,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="typeCode != null  and typeCode != ''  ">#{typeCode},</if>
+			<if test="typeName != null  and typeName != ''  ">#{typeName},</if>
+			<if test="code != null  and code != ''  ">#{code},</if>
+			<if test="fullName != null  and fullName != ''  ">#{fullName},</if>
+			<if test="shortName != null  and shortName != ''  ">#{shortName},</if>
+			<if test="orderNo != null  ">#{orderNo},</if>
+			<if test="isType != null  ">#{isType},</if>
+			<if test="isDefault != null  ">#{isDefault},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateDataDic" parameterType="AefsysDataDic">
+        update aefsys_data_dic
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeCode != null  and typeCode != ''  ">type_code = #{typeCode},</if>
+            <if test="typeName != null  and typeName != ''  ">type_name = #{typeName},</if>
+            <if test="code != null  and code != ''  ">code = #{code},</if>
+            <if test="fullName != null  and fullName != ''  ">full_name = #{fullName},</if>
+            <if test="shortName != null  and shortName != ''  ">short_name = #{shortName},</if>
+            <if test="orderNo != null  ">order_no = #{orderNo},</if>
+            <if test="isType != null  ">is_type = #{isType},</if>
+            <if test="isDefault != null  ">is_default = #{isDefault},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteDataDicById" parameterType="Long">
+        delete from aefsys_data_dic where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deleteDataDicByIds" parameterType="String">
+        delete from aefsys_data_dic where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>

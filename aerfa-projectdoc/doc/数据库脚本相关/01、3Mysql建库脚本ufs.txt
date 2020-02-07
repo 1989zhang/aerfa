@@ -1,0 +1,28 @@
+/*====================================================================*/
+/* table: aefufs_upload_file  文件上传表                              */
+/*====================================================================*/
+create table aefufs_upload_file (
+  id             int(11)   not null auto_increment    comment 'id标识',
+  file_name      varchar(64)                          comment '文件传入时候的名称',
+  save_name      varchar(64)                          comment '存储时候的名称',
+  file_type      varchar(16)                          comment '文件类型jpgdoc等',
+  file_link      varchar(128)                         comment '证件连接本地/ftp存储路径',
+  impl_name      varchar(64)                          comment '保存接口实现名称',
+  create_by      varchar(128)                         comment '创建者',
+  create_time    timestamp                            comment '创建时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='文件上传表';
+
+/*====================================================================*/
+/* table: aefufs_upload_file_blob  二进制内容文件上传表               */
+/*====================================================================*/
+create table aefufs_upload_file_blob (
+  id             int(11)   not null auto_increment    comment 'id标识',
+  file_name      varchar(64)                          comment '文件传入时候的名称',
+  file_type      varchar(16)                          comment '文件类型jpgdoc等',
+  file_blob      mediumblob                           comment '文件二进制内容',
+  impl_name      varchar(64)                          comment '保存接口实现名称',
+  create_by      varchar(128)                         comment '创建者',
+  create_time    timestamp                            comment '创建时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='二进制内容文件上传表';

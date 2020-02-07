@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.PersonAddressDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="personAddressResult" type="AefsysPersonAddress" >
+        <result property="id"    column="id"    />
+        <result property="personId"    column="person_id"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="district"    column="district"    />
+        <result property="town"    column="town"    />
+        <result property="detailAddress"    column="detail_address"    />
+        <result property="fullAddress"    column="full_address"    />
+        <result property="isDefault"    column="is_default"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectPersonAddress">
+        select id, person_id, province, city, district, town, detail_address, full_address, is_default, create_by, create_time, update_by, update_time from aefsys_person_address
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getPersonAddressById" parameterType="Long" resultMap="personAddressResult">
+        <include refid="selectPersonAddress"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listPersonAddress" parameterType="AefsysPersonAddress" resultMap="personAddressResult">
+        <include refid="selectPersonAddress"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="personId != null  "> and person_id = #{personId}</if>
+            <if test="province != null  and province != ''  "> and province = #{province}</if>
+            <if test="city != null  and city != ''  "> and city = #{city}</if>
+            <if test="district != null  and district != ''  "> and district = #{district}</if>
+            <if test="town != null  and town != ''  "> and town = #{town}</if>
+            <if test="detailAddress != null  and detailAddress != ''  "> and detail_address = #{detailAddress}</if>
+			<if test="fullAddress != null and fullAddress != ''"> and full_address like concat('%',#{fullAddress},'%')  </if>
+            <if test="isDefault != null  "> and is_default = #{isDefault}</if>
+            <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
+            <if test="createTime != null  "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null  "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+
+
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertPersonAddress" parameterType="AefsysPersonAddress">
+        insert into aefsys_person_address
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="personId != null  ">person_id,</if>
+			<if test="province != null  and province != ''  ">province,</if>
+			<if test="city != null  and city != ''  ">city,</if>
+			<if test="district != null  and district != ''  ">district,</if>
+			<if test="town != null  and town != ''  ">town,</if>
+			<if test="detailAddress != null  and detailAddress != ''  ">detail_address,</if>
+			<if test="fullAddress != null  and fullAddress != ''  ">full_address,</if>
+			<if test="isDefault != null  ">is_default,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="personId != null  ">#{personId},</if>
+			<if test="province != null  and province != ''  ">#{province},</if>
+			<if test="city != null  and city != ''  ">#{city},</if>
+			<if test="district != null  and district != ''  ">#{district},</if>
+			<if test="town != null  and town != ''  ">#{town},</if>
+			<if test="detailAddress != null  and detailAddress != ''  ">#{detailAddress},</if>
+			<if test="fullAddress != null  and fullAddress != ''  ">#{fullAddress},</if>
+			<if test="isDefault != null  ">#{isDefault},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updatePersonAddress" parameterType="AefsysPersonAddress">
+        update aefsys_person_address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="personId != null  ">person_id = #{personId},</if>
+            <if test="province != null  and province != ''  ">province = #{province},</if>
+            <if test="city != null  and city != ''  ">city = #{city},</if>
+            <if test="district != null  and district != ''  ">district = #{district},</if>
+            <if test="town != null  and town != ''  ">town = #{town},</if>
+            <if test="detailAddress != null  and detailAddress != ''  ">detail_address = #{detailAddress},</if>
+            <if test="fullAddress != null  and fullAddress != ''  ">full_address = #{fullAddress},</if>
+            <if test="isDefault != null  ">is_default = #{isDefault},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deletePersonAddressById" parameterType="Long">
+        delete from aefsys_person_address where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deletePersonAddressByIds" parameterType="String">
+        delete from aefsys_person_address where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>

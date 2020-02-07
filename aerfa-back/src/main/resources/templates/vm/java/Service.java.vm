@@ -1,0 +1,89 @@
+package ${package}.service;
+import java.util.List;
+
+import ${package}.dataobj.${doclassName};
+import com.zhangysh.accumulate.common.pojo.BsTableDataInfo;
+import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
+
+/**
+ * ${tableComment}相关服务层接口
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+public interface I${className}Service {
+	/**
+     * 根据ID查询单个${tableComment}信息
+     * 
+     * @param ${primaryKey.attrname} ${tableComment}主键ID
+     * @return ${tableComment}信息
+     */
+	 ${doclassName} get${className}ById(${primaryKey.attrType} ${primaryKey.attrname});
+	
+	/**
+     * 根据条件查询${tableComment}分页列表
+     * 
+     * @param pageInfo 分页对象
+     * @param ${classname} 条件${tableComment}对象
+     * @return ${tableComment}条件下结果集合
+     */
+	 BsTableDataInfo listPage${className}(BsTablePageInfo pageInfo,${doclassName} ${classname});
+	
+	/**
+     * 根据主键${primaryKey.attrname}s查询${tableComment}不分页列表
+     * 
+     * @param ${primaryKey.attrname}s 需要查询的数据ID以,拼装
+     * @return ${tableComment}条件下结果集合
+     */
+	 List<${doclassName}> listBypks${className}(String ${primaryKey.attrname}s);
+	 
+	/**
+     * 根据条件查询${tableComment}不分页列表
+     * 
+     * @param ${classname} 条件${tableComment}对象
+     * @return ${tableComment}条件下结果集合
+     */
+	 List<${doclassName}> list${className}(${doclassName} ${classname});
+	 
+#foreach($column in $columns)
+#if(${column.onlyCheckColumn})
+	/****
+	 * ${tableComment}${column.columnComment}唯一性检测，查询出${tableComment}list集合，未分页排序等 
+	 * @param ${classname} 查询条件,内含${column.columnComment}属性和id,id为了排除自己
+	 ****/
+	List<${doclassName}> check${column.attrName}Unique(${doclassName} ${classname});
+#end
+#end
+	/**
+     * 新增${tableComment}
+     * 
+     * @param ${classname} ${tableComment}对象信息
+     * @return 新增结果条数
+     */
+	 int insert${className}(${doclassName} ${classname});
+	
+	/**
+     * 修改${tableComment}
+     * 
+     * @param ${classname} ${tableComment}修改信息
+     * @return 修改结果条数
+     */
+	 int update${className}(${doclassName} ${classname});
+	
+	/**
+     * 单个删除${tableComment}
+     * 
+     * @param ${primaryKey.attrname} ${tableComment}ID
+     * @return 删除结果条数
+     */
+	 int delete${className}ById(${primaryKey.attrType} ${primaryKey.attrname});
+	 	
+	/**
+     * 删除${tableComment}信息
+     * 
+     * @param ${primaryKey.attrname}s 需要删除的数据ID以,拼装
+     * @return 删除结果条数
+     */
+	 int delete${className}ByIds(String ${primaryKey.attrname}s);
+	
+}

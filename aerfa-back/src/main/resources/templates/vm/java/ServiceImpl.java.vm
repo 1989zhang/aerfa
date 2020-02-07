@@ -1,0 +1,82 @@
+package ${package}.service.impl;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+
+import ${package}.dataobj.${doclassName};
+import ${package}.dao.${className}Dao;
+import ${package}.service.I${className}Service;
+import com.zhangysh.accumulate.common.pojo.BsTableDataInfo;
+import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
+
+import com.zhangysh.accumulate.common.util.ConvertUtil;
+/**
+ * ${tableComment} 服务层实现
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Service
+public class ${className}ServiceImpl implements I${className}Service {
+
+	@Autowired
+	private ${className}Dao ${classname}Dao;
+
+    @Override
+	public ${doclassName} get${className}ById(${primaryKey.attrType} ${primaryKey.attrname}){
+	    return ${classname}Dao.get${className}ById(${primaryKey.attrname});
+	}
+	
+	@Override
+	public BsTableDataInfo listPage${className}(BsTablePageInfo pageInfo,${doclassName} ${classname}){
+	    //pagehelper方法调用
+		Page<${doclassName}> page =PageHelper.startPage(pageInfo.getPageNum(),pageInfo.getPageSize(),pageInfo.getOrderBy());
+		${classname}Dao.list${className}(${classname});
+		BsTableDataInfo tableInfo=new BsTableDataInfo();
+		tableInfo.setTotal(page.getTotal());
+		tableInfo.setRows(page.getResult());
+	    return tableInfo; 
+	}
+
+	@Override
+	public List<${doclassName}> listBypks${className}(String ${primaryKey.attrname}s){
+		return ${classname}Dao.listBypks${className}(ConvertUtil.toStrArray(${primaryKey.attrname}s));
+	}
+
+	@Override
+	public List<${doclassName}> list${className}(${doclassName} ${classname}){
+		return ${classname}Dao.list${className}(${classname});
+	}
+
+#foreach($column in $columns)
+#if(${column.onlyCheckColumn})
+	@Override
+	public List<${doclassName}> check${column.attrName}Unique(${doclassName} ${classname}){
+		return ${classname}Dao.check${column.attrName}Unique(${classname});
+	}
+#end
+#end	 
+	@Override
+	public int insert${className}(${doclassName} ${classname}){
+	    return ${classname}Dao.insert${className}(${classname});
+	}
+	
+	@Override
+	public int update${className}(${doclassName} ${classname}){
+	    return ${classname}Dao.update${className}(${classname});
+	}
+	
+	@Override
+	public int delete${className}ById(${primaryKey.attrType} ${primaryKey.attrname}){
+		return ${classname}Dao.delete${className}ById(${primaryKey.attrname});
+	}
+	
+	@Override
+	public int delete${className}ByIds(String ${primaryKey.attrname}s){
+		return ${classname}Dao.delete${className}ByIds(ConvertUtil.toStrArray(${primaryKey.attrname}s));
+	}
+	
+}

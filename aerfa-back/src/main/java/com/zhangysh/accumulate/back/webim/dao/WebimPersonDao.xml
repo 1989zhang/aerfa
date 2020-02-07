@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.webim.dao.WebimPersonDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="personResult" type="AefwebimPerson" >
+        <result property="id"    column="id"    />
+        <result property="personId"    column="person_id"    />
+        <result property="signature"    column="signature"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="job"    column="job"    />
+        <result property="constellation"    column="constellation"    />
+        <result property="bloodType"    column="blood_type"    />
+        <result property="wechat"    column="wechat"    />
+        <result property="qqNumber"    column="qq_number"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectPerson">
+        select id, person_id, signature, birthday, job, constellation, blood_type, wechat, qq_number from aefwebim_person
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getPersonById" parameterType="Long" resultMap="personResult">
+        <include refid="selectPerson"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据系统PersonId查询单个拓展webim个人信息-->
+    <select id="getWebimPersonBySysPersonId" parameterType="Long" resultMap="personResult">
+        <include refid="selectPerson"/>
+        where person_id = #{personId}
+    </select>
+    
+
+    <!--根据条件查询多个对象-->	
+    <select id="listPerson" parameterType="AefwebimPerson" resultMap="personResult">
+        <include refid="selectPerson"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="personId != null  "> and person_id = #{personId}</if>
+            <if test="signature != null  and signature != ''  "> and signature = #{signature}</if>
+            <if test="birthday != null  "> and birthday = #{birthday}</if>
+            <if test="job != null  and job != ''  "> and job = #{job}</if>
+            <if test="constellation != null  and constellation != ''  "> and constellation = #{constellation}</if>
+            <if test="bloodType != null  and bloodType != ''  "> and blood_type = #{bloodType}</if>
+            <if test="wechat != null  and wechat != ''  "> and wechat = #{wechat}</if>
+            <if test="qqNumber != null  and qqNumber != ''  "> and qq_number = #{qqNumber}</if>
+        </where>
+    </select>
+
+    <!--根据主键查询多个对象-->
+	<select id="listBypksPerson" parameterType="String" resultMap="personResult">
+        <include refid="selectPerson"/>
+        where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertPerson" parameterType="AefwebimPerson" useGeneratedKeys="true" keyProperty="id">
+        insert into aefwebim_person
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="personId != null  ">person_id,</if>
+			<if test="signature != null  and signature != ''  ">signature,</if>
+			<if test="birthday != null  ">birthday,</if>
+			<if test="job != null  and job != ''  ">job,</if>
+			<if test="constellation != null  and constellation != ''  ">constellation,</if>
+			<if test="bloodType != null  and bloodType != ''  ">blood_type,</if>
+			<if test="wechat != null  and wechat != ''  ">wechat,</if>
+			<if test="qqNumber != null  and qqNumber != ''  ">qq_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="personId != null  ">#{personId},</if>
+			<if test="signature != null  and signature != ''  ">#{signature},</if>
+			<if test="birthday != null  ">#{birthday},</if>
+			<if test="job != null  and job != ''  ">#{job},</if>
+			<if test="constellation != null  and constellation != ''  ">#{constellation},</if>
+			<if test="bloodType != null  and bloodType != ''  ">#{bloodType},</if>
+			<if test="wechat != null  and wechat != ''  ">#{wechat},</if>
+			<if test="qqNumber != null  and qqNumber != ''  ">#{qqNumber},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updatePerson" parameterType="AefwebimPerson">
+        update aefwebim_person
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="personId != null  ">person_id = #{personId},</if>
+            <if test="signature != null  and signature != ''  ">signature = #{signature},</if>
+            <if test="birthday != null  ">birthday = #{birthday},</if>
+            <if test="job != null  and job != ''  ">job = #{job},</if>
+            <if test="constellation != null  and constellation != ''  ">constellation = #{constellation},</if>
+            <if test="bloodType != null  and bloodType != ''  ">blood_type = #{bloodType},</if>
+            <if test="wechat != null  and wechat != ''  ">wechat = #{wechat},</if>
+            <if test="qqNumber != null  and qqNumber != ''  ">qq_number = #{qqNumber},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deletePersonById" parameterType="Long">
+        delete from aefwebim_person where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deletePersonByIds" parameterType="String">
+        delete from aefwebim_person where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>

@@ -1,0 +1,83 @@
+/*====================================================================*/
+/* table: aefcomm_info_publish  信息发布表                                                                                               */
+/*====================================================================*/
+create table aefcomm_info_publish (
+  id           int(11)      not null  auto_increment   comment 'id标识',
+  title        varchar(128)                            comment '标题',
+  info_type    varchar(32)                             comment '信息分类',
+  pub_date     timestamp                               comment '发布日期',
+  status       int(11)                                 comment '状态1有效0无效',
+  view_url     varchar(128)                            comment '查看内容访问地址',
+  order_no       int(11)                               comment '排序号',
+  create_by      varchar(64)                           comment '创建人员名称',
+  create_time    timestamp                             comment '创建时间',
+  update_by      varchar(64)                           comment '更新人员名称',
+  update_time    timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='信息发布表';
+
+/*====================================================================*/
+/* table: aefcomm_info_content  信息发布内容表                                                                     */
+/*====================================================================*/
+create table aefcomm_info_content (
+  id            int(11)     not null                    comment 'id标识同publish的id',
+  content       mediumtext                              comment '信息内容'
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='信息发布内容表';
+
+/*====================================================================*/
+/* table: aefcomm_division  行政区划表                                                                                      */
+/*====================================================================*/
+create table aefcomm_division (
+  id            int(11)   not null auto_increment    comment 'id标识',
+  code          varchar(32)                          comment '区划代码',
+  name          varchar(128)                         comment '区划名称',
+  parent_id     int(11)                              comment '父级区划id',
+  parent_code   varchar(32)                          comment '父级区划代码',
+  parent_name   varchar(128)                         comment '父级区划名称',
+  short_name    varchar(32)                          comment '区划简称',
+  level			int(11)                              comment '区划等级:0国家级;1省级;2市级 ;3区县级;4乡镇街道级',
+  mark          int(11)                              comment '区划标示:1首都;2省会;3市直管区等',
+  remark        varchar(256)                         comment '备注',
+  create_by      varchar(64)                         comment '创建人员名称',
+  create_time    timestamp                           comment '创建时间',
+  update_by      varchar(64)                         comment '更新人员名称',
+  update_time    timestamp                           comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='行政区划信息';
+
+/*====================================================================*/
+/* table: aefcomm_work_day  工作日信息                                                                                      */
+/*====================================================================*/
+create table aefcomm_work_day (
+  id                  int(11)   not null auto_increment    comment 'id标识',
+  work_date           varchar(32)                          comment '工作日字符串',
+  morning_duty_time   varchar(16)                          comment '上午上班时间',
+  morning_rush_time   varchar(16)                          comment '上午下班时间',
+  afternoon_duty_time varchar(16)                          comment '下午上班时间',
+  afternoon_rush_time varchar(16)                          comment '下午下班时间',
+  totle_work_time     int(11)                              comment '总工作时间（小时）',
+  work_status         int(11)                              comment '是否工作:1上班;0不上班',
+  remark              varchar(256)                         comment '备注',
+  create_by           varchar(64)                          comment '创建人员名称',
+  create_time         timestamp                            comment '创建时间',
+  update_by           varchar(64)                          comment '更新人员名称',
+  update_time         timestamp                            comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='工作日信息';
+
+/*====================================================================*/
+/* table: aefcomm_note_calendar  日历记事本                           */
+/*====================================================================*/
+create table aefcomm_note_calendar (
+  id             int(11)    not null  auto_increment   comment 'id标识',
+  person_id      int(11)                               comment '个人id',
+  mark           varchar(128)                          comment '标注',
+  start_date     timestamp                             comment '开始日期',
+  end_date       timestamp                             comment '结束日期',
+  order_no       int(11)                               comment '排序号',
+  create_by      varchar(64)                           comment '创建人员名称',
+  create_time    timestamp                             comment '创建时间',
+  update_by      varchar(64)                           comment '更新人员名称',
+  update_time    timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='日历记事本';

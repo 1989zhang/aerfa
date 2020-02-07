@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.OperLogDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="operLogResult" type="AefsysOperLog" >
+        <result property="id"    column="id"    />
+        <result property="logType"    column="log_type"    />
+        <result property="channel"    column="channel"    />
+        <result property="logContent"    column="log_content"    />
+        <result property="operName"    column="oper_name"    />
+        <result property="orgName"    column="org_name"    />
+        <result property="operTime"    column="oper_time"    />
+        <result property="operUrl"    column="oper_url"    />
+        <result property="operSystem"    column="oper_system"    />
+        <result property="operModule"    column="oper_module"    />
+        <result property="operMenu"    column="oper_menu"    />
+        <result property="operButton"    column="oper_button"    />
+        <result property="operIp"    column="oper_ip"    />
+        <result property="operLocation"    column="oper_location"    />
+        <result property="operMethod"    column="oper_method"    />
+        <result property="operParam"    column="oper_param"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectOperLog">
+        select id, log_type, channel, log_content, oper_name, org_name, oper_time, oper_url, oper_system, oper_module, oper_menu, oper_button, oper_ip, oper_location, oper_method, oper_param from aefsys_oper_log
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getOperLogById" parameterType="Long" resultMap="operLogResult">
+        <include refid="selectOperLog"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listOperLog" parameterType="AefsysOperLog" resultMap="operLogResult">
+        <include refid="selectOperLog"/>
+        <where>  
+            <if test="id != null and id != ''"> and id = #{id}</if>
+             <if test="logType != null and logType != ''"> and log_type = #{logType}</if>
+             <if test="channel != null and channel != ''"> and channel = #{channel}</if>
+             <if test="logContent != null and logContent != ''"> and log_content = #{logContent}</if>
+             <if test="operName != null and operName != ''"> and oper_name like concat('%',#{operName},'%')</if>
+             <if test="orgName != null and orgName != ''"> and org_name = #{orgName}</if>
+             <if test="operTime != null and operTime != ''"> and oper_time = #{operTime}</if>
+             <if test="operUrl != null and operUrl != ''"> and oper_url = #{operUrl}</if>
+             <if test="operSystem != null and operSystem != ''"> and oper_system = #{operSystem}</if>
+             <if test="operModule != null and operModule != ''"> and oper_module = #{operModule}</if>
+             <if test="operMenu != null and operMenu != ''"> and oper_menu = #{operMenu}</if>
+             <if test="operButton != null and operButton != ''"> and oper_button = #{operButton}</if>
+             <if test="operIp != null and operIp != ''"> and oper_ip = #{operIp}</if>
+             <if test="operLocation != null and operLocation != ''"> and oper_location = #{operLocation}</if>
+             <if test="operMethod != null and operMethod != ''"> and oper_method like concat('%',#{operMethod},'%')</if>
+             <if test="operParam != null and operParam != ''"> and oper_param = #{operParam}</if>
+             
+             <if test="params != null and params.startTime != ''">
+				and date_format(oper_time,'%y%m%d') &gt;= date_format(#{params.startTime},'%y%m%d')
+		     </if>
+			 <if test="params != null and params.endTime != ''">
+				and date_format(oper_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+	         </if>
+         </where>
+    </select>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteOperLogById" parameterType="Long">
+        delete from aefsys_oper_log where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deleteOperLogByIds" parameterType="String">
+        delete from aefsys_oper_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+     
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertOperLog" parameterType="AefsysOperLog">
+        insert into aefsys_oper_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="logType != null  and logType != ''  ">log_type,</if>
+			<if test="channel != null  and channel != ''  ">channel,</if>
+			<if test="logContent != null  and logContent != ''  ">log_content,</if>
+			<if test="operName != null  and operName != ''  ">oper_name,</if>
+			<if test="orgName != null  and orgName != ''  ">org_name,</if>
+			<if test="operTime != null  ">oper_time,</if>
+			<if test="operUrl != null  and operUrl != ''  ">oper_url,</if>
+			<if test="operSystem != null  and operSystem != ''  ">oper_system,</if>
+			<if test="operModule != null  and operModule != ''  ">oper_module,</if>
+			<if test="operMenu != null  and operMenu != ''  ">oper_menu,</if>
+			<if test="operButton != null  and operButton != ''  ">oper_button,</if>
+			<if test="operIp != null  and operIp != ''  ">oper_ip,</if>
+			<if test="operLocation != null  and operLocation != ''  ">oper_location,</if>
+			<if test="operMethod != null  and operMethod != ''  ">oper_method,</if>
+			<if test="operParam != null  and operParam != ''  ">oper_param,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="logType != null  and logType != ''  ">#{logType},</if>
+			<if test="channel != null  and channel != ''  ">#{channel},</if>
+			<if test="logContent != null  and logContent != ''  ">#{logContent},</if>
+			<if test="operName != null  and operName != ''  ">#{operName},</if>
+			<if test="orgName != null  and orgName != ''  ">#{orgName},</if>
+			<if test="operTime != null  ">#{operTime},</if>
+			<if test="operUrl != null  and operUrl != ''  ">#{operUrl},</if>
+			<if test="operSystem != null  and operSystem != ''  ">#{operSystem},</if>
+			<if test="operModule != null  and operModule != ''  ">#{operModule},</if>
+			<if test="operMenu != null  and operMenu != ''  ">#{operMenu},</if>
+			<if test="operButton != null  and operButton != ''  ">#{operButton},</if>
+			<if test="operIp != null  and operIp != ''  ">#{operIp},</if>
+			<if test="operLocation != null  and operLocation != ''  ">#{operLocation},</if>
+			<if test="operMethod != null  and operMethod != ''  ">#{operMethod},</if>
+			<if test="operParam != null  and operParam != ''  ">#{operParam},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateOperLog" parameterType="AefsysOperLog">
+        update aefsys_oper_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="logType != null  and logType != ''  ">log_type = #{logType},</if>
+            <if test="channel != null  and channel != ''  ">channel = #{channel},</if>
+            <if test="logContent != null  and logContent != ''  ">log_content = #{logContent},</if>
+            <if test="operName != null  and operName != ''  ">oper_name = #{operName},</if>
+            <if test="orgName != null  and orgName != ''  ">org_name = #{orgName},</if>
+            <if test="operTime != null  ">oper_time = #{operTime},</if>
+            <if test="operUrl != null  and operUrl != ''  ">oper_url = #{operUrl},</if>
+            <if test="operSystem != null  and operSystem != ''  ">oper_system = #{operSystem},</if>
+            <if test="operModule != null  and operModule != ''  ">oper_module = #{operModule},</if>
+            <if test="operMenu != null  and operMenu != ''  ">oper_menu = #{operMenu},</if>
+            <if test="operButton != null  and operButton != ''  ">oper_button = #{operButton},</if>
+            <if test="operIp != null  and operIp != ''  ">oper_ip = #{operIp},</if>
+            <if test="operLocation != null  and operLocation != ''  ">oper_location = #{operLocation},</if>
+            <if test="operMethod != null  and operMethod != ''  ">oper_method = #{operMethod},</if>
+            <if test="operParam != null  and operParam != ''  ">oper_param = #{operParam},</if>
+        </trim>
+        where id = #{id}
+    </update>
+ 
+</mapper>

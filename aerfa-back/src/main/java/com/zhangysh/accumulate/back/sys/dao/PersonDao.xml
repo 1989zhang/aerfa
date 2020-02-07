@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.PersonDao">
+	
+	<resultMap id="personResult" type="AefsysPerson" >
+		<id     property="id"          column="id"    />
+		<result property="orgId"       column="org_id"/>
+		<result property="account"     column="account"/>
+		<result property="phoneNo"     column="phone_no"/>
+		<result property="email"       column="email"/>
+		<result property="personType"  column="person_type"/>
+		<result property="personName"  column="person_name"/>
+		<result property="personSex"   column="person_sex"/>
+		<result property="nickName"    column="nick_name"/>
+		<result property="headPic"     column="head_pic"/>
+		<result property="cardType"    column="card_type"/>
+		<result property="cardNo"      column="card_no"/>
+		<result property="orderNo"     column="order_no"/>
+		<result property="status"      column="status"/>
+		<result property="remark"      column="remark"/>
+		<result property="createBy"    column="create_by"/>
+		<result property="createTime"  column="create_time"/>
+		<result property="updateBy"    column="update_by"/>
+		<result property="updateTime"  column="update_time"/>
+	</resultMap>
+	
+	<sql id="selectPerson">
+       select id,org_id,account,phone_no,email,person_type,person_name,person_sex,nick_name,head_pic,
+       card_type,card_no,order_no,status,remark,create_by,create_time,update_by,update_time 
+       from aefsys_person 
+    </sql>
+    
+	<select id="getPersonById" parameterType="Long" resultMap="personResult">
+		<include refid="selectPerson"/>
+		<where> and id = #{id}</where>
+	</select>
+	
+	<select id="getPersonByAccountPassword" parameterType="java.util.Map" resultMap="personResult">
+		<include refid="selectPerson"/>
+		<where> and account = #{account} and password = #{password}</where>
+	</select>
+	
+    <!--pagehelper方法的映射--> 
+	<select id="listPerson" parameterType="AefsysPerson" resultMap="personResult">
+        <include refid="selectPerson"/>
+		<where>
+			<if test="orgId != null"> and org_id = #{orgId}</if>
+			<if test="personName != null and personName != ''"> and person_name like concat('%',#{personName},'%')</if>
+			<if test="nickName != null and nickName != ''"> and nick_name like concat('%',#{nickName},'%')</if>
+		   	<if test="phoneNo != null and phoneNo != ''"> and phone_no like concat('%',#{phoneNo},'%')</if>
+		   	<if test="status != null"> and status = #{status}</if>
+		   	
+		    <if test="params != null and params.startTime != ''">
+				and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.startTime},'%y%m%d')
+		    </if>
+			<if test="params != null and params.endCreateTime != ''">
+				and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+			</if>
+		</where>
+	</select>
+	
+	<!--自定义拦截器方法映射--><!--
+	<select id="listPersons" resultMap="PersonResult">
+        <include refid="selectPerson"/>
+		<where>
+			<if test="person.personName != null and person.personName != ''"> and person_name like concat('%',#{person.personName},'%')</if>
+		   
+		    <if test="person.params != null and person.params.startTime != ''">
+				and date_format(create_time,'%y%m%d') &gt;= date_format(#{person.params.startTime},'%y%m%d')
+		    </if>
+			<if test="person.params != null and person.params.endTime != ''">
+				and date_format(create_time,'%y%m%d') &lt;= date_format(#{person.params.endTime},'%y%m%d')
+			</if>
+		</where>
+	</select>-->
+	
+	<select id="checkAccountUnique" parameterType="AefsysPerson" resultMap="personResult">
+        <include refid="selectPerson"/>
+		<where>
+		    <if test="id != null ">and id != #{id}</if>
+			<if test="account != null and account != ''"> and account = #{account} </if>
+		</where>
+	</select>
+	
+	<!--根据对象和属性insert新增对象-->
+    <insert id="insertPerson" parameterType="AefsysPerson">
+        insert into aefsys_person
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="orgId != null  ">org_id,</if>
+			<if test="account != null  and account != ''  ">account,</if>
+			<if test="password != null  and password != ''  ">password,</if>
+			<if test="salt != null  and salt != ''  ">salt,</if>
+			<if test="phoneNo != null  and phoneNo != ''  ">phone_no,</if>
+			<if test="email != null  and email != ''  ">email,</if>
+			<if test="personType != null and personType != '' ">person_type,</if>
+			<if test="personName != null and personName != '' ">person_name,</if>
+			<if test="personSex != null and personSex != '' ">person_sex,</if>
+			<if test="nickName != null and nickName != '' ">nick_name,</if>
+			<if test="headPic != null and headPic != '' ">head_pic,</if>
+			<if test="cardType != null  and cardType != ''  ">card_type,</if>
+			<if test="cardNo != null  and cardNo != ''  ">card_no,</if>
+			<if test="orderNo != null  ">order_no,</if>
+			<if test="status != null  ">status,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="orgId != null  ">#{orgId},</if>
+			<if test="account != null  and account != ''  ">#{account},</if>
+			<if test="password != null  and password != ''  ">#{password},</if>
+			<if test="salt != null  and salt != ''  ">#{salt},</if>
+			<if test="phoneNo != null  and phoneNo != ''  ">#{phoneNo},</if>
+			<if test="email != null  and email != ''  ">#{email},</if>
+			<if test="personType != null  and personType != ''  ">#{personType},</if>
+			<if test="personName != null  and personName != ''  ">#{personName},</if>
+			<if test="personSex != null  and personSex != ''  ">#{personSex},</if>
+			<if test="nickName != null  and nickName != ''  ">#{nickName},</if>
+			<if test="headPic != null  and headPic != ''  ">#{headPic},</if>
+			<if test="cardType != null  and cardType != ''  ">#{cardType},</if>
+			<if test="cardNo != null  and cardNo != ''  ">#{cardNo},</if>
+            <if test="orderNo != null  ">#{orderNo},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象，账号不允许修改-->
+    <update id="updatePerson" parameterType="AefsysPerson">
+        update aefsys_person
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orgId != null  ">org_id = #{orgId},</if>
+            <if test="password != null  and password != ''  ">password = #{password},</if>
+            <if test="salt != null  and salt != ''  ">salt = #{salt},</if>
+            <if test="phoneNo != null  and phoneNo != ''  ">phone_no = #{phoneNo},</if>
+            <if test="email != null  and email != ''  ">email = #{email},</if>
+            <if test="personType != null  and personType != ''  ">person_type = #{personType},</if>
+            <if test="personName != null  and personName != ''  ">person_name = #{personName},</if>
+            <if test="personSex != null  and personSex != ''  ">person_sex = #{personSex},</if>
+            <if test="nickName != null  and nickName != ''  ">nick_name = #{nickName},</if>
+            <if test="headPic != null  and headPic != ''  ">head_pic = #{headPic},</if>
+            <if test="cardType != null  and cardType != ''  ">card_type = #{cardType},</if>
+            <if test="cardNo != null  and cardNo != ''  ">card_no = #{cardNo},</if>
+            <if test="orderNo != null  ">order_no = #{orderNo},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <!--根据ID删除单个对象-->	
+	<delete id="deletePersonById" parameterType="Long">
+        delete from aefsys_person where id = #{id}
+    </delete>
+</mapper>

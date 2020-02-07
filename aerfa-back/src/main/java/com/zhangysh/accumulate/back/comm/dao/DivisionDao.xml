@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.comm.dao.DivisionDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="divisionResult" type="AefcommDivision" >
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="name"    column="name"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="parentCode"    column="parent_code"    />
+        <result property="parentName"    column="parent_name"    />
+        <result property="shortName"    column="short_name"    />
+        <result property="level"    column="level"    />
+        <result property="mark"    column="mark"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectDivision">
+        select id, code, name, parent_id, parent_code, parent_name, short_name, level, mark, remark, create_by, create_time, update_by, update_time from aefcomm_division
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getDivisionById" parameterType="Long" resultMap="divisionResult">
+        <include refid="selectDivision"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listDivision" parameterType="AefcommDivision" resultMap="divisionResult">
+        <include refid="selectDivision"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+			<if test="code != null and code != ''"> and code like concat('%',#{code},'%')  </if>
+			<if test="name != null and name != ''"> and name like concat('%',#{name},'%')  </if>
+            <if test="parentId != null  "> and parent_id = #{parentId}</if>
+            <if test="parentCode != null  and parentCode != ''  "> and parent_code = #{parentCode}</if>
+            <if test="parentName != null  and parentName != ''  "> and parent_name = #{parentName}</if>
+            <if test="shortName != null  and shortName != ''  "> and short_name = #{shortName}</if>
+            <if test="level != null  "> and level = #{level}</if>
+            <if test="mark != null  "> and mark = #{mark}</if>
+            <if test="remark != null  and remark != ''  "> and remark = #{remark}</if>
+            <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
+            <if test="createTime != null  "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null  "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+
+	<!--行政区划区划代码唯一性字符检测-->
+	<select id="checkCodeUnique" parameterType="AefcommDivision" resultMap="divisionResult">
+        <include refid="selectDivision"/>
+		<where>
+		    <if test="id != null ">and id != #{id}</if>
+			<if test="code != null and code != ''"> and code = #{code} </if>
+		</where>
+	</select>
+
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertDivision" parameterType="AefcommDivision">
+        insert into aefcomm_division
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="code != null  and code != ''  ">code,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="parentId != null  ">parent_id,</if>
+			<if test="parentCode != null  and parentCode != ''  ">parent_code,</if>
+			<if test="parentName != null  and parentName != ''  ">parent_name,</if>
+			<if test="shortName != null  and shortName != ''  ">short_name,</if>
+			<if test="level != null  ">level,</if>
+			<if test="mark != null  ">mark,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="code != null  and code != ''  ">#{code},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="parentId != null  ">#{parentId},</if>
+			<if test="parentCode != null  and parentCode != ''  ">#{parentCode},</if>
+			<if test="parentName != null  and parentName != ''  ">#{parentName},</if>
+			<if test="shortName != null  and shortName != ''  ">#{shortName},</if>
+			<if test="level != null  ">#{level},</if>
+			<if test="mark != null  ">#{mark},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateDivision" parameterType="AefcommDivision">
+        update aefcomm_division
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null  and code != ''  ">code = #{code},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="parentId != null  ">parent_id = #{parentId},</if>
+            <if test="parentCode != null  and parentCode != ''  ">parent_code = #{parentCode},</if>
+            <if test="parentName != null  and parentName != ''  ">parent_name = #{parentName},</if>
+            <if test="shortName != null  and shortName != ''  ">short_name = #{shortName},</if>
+            <if test="level != null  ">level = #{level},</if>
+            <if test="mark != null  ">mark = #{mark},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteDivisionById" parameterType="Long">
+        delete from aefcomm_division where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deleteDivisionByIds" parameterType="String">
+        delete from aefcomm_division where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>

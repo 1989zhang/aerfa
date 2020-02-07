@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.ConfigDataDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="configDataResult" type="AefsysConfigData" >
+        <result property="id"    column="id"    />
+        <result property="dataCode"    column="data_code"    />
+        <result property="dataValue"    column="data_value"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectConfigData">
+        select id, data_code, data_value, order_no, remark, create_by, create_time, update_by, update_time from aefsys_config_data
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getConfigDataById" parameterType="Long" resultMap="configDataResult">
+        <include refid="selectConfigData"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listConfigData" parameterType="AefsysConfigData" resultMap="configDataResult">
+        <include refid="selectConfigData"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+			<if test="dataCode != null and dataCode != ''"> and data_code like concat('%',#{dataCode},'%')  </if>
+			<if test="dataValue != null and dataValue != ''"> and data_value like concat('%',#{dataValue},'%')  </if>
+            <if test="orderNo != null  "> and order_no = #{orderNo}</if>
+			<if test="remark != null and remark != ''"> and remark like concat('%',#{remark},'%')}  </if>
+            <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
+            <if test="createTime != null  "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null  "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+
+	<!--配置参数编码唯一性字符检测-->
+	<select id="checkDataCodeUnique" parameterType="AefsysConfigData" resultMap="configDataResult">
+        <include refid="selectConfigData"/>
+		<where>
+		    <if test="id != null ">and id != #{id}</if>
+			<if test="dataCode != null and dataCode != ''"> and data_code = #{dataCode} </if>
+		</where>
+	</select>
+	
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertConfigData" parameterType="AefsysConfigData">
+        insert into aefsys_config_data
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="dataCode != null  and dataCode != ''  ">data_code,</if>
+			<if test="dataValue != null  and dataValue != ''  ">data_value,</if>
+			<if test="orderNo != null  ">order_no,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="dataCode != null  and dataCode != ''  ">#{dataCode},</if>
+			<if test="dataValue != null  and dataValue != ''  ">#{dataValue},</if>
+			<if test="orderNo != null  ">#{orderNo},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateConfigData" parameterType="AefsysConfigData">
+        update aefsys_config_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="dataCode != null  and dataCode != ''  ">data_code = #{dataCode},</if>
+            <if test="dataValue != null  and dataValue != ''  ">data_value = #{dataValue},</if>
+            <if test="orderNo != null  ">order_no = #{orderNo},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteConfigDataById" parameterType="Long">
+        delete from aefsys_config_data where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deleteConfigDataByIds" parameterType="String">
+        delete from aefsys_config_data where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>

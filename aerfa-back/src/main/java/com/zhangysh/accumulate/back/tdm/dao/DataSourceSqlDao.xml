@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.tdm.dao.DataSourceSqlDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="dataSourceSqlResult" type="AeftdmDataSourceSql" >
+        <result property="id"    column="id"    />
+        <result property="templateId"    column="template_id"    />
+        <result property="explainName"    column="explain_name"    />
+        <result property="sqlText"    column="sql_text"    />
+        <result property="fillType"    column="fill_type"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectDataSourceSql">
+        select id, template_id, explain_name, sql_text, fill_type, remark, create_by, create_time, update_by, update_time from aeftdm_data_source_sql
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getDataSourceSqlById" parameterType="Long" resultMap="dataSourceSqlResult">
+        <include refid="selectDataSourceSql"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listDataSourceSql" parameterType="AeftdmDataSourceSql" resultMap="dataSourceSqlResult">
+        <include refid="selectDataSourceSql"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="templateId != null  "> and template_id = #{templateId}</if>
+			<if test="explainName != null and explainName != ''"> and explain_name like concat('%',#{explainName},'%')  </if>
+            <if test="sqlText != null  and sqlText != ''  "> and sql_text = #{sqlText}</if>
+            <if test="fillType != null  and fillType != ''  "> and fill_type = #{fillType}</if>
+            <if test="remark != null  and remark != ''  "> and remark = #{remark}</if>
+            <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
+            <if test="createTime != null  "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null  "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+
+
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertDataSourceSql" parameterType="AeftdmDataSourceSql" useGeneratedKeys="true" keyProperty="id">
+        insert into aeftdm_data_source_sql
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="templateId != null  ">template_id,</if>
+			<if test="explainName != null  and explainName != ''  ">explain_name,</if>
+			<if test="sqlText != null  and sqlText != ''  ">sql_text,</if>
+			<if test="fillType != null  and fillType != ''  ">fill_type,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="templateId != null  ">#{templateId},</if>
+			<if test="explainName != null  and explainName != ''  ">#{explainName},</if>
+			<if test="sqlText != null  and sqlText != ''  ">#{sqlText},</if>
+			<if test="fillType != null  and fillType != ''  ">#{fillType},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateDataSourceSql" parameterType="AeftdmDataSourceSql">
+        update aeftdm_data_source_sql
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="templateId != null  ">template_id = #{templateId},</if>
+            <if test="explainName != null  and explainName != ''  ">explain_name = #{explainName},</if>
+            <if test="sqlText != null  and sqlText != ''  ">sql_text = #{sqlText},</if>
+            <if test="fillType != null  and fillType != ''  ">fill_type = #{fillType},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteDataSourceSqlById" parameterType="Long">
+        delete from aeftdm_data_source_sql where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deleteDataSourceSqlByIds" parameterType="String">
+        delete from aeftdm_data_source_sql where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>

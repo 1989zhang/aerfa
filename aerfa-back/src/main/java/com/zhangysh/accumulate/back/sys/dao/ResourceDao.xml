@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.ResourceDao">
+	
+	<resultMap id="resourceResult" type="AefsysResource" >
+		<id     property="id"             column="id"    />
+		<result property="parentId"       column="parent_id"/>
+		<result property="resourceName"   column="resource_name"/>
+		<result property="resourceType"   column="resource_type"/>
+		<result property="status"         column="status"/>
+		<result property="identify"     column="identify"/>
+		<result property="url"  		  column="url"/>
+		<result property="icon"           column="icon"/>
+		<result property="orderNo"        column="order_no"/>
+		<result property="remark"         column="remark"/>
+		<result property="createBy"       column="create_by"/>
+		<result property="createTime"     column="create_time"/>
+		<result property="updateBy"       column="update_by"/>
+		<result property="updateTime"     column="update_time"/>
+	</resultMap>
+	
+	<sql id="selectResource">
+       select id,resource_name,parent_id,resource_type,status,identify,url,icon,order_no,remark,
+       create_by,create_time,update_by,update_time 
+       from aefsys_resource 
+    </sql>
+    
+	<select id="getResourceById" parameterType="Long" resultMap="resourceResult">
+		<include refid="selectResource"/>
+		<where> and id = #{id}</where>
+	</select>
+	
+	<select id="listTopResource" resultMap="resourceResult">
+        <include refid="selectResource"/>
+		<where>
+			and (parent_id is null or parent_id=0)
+		</where>
+	</select>
+		
+	<select id="listResource" parameterType="AefsysResource" resultMap="resourceResult">
+        <include refid="selectResource"/>
+		<where>
+		    <if test="parentId != null and parentId != ''"> and parent_id = #{parentId}</if>
+			<if test="resourceName != null and resourceName != ''"> and resource_name like concat('%',#{resourceName},'%')</if>
+		    <if test="resourceType != null and resourceType != ''"> and resource_type like concat('%',#{resourceType},'%')</if>
+		    <if test="status != null "> and status = #{status}</if>
+		    <if test="identify != null and identify != ''"> and identify like concat('%',#{identify},'%')</if>
+
+		    <if test="params != null and params.startTime != ''"><!-- 开始时间检索 -->
+				and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.startTime},'%y%m%d')
+		    </if>
+			<if test="params != null and params.endTime != ''"><!-- 结束时间检索 -->
+				and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+			</if>
+		</where>
+	</select>
+	
+	<select id="checkResourceUnique" parameterType="AefsysResource" resultMap="resourceResult">
+        <include refid="selectResource"/>
+		<where>
+		    <if test="id != null ">and id != #{id}</if>
+			<if test="identify != null and identify != ''"> and identify = #{identify} </if>
+		</where>
+	</select>
+	
+	<!--根据对象和属性insert新增对象-->
+    <insert id="insertResource" parameterType="AefsysResource">
+        insert into aefsys_resource
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="parentId != null  ">parent_id,</if>
+			<if test="resourceName != null  and resourceName != ''  ">resource_name,</if>
+			<if test="resourceType != null  and resourceType != ''  ">resource_type,</if>
+			<if test="status != null  ">status,</if>
+			<if test="identify != null  and identify != ''  ">identify,</if>
+			<if test="url != null  and url != ''  ">url,</if>
+			<if test="icon != null  and icon != ''  ">icon,</if>
+			<if test="orderNo != null  ">orderNo,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="parentId != null  ">#{parentId},</if>
+			<if test="resourceName != null  and resourceName != ''  ">#{resourceName},</if>
+			<if test="resourceType != null  and resourceType != ''  ">#{resourceType},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="identify != null  and identify != ''  ">#{identify},</if>
+			<if test="url != null  and url != ''  ">#{url},</if>
+			<if test="icon != null  and icon != ''  ">#{icon},</if>
+			<if test="orderNo != null  ">#{orderNo},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateResource" parameterType="AefsysResource">
+        update aefsys_resource
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null  ">parent_id = #{parentId},</if>
+            <if test="resourceName != null  and resourceName != ''  ">resource_name = #{resourceName},</if>
+            <if test="resourceType != null  and resourceType != ''  ">resource_type = #{resourceType},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="identify != null  and identify != ''  ">identify = #{identify},</if>
+            <if test="url != null  and url != ''  ">url = #{url},</if> 
+            <if test="icon != null  and icon != ''  ">icon = #{icon},</if>
+            <if test="orderNo != null  ">order_no = #{orderNo},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteResourceById" parameterType="Long">
+        delete from aefsys_resource where id = #{id}
+    </delete>
+</mapper>

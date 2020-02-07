@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.webim.dao.TipsInfoDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="tipsInfoResult" type="AefwebimTipsInfo" >
+        <result property="id"    column="id"    />
+        <result property="fromPersonId"    column="from_person_id"    />
+        <result property="toPersonId"    column="to_person_id"    />
+        <result property="type"    column="type"    />
+        <result property="content"    column="content"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="sendTime"    column="send_time"    />
+        <result property="handleTime"    column="handle_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectTipsInfo">
+        select id, from_person_id, to_person_id, type, content, remark, status, send_time, handle_time, create_by, create_time, update_by, update_time from aefwebim_tips_info
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getTipsInfoById" parameterType="Long" resultMap="tipsInfoResult">
+        <include refid="selectTipsInfo"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listTipsInfo" parameterType="AefwebimTipsInfo" resultMap="tipsInfoResult">
+        <include refid="selectTipsInfo"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="fromPersonId != null  "> and from_person_id = #{fromPersonId}</if>
+            <if test="toPersonId != null  "> and to_person_id = #{toPersonId}</if>
+            <if test="type != null  and type != ''  "> and type = #{type}</if>
+            <if test="content != null  and content != ''  "> and content = #{content}</if>
+            <if test="remark != null  and remark != ''  "> and remark = #{remark}</if>
+            <if test="status != null  "> and status = #{status}</if>
+            <if test="sendTime != null  "> and send_time = #{sendTime}</if>
+            <if test="handleTime != null  "> and handle_time = #{handleTime}</if>
+            <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
+            <if test="createTime != null  "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null  "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+
+    <!--根据主键查询多个对象-->
+	<select id="listBypksTipsInfo" parameterType="String" resultMap="tipsInfoResult">
+        <include refid="selectTipsInfo"/>
+        where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertTipsInfo" parameterType="AefwebimTipsInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into aefwebim_tips_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="fromPersonId != null  ">from_person_id,</if>
+			<if test="toPersonId != null  ">to_person_id,</if>
+			<if test="type != null  and type != ''  ">type,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="status != null  ">status,</if>
+			<if test="sendTime != null  ">send_time,</if>
+			<if test="handleTime != null  ">handle_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="fromPersonId != null  ">#{fromPersonId},</if>
+			<if test="toPersonId != null  ">#{toPersonId},</if>
+			<if test="type != null  and type != ''  ">#{type},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="sendTime != null  ">#{sendTime},</if>
+			<if test="handleTime != null  ">#{handleTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateTipsInfo" parameterType="AefwebimTipsInfo">
+        update aefwebim_tips_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fromPersonId != null  ">from_person_id = #{fromPersonId},</if>
+            <if test="toPersonId != null  ">to_person_id = #{toPersonId},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="sendTime != null  ">send_time = #{sendTime},</if>
+            <if test="handleTime != null  ">handle_time = #{handleTime},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteTipsInfoById" parameterType="Long">
+        delete from aefwebim_tips_info where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deleteTipsInfoByIds" parameterType="String">
+        delete from aefwebim_tips_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhangysh.accumulate.back.ufs.dao.UploadFileBlobDao">
+    <!--要返回对象带id必须配置useGeneratedKeys="true" keyProperty="id"-->
+	<insert id="insertUploadFileBlob" parameterType="AefufsUploadFileBlob"  useGeneratedKeys="true" keyProperty="id">
+ 		insert into aefufs_upload_file_blob
+ 		<trim prefix="(" suffix=")" suffixOverrides=",">
+ 			<if test="fileName != null and fileName != ''">file_name,</if>
+ 			<if test="fileType != null and fileType != ''">file_type,</if>
+ 			<if test="fileBlob != null">file_blob,</if>
+ 			<if test="implName != null and implName != ''">impl_name,</if>
+ 			<if test="createBy != null and createBy != ''">create_by,</if>
+ 			<if test="createTime != null">create_time</if>
+ 		</trim>
+ 		<trim prefix="values (" suffix=")" suffixOverrides=",">
+ 			<if test="fileName != null and fileName != ''">#{fileName},</if>
+ 			<if test="fileType != null and fileType != ''">#{fileType},</if>
+ 			<if test="fileBlob != null">#{fileBlob},</if>
+ 			<if test="implName != null and implName != ''">#{implName},</if>
+ 			<if test="createBy != null and createBy != ''">#{createBy},</if>
+ 			<if test="createTime != null">#{createTime}</if>
+ 		</trim>
+	</insert>
+</mapper>
+
+	

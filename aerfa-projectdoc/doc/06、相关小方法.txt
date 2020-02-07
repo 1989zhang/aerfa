@@ -1,0 +1,2 @@
+---------- ---------- ----------PDM导出SQL---------- ---------- ----------
+菜单 Database -->Generate Database -->preview

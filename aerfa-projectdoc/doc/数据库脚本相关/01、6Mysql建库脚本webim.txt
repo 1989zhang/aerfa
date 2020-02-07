@@ -1,0 +1,75 @@
+﻿/*====================================================================*/
+/* table: aefwebim_person 即时通讯拓展的个人表                                     */
+/*====================================================================*/
+create table aefwebim_person (
+  id                  int(11)    not null  auto_increment   comment 'id标识',
+  person_id           int(11)                               comment '个人id',
+  signature           varchar(64)                           comment '心情签名',
+  birthday            timestamp                             comment '出生日期',
+  job                 varchar(32)                           comment '职业',
+  constellation       varchar(16)                           comment '星座',
+  blood_type          varchar(16)                           comment '血型',
+  wechat              varchar(32)                           comment '微信号',
+  qq_number           varchar(32)                           comment 'QQ号',
+  create_by           varchar(64)                           comment '创建人员名称',
+  create_time         timestamp                             comment '创建时间',
+  update_by           varchar(64)                           comment '更新人员名称',
+  update_time         timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='个人表'; 
+
+/*====================================================================*/
+/* table: aefwebim_friend  好友表                                     */
+/*====================================================================*/
+create table aefwebim_friend (
+  id                  int(11)    not null  auto_increment   comment 'id标识',
+  person_id           int(11)                               comment '个人id',
+  friend_id           int(11)                               comment '好友id',
+  relation_status     int(11)                               comment '关系状态0刚添加1已通过2黑名单',
+  mark                varchar(64)                           comment '好友标注',
+  group_id            int(11)                               comment '所属群组id',
+  order_no            int(11)                               comment '排序号',
+  create_by           varchar(64)                           comment '创建人员名称',
+  create_time         timestamp                             comment '创建时间',
+  update_by           varchar(64)                           comment '更新人员名称',
+  update_time         timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='好友表';
+
+/*====================================================================*/
+/* table: aefwebim_group  群组表                                      */
+/*====================================================================*/
+create table aefwebim_group (
+  id             int(11)    not null  auto_increment   comment 'id标识',
+  group_name     varchar(64)                           comment '群组名称',
+  group_type     int(11)                               comment '群类型1好友群2普通群',
+  owner_id       int(11)                               comment '所属拥有者id',
+  order_no       int(11)                               comment '排序号',
+  avatar         varchar(128)                          comment '群组头像路径',
+  approval       int(11)                               comment '批准加群',
+  create_by      varchar(64)                           comment '创建人员名称',
+  create_time    timestamp                             comment '创建时间',
+  update_by      varchar(64)                           comment '更新人员名称',
+  update_time    timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='群组表';
+
+/*====================================================================*/
+/* table: aefwebim_tips_info  提示消息表                                  */
+/*====================================================================*/
+create table aefwebim_tips_info (
+  id               int(11)    not null  auto_increment   comment 'id标识',
+  from_person_id   int(11)                               comment '消息来源',
+  to_person_id     int(11)                               comment '消息目标',
+  type             varchar(32)                           comment '消息类型',
+  content          varchar(256)                          comment '消息内容',
+  remark           varchar(128)                          comment '请求备注',
+  status           int(11)                               comment '消息状态1已处理0未处理',
+  send_time        timestamp                             comment '消息发送时间',
+  handle_time      timestamp                             comment '消息处理时间',
+  create_by        varchar(64)                           comment '创建人员名称',
+  create_time      timestamp                             comment '创建时间',
+  update_by        varchar(64)                           comment '更新人员名称',
+  update_time      timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='提示消息表';

@@ -1,0 +1,70 @@
+﻿/*====================================================================*/
+/* table: aefiqa_category 知识库知识分类                               */
+/*====================================================================*/
+create table aefiqa_category (
+  id                  int(11)    not null  auto_increment   comment 'id标识',
+  category_name       varchar(64)                           comment '分类名称',
+  belong_org_id       int(11)                               comment '所属单位',
+  order_no            int(11)                               comment '排序号',
+  create_by           varchar(64)                           comment '创建人员名称',
+  create_time         timestamp                             comment '创建时间',
+  update_by           varchar(64)                           comment '更新人员名称',
+  update_time         timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='知识类别'; 
+
+/*====================================================================*/
+/* table: aefiqa_question  知识库提问问题                             */
+/*====================================================================*/
+create table aefiqa_question (
+  id                  int(11)    not null  auto_increment   comment 'id标识',
+  belong_org_id       int(11)                               comment '所属单位',
+  category_id         int(11)                               comment '所属分类',
+  answer_id           int(11)                               comment '解答回答id',
+  content             varchar(256)                          comment '问题内容',
+  standard            int(11)                               comment '标准问题1是标准0否相似',
+  hit_counts          int(11)                               comment '命中次数',
+  help_counts         int(11)                               comment '有帮助次数',
+  no_help_counts      int(11)                               comment '没有有帮助次数',
+  status              int(11)                               comment '状态1有效0无效',
+  order_no            int(11)                               comment '排序号',
+  create_by           varchar(64)                           comment '创建人员名称',
+  create_time         timestamp                             comment '创建时间',
+  update_by           varchar(64)                           comment '更新人员名称',
+  update_time         timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='提问问题';
+
+/*====================================================================*/
+/* table: aefiqa_answer  知识库解答回答                             */
+/*====================================================================*/
+create table aefiqa_answer (
+  id                  int(11)    not null  auto_increment   comment 'id标识',
+  belong_org_id       int(11)                               comment '所属单位',
+  category_id         int(11)                               comment '所属分类',
+  content             varchar(512)                          comment '回答内容',
+  create_by           varchar(64)                           comment '创建人员名称',
+  create_time         timestamp                             comment '创建时间',
+  update_by           varchar(64)                           comment '更新人员名称',
+  update_time         timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='解答回答';
+
+/*====================================================================*/
+/* table: aefiqa_message  智能问答消息记录                             */
+/*====================================================================*/
+create table aefiqa_message (
+  id                  int(11)    not null  auto_increment   comment 'id标识',
+  from_person_id      int(11)                               comment '消息来源',
+  to_person_id        int(11)                               comment '消息目标',
+  type                varchar(32)                           comment '消息类型IntellectService',
+  content             varchar(256)                          comment '消息内容',
+  status              int(11)                               comment '消息状态1已读0未读',
+  send_time           timestamp                             comment '消息发送时间',
+  handle_time         timestamp                             comment '消息处理时间',
+  create_by           varchar(64)                           comment '创建人员名称',
+  create_time         timestamp                             comment '创建时间',
+  update_by           varchar(64)                           comment '更新人员名称',
+  update_time         timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='智能问答消息记录';

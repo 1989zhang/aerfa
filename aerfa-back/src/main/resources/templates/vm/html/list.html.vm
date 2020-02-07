@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated">
+        <!--搜索区域开始-->
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+            	<form role="form" class="form-inline" id="form-${classname}-search"> 		
+#foreach($column in $columns)
+#if(${column.searchColumn})	                
+	                <div class="form-group">
+	                    <label>${column.columnComment}：</label>
+#if(${column.pullDicColumn})
+						<select class="form-control form-selectdown" id="${column.attrname}" name="${column.attrname}" th:with="${column.attrname}DicList=${@dic.getDic('${column.pullDicType}')}">
+		         	         <option value="">所有</option>
+		         			 <option th:each="dic:${${column.attrname}DicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+	                    </select> 
+#else
+						<input type="text" id="${column.attrname}" name="${column.attrname}" class="form-control">
+#end	                   
+	                </div>
+#end
+#end	                
+	                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search($('form').attr('id'))"><i class="fa fa-search"></i>&nbsp;查询</a>
+            	</form>
+            </div>
+        </div>
+        <!--搜索区域结束-->
+        <div class="ibox float-e-margins">
+        	<div class="ibox-content">
+                 <div id="toolbar" >
+                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.add()">
+                          <i class="glyphicon glyphicon-plus" aria-hidden="true" ></i>新增
+                      </button>
+                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.batRemove()">
+                          <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>删除
+                      </button>
+                  </div>
+              
+                  <table id="bootstrap-table"></table>
+        	</div>
+        </div>
+    </div>
+    <div th:include="sys/include :: footer"></div>
+
+    <script th:inline="javascript">
+#foreach($column in $columns)
+#if(${column.tableShowColumn} && ${column.pullDicColumn})	    
+    	var ${column.attrname}Datas = [[${@dic.getDic('${column.pullDicType}')}]];
+#end
+#end    
+        //初始化参数和数据
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/to_add",
+                updateUrl: prefix + "/to_edit/{id}",
+                removeUrl: prefix + "/remove/{id}",
+                modalName: "${tableComment}",
+                id:'${primaryKey.attrname}',//id字段
+                columns: [{
+		            checkbox: true
+		        },
+#foreach($column in $columns)
+#if(${column.tableShowColumn})	 
+				{
+					field : '${column.attrname}', 
+					title : '${column.columnComment}',
+					width: '${column.tableShowColumnWidth}%',
+					align: 'center',
+#if(${column.pullDicColumn})
+					formatter: function(value, row, index) {
+		            	return $.table.formatDicLabel(${column.attrname}Datas, value);
+		            }
+#end
+				},
+#end				
+#end
+		        {
+		            title: '操作',
+		            align: 'center',
+		            width: '10%',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.edit(\'' + row.${primaryKey.attrname} + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs" href="#" onclick="$.operate.remove(\'' + row.${primaryKey.attrname} + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.OrgDao">
+	
+	<resultMap id="orgResult" type="AefsysOrg" >
+		<id     property="id"          column="id"    />
+		<result property="parentId"    column="parent_id"/>
+		<result property="fullName"    column="full_name"/>
+		<result property="shortName"   column="short_name"/>
+		<result property="orderNo"     column="order_no"/>
+		<result property="cardType"    column="card_type"/>
+		<result property="cardNo"      column="card_no"/>
+		<result property="phoneNo"     column="phone_no"/>
+		<result property="address"     column="address"/>
+		<result property="status"      column="status"/>
+		<result property="remark"      column="remark"/>
+		<result property="createBy"    column="create_by"/>
+		<result property="createTime"  column="create_time"/>
+		<result property="updateBy"    column="update_by"/>
+		<result property="updateTime"  column="update_time"/>
+	</resultMap>
+	
+	<sql id="selectOrg">
+       select id,parent_id,full_name,short_name,order_no,card_type,card_no,phone_no,
+       address,status,remark,create_by,create_time,update_by,update_time
+       from aefsys_org 
+    </sql>
+    
+	<select id="getOrgById" parameterType="Long" resultMap="orgResult">
+		<include refid="selectOrg"/>
+		<where> and id = #{id}</where>
+	</select>
+	
+	<select id="listTopOrg" resultMap="orgResult">
+        <include refid="selectOrg"/>
+		<where>
+			and (parent_id is null or parent_id=0)
+		</where>
+	</select>
+		
+	<select id="listOrg" parameterType="AefsysOrg" resultMap="orgResult">
+        <include refid="selectOrg"/>
+		<where>
+			<if test="fullName != null and fullName != ''"> and full_name like concat('%',#{fullName},'%')</if>
+		    <if test="shortName != null and shortName != ''"> and short_name like concat('%',#{shortName},'%')</if>
+		    <if test="cardNo != null and cardNo != ''"> and card_no like concat('%',#{cardNo},'%')</if>
+		    <if test="status != null"> and status = #{status}</if>
+		    <if test="parentId != null and parentId != ''"> and parent_id = #{parentId}</if>
+		     
+		    <if test="params != null and params.startTime != ''"><!-- 开始时间检索 -->
+				and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.startTime},'%y%m%d')
+		    </if>
+			<if test="params != null and params.endTime != ''"><!-- 结束时间检索 -->
+				and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+			</if>
+		</where>
+	</select>
+	            
+	<select id="checkOrgUnique" parameterType="AefsysOrg" resultMap="orgResult">
+        <include refid="selectOrg"/>
+		<where>
+		    <if test="id != null ">and id != #{id}</if>
+			<if test="fullName != null and fullName != ''"> and full_name = #{fullName} </if>
+		</where>
+	</select>
+	
+	<!--根据对象和属性insert新增对象-->
+    <insert id="insertOrg" parameterType="AefsysOrg">
+        insert into aefsys_org
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="parentId != null  ">parent_id,</if>
+			<if test="fullName != null  and fullName != ''  ">full_name,</if>
+			<if test="shortName != null  and shortName != ''  ">short_name,</if>
+			<if test="orderNo != null  ">order_no,</if>
+			<if test="cardType != null  and cardType != ''  ">card_type,</if>
+			<if test="cardNo != null  and cardNo != ''  ">card_no,</if>
+			<if test="phoneNo != null  and phoneNo != ''  ">phone_no,</if>
+			<if test="address != null  and address != ''  ">address,</if>
+			<if test="status != null  ">status,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="parentId != null  ">#{parentId},</if>
+			<if test="fullName != null  and fullName != ''  ">#{fullName},</if>
+			<if test="shortName != null  and shortName != ''  ">#{shortName},</if>
+			<if test="orderNo != null  ">#{orderNo},</if>
+			<if test="cardType != null  and cardType != ''  ">#{cardType},</if>
+			<if test="cardNo != null  and cardNo != ''  ">#{cardNo},</if>
+			<if test="phoneNo != null  and phoneNo != ''  ">#{phoneNo},</if>
+			<if test="address != null  and address != ''  ">#{address},</if>
+			<if test="status != null  ">#{status},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateOrg" parameterType="AefsysOrg">
+        update aefsys_org
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null  ">parent_id = #{parentId},</if>
+            <if test="fullName != null  and fullName != ''  ">full_name = #{fullName},</if>
+            <if test="shortName != null  and shortName != ''  ">short_name = #{shortName},</if>
+            <if test="orderNo != null  ">order_no = #{orderNo},</if>
+            <if test="cardType != null  and cardType != ''  ">card_type = #{cardType},</if>
+            <if test="cardNo != null  and cardNo != ''  ">card_no = #{cardNo},</if>
+            <if test="phoneNo != null  and phoneNo != ''  ">phone_no = #{phoneNo},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="status != null  ">status = #{status},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+    
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteOrgById" parameterType="Long">
+        delete from aefsys_org where id = #{id}
+    </delete>
+</mapper>

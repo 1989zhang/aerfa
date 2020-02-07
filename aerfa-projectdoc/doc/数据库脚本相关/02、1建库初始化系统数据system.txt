@@ -1,0 +1,28 @@
+/*==========初始化部门aefsys_org数据==========*/
+insert into aefsys_org values (1, null, '部门根节点', '部门根节点', 1, null, null, null, null, 1, '系统部门根节点', null, null, null, null);
+
+/*==========初始化人员aefsys_person数据==========*/
+insert into aefsys_person values (1, 1, 'sysmaster', 'sysmaster', null, null, '', null, '超级管理员', '1', '超级管理员', null, null, null, null, 1, '系统超级管理员', null, null, null, null);
+insert into aefsys_person values (10, 1, 'webimaixf', 'webimaixf', null, null, '', null, '智能小法', '1', '智能小法', null, null, null, null, 1, 'webim智能机器人小法', null, null, null, null);
+
+/*==========初始化资源菜单按钮aefsys_resource数据==========*/
+insert into aefsys_resource values (1, null, '阿尔法后台管理系统', 'system', 1, null, '#', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (2, 1, '系统管理', 'content', 1, null, '#', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (3, 2, '部门管理', 'menu', 1, null, '/sys/org/to_org', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (4, 3, '部门查询', 'button', 1, 'system:org:view', '#', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (5, 3, '部门新增', 'button', 1, 'system:org:add', '#', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (6, 3, '部门修改', 'button', 1, 'system:org:edit', '#', null, 3, null, null, null, null, null);
+insert into aefsys_resource values (7, 3, '部门删除', 'button', 1, 'system:org:remove', '#', null, 4, null, null, null, null, null);
+insert into aefsys_resource values (8, 2, '人员管理', 'menu', 1, null, '/sys/person/to_person', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (9, 8, '人员查询', 'button', 1, 'system:person:view', '#', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (10, 8, '人员新增', 'button', 1, 'system:person:add', '#', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (11, 8, '人员修改', 'button', 1, 'system:person:edit', '#', null, 3, null, null, null, null, null);
+insert into aefsys_resource values (12, 8, '人员删除', 'button', 1, 'system:person:remove', '#', null, 4, null, null, null, null, null);
+insert into aefsys_resource values (13, 8, '重置密码', 'button', 1, 'system:person:resetPassword', '#', null, 5, null, null, null, null, null);
+
+/*==========初始化基本配置aefsys_config_data数据==========*/
+insert into aefsys_config_data values ('1', 'fullSystemName', 'α管理系统', '1', '系统名称全称', '超级管理员', '2019-05-24 00:00:00', null, null);
+insert into aefsys_config_data values ('2', 'shortSystemName', '阿尔法', '2', '系统名称简称', '超级管理员', '2019-05-24 00:00:00', null, null);
+insert into aefsys_config_data values ('3', 'divisionCode', '000000', '3', '系统使用者所在行政区划代码', '超级管理员', '2019-05-24 00:00:00', null, null);
+insert into aefsys_config_data values ('4', 'picIpAddress', 'http://127.0.0.1/', '4', '头像图片的nginx访问地址', '超级管理员', '2019-05-24 00:00:00', null, null);
+insert into aefsys_config_data values ('5', 'templateFolderPath', 'd://testaerfa//template//', '5', 'template报表模板相关存储路径配置参数要带结尾符', '超级管理员', '2019-06-20 00:00:00', null, null);

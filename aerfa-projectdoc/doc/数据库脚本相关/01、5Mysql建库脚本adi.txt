@@ -1,0 +1,18 @@
+/*====================================================================*/
+/* table: aefadi_data_source   数据源表                                                                                 */
+/*====================================================================*/
+create table aefadi_data_source (
+  id             int(11)    not null  auto_increment   comment 'id标识',
+  code   		 varchar(64)                           comment '数据源编码',
+  name      	 varchar(64)                           comment '数据源名称',
+  url            varchar(128)                          comment '数据源地址',
+  username        varchar(64)                          comment '登录账号',
+  password       varchar(64)                           comment '登录密码',
+  type           varchar(32)						   comment '类型mysql,oracle',
+  remark         varchar(256)                          comment '备注描述',
+  create_by      varchar(64)                           comment '创建人员名称',
+  create_time    timestamp                             comment '创建时间',
+  update_by      varchar(64)                           comment '更新人员名称',
+  update_time    timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='数据源表';

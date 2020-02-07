@@ -1,0 +1,35 @@
+package ${package}.transobj;
+
+import java.io.Serializable;
+
+import ${package}.dataobj.${doclassName};
+import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
+
+/**
+ * ${tableComment}数据传输查询条件和分页对象
+ * 
+ * @author ${author}
+ * @date ${datetime}
+ */
+public class ${doclassName}Dto implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
+	private ${doclassName} ${classname};
+	private BsTablePageInfo pageInfo;
+	
+	public ${doclassName} get${className}() {
+		return ${classname};
+	}
+	public void set${className}(${doclassName} ${classname}) {
+		this.${classname} = ${classname};
+	}
+	
+	public BsTablePageInfo getPageInfo() {
+		return pageInfo;
+	}
+
+	public void setPageInfo(BsTablePageInfo pageInfo) {
+		this.pageInfo = pageInfo;
+	}
+}

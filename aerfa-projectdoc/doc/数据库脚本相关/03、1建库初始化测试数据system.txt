@@ -1,0 +1,8 @@
+/*==========初始化部门aefsys_org测试数据==========*/
+insert into aefsys_org values (2, 1, '阿尔法集团四川分中心', '阿尔法四川', 1, null, null, null, null, 1, null, null, '2018-10-31 12:20:59', null, null);
+insert into aefsys_org values (3, 1, '阿尔法集团北京分中心', '阿尔法北京', 2, null, null, null, null, 1, null, null, '2018-11-1 12:21:11', null, null);
+insert into aefsys_org values (4, 2, '阿尔法成都办事处', '阿尔法成都', 1, null, null, null, null, 1, null, null, '2018-11-2 12:21:16', null, null);
+insert into aefsys_org values (5, 3, '阿尔法朝阳办事处', '阿尔法朝阳', 1, null, null, null, null, 1, null, null, '2018-10-29 10:07:31', null, null);
+
+/*==========初始化操作日志aefsys_oper_log测试数据==========*/
+insert into aefsys_oper_log values (1, 'info', 'manage', null, 'sysmaster', '部门根节点', '2019-4-27 18:51:25', null, '后台管理系统', '系统管理', '部门管理', '删除', null, null, 'com.zhangysh.accumulate.back.sys.controller.OrgController.deleteOrgById()', '37');

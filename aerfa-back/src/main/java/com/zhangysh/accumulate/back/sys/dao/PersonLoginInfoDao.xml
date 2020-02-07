@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.PersonLoginInfoDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="personLoginInfoResult" type="AefsysPersonLoginInfo" >
+        <result property="id"    column="id"    />
+        <result property="personId"    column="person_id"    />
+        <result property="personName"    column="person_name"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="loginVoucher"    column="login_voucher"    />
+        <result property="loginIp"    column="login_ip"    />
+        <result property="serverUiIp"    column="server_ui_ip"    />
+        <result property="loginLocation"    column="login_location"    />
+        <result property="loginInTime"    column="login_in_time"    />
+        <result property="loginOutTime"    column="login_out_time"    />
+        <result property="browserType"    column="browser_type"    />
+        <result property="osType"    column="os_type"    />
+        <result property="passFailNum"    column="pass_fail_num"    />
+        <result property="lastAccessTime"    column="last_access_time"    />
+        <result property="expireTime"    column="expire_time"    />
+        <result property="loginStatus"    column="login_status"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectPersonLoginInfo">
+        select id, person_id, person_name, nick_name, login_voucher, login_ip, server_ui_ip,login_location, login_in_time, login_out_time, browser_type, os_type, pass_fail_num, last_access_time, expire_time, login_status from aefsys_person_login_info
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getPersonLoginInfoById" parameterType="Long" resultMap="personLoginInfoResult">
+        <include refid="selectPersonLoginInfo"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据个人ID查询单个个人登录信息-->
+    <select id="getPersonLoginInfoByPersonId" parameterType="Long" resultMap="personLoginInfoResult">
+        <include refid="selectPersonLoginInfo"/>
+        where person_id = #{personId}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listPersonLoginInfo" parameterType="AefsysPersonLoginInfo" resultMap="personLoginInfoResult">
+        <include refid="selectPersonLoginInfo"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="personId != null  "> and person_id = #{personId}</if>
+            <if test="personName != null  and personName != ''  "> and person_name = #{personName}</if>
+            <if test="nickName != null  and nickName != ''  "> and nick_name = #{nickName}</if>
+            <if test="loginVoucher != null  and loginVoucher != ''  "> and login_voucher = #{loginVoucher}</if>
+            <if test="loginIp != null  and loginIp != ''  "> and login_ip = #{loginIp}</if>
+            <if test="serverUiIp != null  and serverUiIp != ''  "> and server_ui_ip = #{serverUiIp}</if>
+            <if test="loginLocation != null  and loginLocation != ''  "> and login_location = #{loginLocation}</if>
+            <if test="loginInTime != null  "> and login_in_time = #{loginInTime}</if>
+            <if test="loginOutTime != null  "> and login_out_time = #{loginOutTime}</if>
+            <if test="browserType != null  and browserType != ''  "> and browser_type = #{browserType}</if>
+            <if test="osType != null  and osType != ''  "> and os_type = #{osType}</if>
+            <if test="passFailNum != null  "> and pass_fail_num = #{passFailNum}</if>
+            <if test="lastAccessTime != null  "> and last_access_time = #{lastAccessTime}</if>
+            <if test="expireTime != null  "> and expire_time = #{expireTime}</if>
+            <if test="loginStatus != null  "> and login_status = #{loginStatus}</if>
+        </where>
+    </select>
+     
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertPersonLoginInfo" parameterType="AefsysPersonLoginInfo">
+        insert into aefsys_person_login_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="personId != null  ">person_id,</if>
+			<if test="personName != null  and personName != ''  ">person_name,</if>
+			<if test="nickName != null  and nickName != ''  ">nick_name,</if>
+			<if test="loginVoucher != null  and loginVoucher != ''  ">login_voucher,</if>
+			<if test="loginIp != null  and loginIp != ''  ">login_ip,</if>
+			<if test="serverUiIp != null  and serverUiIp != ''  ">server_ui_ip,</if>
+			<if test="loginLocation != null  and loginLocation != ''  ">login_location,</if>
+			<if test="loginInTime != null  ">login_in_time,</if>
+			<if test="loginOutTime != null  ">login_out_time,</if>
+			<if test="browserType != null  and browserType != ''  ">browser_type,</if>
+			<if test="osType != null  and osType != ''  ">os_type,</if>
+			<if test="passFailNum != null  ">pass_fail_num,</if>
+			<if test="lastAccessTime != null  ">last_access_time,</if>
+			<if test="expireTime != null  ">expire_time,</if>
+			<if test="loginStatus != null  ">login_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="personId != null  ">#{personId},</if>
+			<if test="personName != null  and personName != ''  ">#{personName},</if>
+			<if test="nickName != null  and nickName != ''  ">#{nickName},</if>
+			<if test="loginVoucher != null  and loginVoucher != ''  ">#{loginVoucher},</if>
+			<if test="loginIp != null  and loginIp != ''  ">#{loginIp},</if>
+			<if test="serverUiIp != null  and serverUiIp != ''  ">#{serverUiIp},</if>
+			<if test="loginLocation != null  and loginLocation != ''  ">#{loginLocation},</if>
+			<if test="loginInTime != null  ">#{loginInTime},</if>
+			<if test="loginOutTime != null  ">#{loginOutTime},</if>
+			<if test="browserType != null  and browserType != ''  ">#{browserType},</if>
+			<if test="osType != null  and osType != ''  ">#{osType},</if>
+			<if test="passFailNum != null  ">#{passFailNum},</if>
+			<if test="lastAccessTime != null  ">#{lastAccessTime},</if>
+			<if test="expireTime != null  ">#{expireTime},</if>
+			<if test="loginStatus != null  ">#{loginStatus},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updatePersonLoginInfo" parameterType="AefsysPersonLoginInfo">
+        update aefsys_person_login_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="personId != null  ">person_id = #{personId},</if>
+            <if test="personName != null  and personName != ''  ">person_name = #{personName},</if>
+            <if test="nickName != null  and nickName != ''  ">nick_name = #{nickName},</if>
+            <if test="loginVoucher != null  and loginVoucher != ''  ">login_voucher = #{loginVoucher},</if>
+            <if test="loginIp != null  and loginIp != ''  ">login_ip = #{loginIp},</if>
+            <if test="serverUiIp != null  and serverUiIp != ''  ">server_ui_ip = #{serverUiIp},</if>
+            <if test="loginLocation != null  and loginLocation != ''  ">login_location = #{loginLocation},</if>
+            <if test="loginInTime != null  ">login_in_time = #{loginInTime},</if>
+            <if test="loginOutTime != null  ">login_out_time = #{loginOutTime},</if>
+            <if test="browserType != null  and browserType != ''  ">browser_type = #{browserType},</if>
+            <if test="osType != null  and osType != ''  ">os_type = #{osType},</if>
+            <if test="passFailNum != null  ">pass_fail_num = #{passFailNum},</if>
+            <if test="lastAccessTime != null  ">last_access_time = #{lastAccessTime},</if>
+            <if test="expireTime != null  ">expire_time = #{expireTime},</if>
+            <if test="loginStatus != null  ">login_status = #{loginStatus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deletePersonLoginInfoById" parameterType="Long">
+        delete from aefsys_person_login_info where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deletePersonLoginInfoByIds" parameterType="String">
+        delete from aefsys_person_login_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>
