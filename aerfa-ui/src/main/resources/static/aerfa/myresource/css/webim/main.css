@@ -1,0 +1,12 @@
+/**********我的webim拓展样式**********/
+.layui-layim-min{
+	margin-left: -10px !important;
+	margin-top: -40px !important;
+}
+.layui-layim{
+	margin-left: -10px !important;
+	margin-top: -40px !important;
+}
+.layui-layim-user {
+    cursor: pointer;
+}

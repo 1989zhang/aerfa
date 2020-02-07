@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+		<div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>redis配置参数信息</h5>
+                    </div>
+                    <div class="ibox-content">
+                    	<table id="bootstrap-table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:include="sys/include :: footer"></div>
+	<script th:src="@{/aerfa/myresource/js/support/redis/config.js}" type="text/javascript"></script>
+
+</body>
+
+</html>

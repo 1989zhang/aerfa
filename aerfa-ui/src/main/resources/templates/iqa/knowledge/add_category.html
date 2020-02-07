@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+
+<style type="text/css">
+
+</style>
+
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-category-add">
+			<input id="id" name="id" type="hidden"><!--判断唯一要用到id，避免出现undefine-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">分类名称：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="categoryName">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">显示排序：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="orderNo">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">保存</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div th:include="sys/include :: footer"></div>
+   
+	<script th:inline="javascript">
+	//校验和提交form数据方法
+	$("#form-category-add").validate({
+		rules:{
+			categoryName:{
+				required:true
+			},
+			orderNo:{
+				number:true
+			}
+		},
+		submitHandler:function(form){
+			$.operate.save(prefix + "/save_category", $('#form-category-add').serialize());
+		}
+	});
+	</script>
+</body>
+</html>

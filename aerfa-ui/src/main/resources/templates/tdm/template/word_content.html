@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+
+<head>
+	<style>
+		.ExcelOrWordContentDiv {
+		    height: 100%;
+		    overflow: scroll;
+		    overflow-x: scroll;
+		}
+		
+		.cellClick {
+		    background-color: #e6e6e6;
+		    border-color: #8c8c8c
+		}
+		
+		.excelMenuAction {
+		    font-size: 14px;
+		}
+		
+		.selectedTreeNodeShown {
+		    border: 0px;
+		    padding: 3px;
+		}
+		
+		.afterCellSetting{
+		
+		}
+		
+		.afterCellZoneSetting{
+		    background-color: #a8b8e6;
+		}
+		
+		
+		.replaceTarget {
+		    color: #5cb85c;
+		}
+		
+		.replaceTargetClick {
+		    background-color: #e6e6e6;
+		}
+		
+		.afterWordSetting {
+		
+		}
+	    .contentdivsplit{
+		    width:100%;
+		    padding-top:30px;
+		}
+		
+	</style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated">
+	    <div id="wordContentDiv">
+	         <form class="form-inline">
+	             <fieldset>
+	                 <div class="form-group">
+	                     <label>匹配符号:</label>
+	                     <select class="form-control">
+	                         <option value="\$\{\w+\}">${abc}</option>
+	                         <!--<option value="\$">$abc</option>-->
+	                     </select>
+	                 </div>
+	             </fieldset>
+	         </form>
+	         <div class="contentdivsplit"></div>
+	         <div name="wordHtml" id="wordHtml" class="ExcelOrWordContentDiv"></div>
+	     </div>
+    </div>
+    
+    <div th:include="sys/include :: footer"></div>
+    <th:block th:include="sys/include :: bootstrapmenu-js" />
+    <script th:inline="javascript">
+    var templateId = [[${templateId}]];
+    </script>
+        
+    <script type="text/javascript">
+    //其他非通用方法
+    $(document).ready(function () {
+    	//显示word预览内容
+    	var showReplaceTargetChar = function (selectValue,$ContentDiv,content) {
+	        var $HtmlDiv = $ContentDiv.find("div[name=wordHtml]");
+	        $HtmlDiv.html(content);
+	
+	        var $Spans = $HtmlDiv.find("span");
+	        $Spans.removeClass("replaceTarget");
+	        $Spans.unbind();
+	
+	        for (var x = 0; x < $Spans.length; x++) {
+	            var $OneSpan = $($Spans[x]);
+	            var spanVal = $OneSpan.html();
+	            var reg = new RegExp(selectValue);
+	            if (reg.test(spanVal)) {
+	                $OneSpan.addClass('replaceTarget');
+	            }
+	        }
+	        $(".replaceTarget").click(function () {
+	            $(".replaceTarget").removeClass('replaceTargetClick');
+	            $(this).addClass('replaceTargetClick');
+	        });
+    	};
+    	//添加左键点击菜单
+    	var initBootstrapMenu = function ($ContentDiv,content) {
+    		new BootstrapMenu(".replaceTarget", {
+	            menuEvent: 'click',
+	            fetchElementData: function ($elem) {
+	                return $elem;
+	            },
+	            actionsGroups: [
+	                ['replaceContent'], ['removeSetting']
+	            ],
+	            actions: {
+	                replaceContent: {
+	                    name: '内容替换',
+	                    classNames: 'excelMenuAction',
+	                    onClick: function ($elem) {
+	                    	showReplaceSetting($elem);
+	                    },
+	                    isEnabled: function ($elem) {
+	                        return !$elem.hasClass('afterWordSetting');
+	                    }
+	                },
+	                removeSetting: {
+	                    name: '删除配置',
+	                    classNames: 'excelMenuAction',
+	                    onClick: function ($elem) {
+	                        removeSetting($elem);
+	                        showReplaceTargetChar(selectValue,$ContentDiv,content);
+	                    },
+	                    isEnabled: function ($elem) {
+	                        return $elem.hasClass('afterWordSetting');
+	                    }
+	                }
+	            }
+        	});
+    	};
+    	
+    	var showWordTemplateFileContent = function ($ContentDiv, content) {
+    		var $OptionsSelect = $ContentDiv.find("select");
+	    	$OptionsSelect.unbind();
+	    	//初始化右键菜单
+            initBootstrapMenu($ContentDiv,content);
+	    	//显示word预览内容
+	    	$OptionsSelect.change(function () {
+            	var selectValue = $(this).val();
+            	showReplaceTargetChar(selectValue,$ContentDiv,content);
+        	});
+            showReplaceTargetChar($($OptionsSelect.find("option")[0]).val(),$ContentDiv,content);
+    	};
+    	
+     	//初始化页面获取模板内容方法
+        var initAddAndEditTemplateHtml = function (templateId) {
+     		 var url=prefix+"/template_content";
+     		 $.operate.sendAjax(url,"","","",{templateId: templateId}, function (data) {
+         		 var $WordContentDiv = $("#wordContentDiv");
+         		 showWordTemplateFileContent($WordContentDiv, data.data);
+         	 });
+     	};
+    	//开始初始化模板内容页面
+        initAddAndEditTemplateHtml(templateId);
+    });
+    
+ 	// 展示内容替换规则
+    function showReplaceSetting($elem) {
+ 		var replaceStr=$elem.html();
+ 		replaceStr = replaceStr.replace('$', '');
+ 		replaceStr = replaceStr.replace('{', '');
+ 		replaceStr = replaceStr.replace('}', '');
+        var url =  "/tdm/fill_rule" + '/to_fill_rule?templateId=' + templateId +"&locationMark="+replaceStr;
+        createMenuItem(url, "内容替换规则");
+    }
+ 
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<th:block th:include="sys/include :: treeview-css"/>
+
+<style type="text/css">
+
+</style>
+
+<body class="gray-bg top-navigation">
+	<div class="row">
+        <div class="col-sm-3">
+             <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>知识分类</h5>
+                        <div class="ibox-tools pull-right">
+			                <a class="dropdown-toggle" onclick="addCategory()" id="addCategory">
+                                <i class="fa fa-plus">添加分类</i>
+                            </a>
+                            <a class="dropdown-toggle" onclick="editCategory()" id="delCategory">
+                                <i class="fa fa-pencil-square-o">修改分类</i>
+                            </a>
+                            <a class="dropdown-toggle" onclick="delCategory()" id="delCategory">
+                                <i class="fa fa-times">删除分类</i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+						<div id="treeview" class="test"></div>
+                    </div>
+             </div>
+        </div>
+        <div class="col-sm-9 animated fadeInRight">
+        	<div class="ibox float-e-margins">
+               <div class="ibox-content">
+                   <form role="form" class="form-inline" id="form-standard-search">
+                   		<input type="hidden" id="categoryId" name="categoryId">
+                        <div class="form-group">
+                            <label>标准问法：</label>
+                            <input type="text" id="content" name="content" class="form-control">
+                        </div>
+                        <div class="form-group">
+                        	<label>状态：</label>
+                        	<select class="form-control form-selectdown" id="status" name="status" th:with="retDicList=${@dic.getDic('useable_status')}">
+       			    			<option value="">所有</option>
+       							<option th:each="dic:${retDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+                  			</select> 
+                        </div>
+                        <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search($('form').attr('id'))"><i class="fa fa-search"></i>&nbsp;查询</a>
+                    </form>
+				</div>
+            </div>
+            <div class="ibox float-e-margins">
+         	    <div class="ibox-content">
+                  <div id="toolbar" >
+                       <button type="button" class="btn btn-outline btn-default" onclick="addStandard()">
+                           <i class="glyphicon glyphicon-plus" aria-hidden="true" ></i>新增
+                       </button>
+                       <button type="button" class="btn btn-outline btn-default" onclick="$.operate.batRemove()">
+                           <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>删除
+                       </button>
+                   </div>
+                   <table id="bootstrap-table"></table>
+            	</div>
+            </div>
+        </div>
+    </div>
+	<div th:include="sys/include :: footer"></div>
+	<th:block th:include="sys/include :: treeview-js"/>
+	    
+	<script th:inline="javascript">
+	//初始化
+$(function() {
+    var defaultData;
+	$.ajax({
+	    type: "post",
+	    url: prefix + "/category_tree",
+	    dataType: "json",
+	    success: function (result) { 
+		   defaultData=result;
+		   $('#treeview').treeview({
+			   data: defaultData,
+			   onNodeSelected:  function(event, data) {//树的点击事件
+				   $("#categoryId").val(data.id);
+				   $.table.search($('form').attr('id'));
+			   }
+		   });
+	    }
+	});
+	
+	var options = {
+		      url: prefix+"/list_standard",
+		      modalName: "知识库",
+		      createUrl: prefix+"/to_add_standard/{id}",//传的是categoryId，因为替换原有必须为{id}
+		      updateUrl: prefix+"/to_edit_standard/{id}",
+		      removeUrl: prefix+"/delete_standard/{id}",
+		      id:'id',//id字段
+		      sortOrder:'desc',//默认排序规则设置
+		      columns: [{
+		      	checkbox: true
+		      },{
+		      	title: '标准问法',
+		        field: 'questionContent',
+		        width: '25%',
+		        align: "center"
+		      },{
+		      	field: 'answerContent',
+		        title: '标准答案',
+		        width: '25%',
+		        align: "center"
+		      },{
+		      	field: 'categoryName',
+		        title: '知识分类',
+		        width: '15%',
+		        align: "center"
+			  },{
+		      	field: 'hitCounts',
+		        title: '命中次数',
+		        width: '5%',
+		        align: "center"
+			  },{
+		      	field: 'helpCounts',
+		        title: '有帮助',
+		        width: '5%',
+		        align: "center"
+			  },{
+		      	field: 'noHelpCounts',
+		        title: '没有帮助',
+		        width: '5%',
+		        align: "center"
+			  },{
+	          	field: 'status',
+	            title: '状态',
+	            width: '5%',
+	            align: "center",
+	            formatter: function(value,row,index) {
+	            	if(row.status==1){
+	            		return "有效";
+	            	}else if(row.status==0){
+	            		return "无效";
+	            	}
+	            }
+	          },{
+		       title: '操作',
+		       width: '15%',
+		       align: "center",
+		       formatter: function(value,row,index) {
+		            var actions = [];
+		            actions.push('<a class="btn btn-success btn-xs true " href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit">编辑</i></a> ');
+		            actions.push('<a class="btn btn-danger btn-xs false " href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove">删除</i></a>');
+		            return actions.join('');
+		       }
+		    }]
+		};
+		$.table.init(options);
+
+});
+
+/**
+ * 添加知识分类
+ **/
+function addCategory(){
+	var url = prefix+"/to_add_category";
+	$.modal.open("添加知识分类", url);
+}
+
+/**
+ * 修改知识分类
+ **/
+function editCategory(){
+	var treeObj=$('#treeview').treeview('getSelected');
+	if(treeObj.length==0){
+		$.modal.alertWarning("请选中一条知识分类记录!");
+		return;
+	}else{
+		var url = prefix+"/to_edit_category/"+treeObj[0].id;
+		$.modal.open("修改知识分类", url);
+	}
+}
+
+/**
+ * 删除知识分类
+ **/
+function delCategory(){
+	var treeObj=$('#treeview').treeview('getSelected');
+	if(treeObj.length==0){
+		$.modal.alertWarning("请选中一条知识分类记录!");
+		return;
+	}else{
+		var url = prefix+"/delete_category/{id}";
+		$.operate.removeCommon(treeObj[0].text, url,treeObj[0].id);
+	}
+}
+
+function addStandard(){
+	var categoryId=0;
+	var treeObj=$('#treeview').treeview('getSelected');
+	if(treeObj.length>0){
+		categoryId = treeObj[0].id;
+	}
+	$.operate.add(categoryId);
+}
+	</script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<style type="text/css">
+/* 公共样式 */
+@charset "UTF-8";html{font-size:62.5%;font-family:'helvetica neue',tahoma,arial,'hiragino sans gb',Simsun,sans-serif}
+blockquote,body,button,code,dd,div,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,li,ol,p,pre,td,textarea,th,ul{margin:0;padding:0}
+body{line-height:1.333;font-size:12px}
+html,body{width: 100%;height: 100%;}
+h1,h2,h3,h4,h5,h6{font-size:100%;font-family:arial,'hiragino sans gb','microsoft yahei',Simsun,sans-serif}
+li{list-style:none}
+a:link,a:visited{text-decoration:none}
+a:hover{text-decoration:underline;color:rgba(255, 255, 0, 1)!important}
+a,article,audio,body,caption,dd,div,dl,dt,em,footer,form,header,html,i,img,label,li,menu,nav,ol,p,q,s,section,small,span,strong,table,tbody,td,tfoot,th,thead,time,tr,ul,video{margin:0;padding:0;border:0;font-size:100%;font-family:"微软雅黑";font-weight:400;vertical-align:baseline;text-decoration:none}
+a{display:inline-block;text-decoration:none}
+ol,ul{list-style:none}
+blockquote,q{quotes:none}
+blockquote:after,blockquote:before,q:after,q:before{content:'';content:none}
+table{border-collapse:collapse;border-spacing:0}
+.clear{clear:both}
+.fl{float:left}
+.fr{float:right}
+.wrapper{width:1100px;margin:0 auto}
+input:focus{outline:0}
+.clearfloat:after{display:block;clear:both;content:"";overflow:hidden;height:0}
+.clearfloat{zoom:1}
+*{padding:0;margin:0}
+img{vertical-align:top; width: 100%;}
+li{list-style:none}
+thead {
+    display: table-header-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+td, th {
+    display: table-cell;
+    vertical-align: inherit;
+}
+tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+/* 公共样式 end*/
+</style>
+<style type="text/css">
+/* 登录定义样式 */
+.login_wrap {
+	background: url(../aerfa/myresource/images/cqbackground.png) no-repeat center;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+.login_title {
+	width: 100%;
+	overflow: hidden;
+	font-size: 50px;
+	font-weight: 700;
+	color: #FFF;
+	text-align: center;
+	margin-top: 10%;
+	letter-spacing: 3px;
+}
+.login_container_wrap {
+	width: 450px;
+	height: 370px;
+	border-radius: 10px;
+	margin: 5% auto;
+}
+.login_container {
+	box-shadow: inset 0 0 5px #999;
+	border-radius: 5px;
+	width: 500px;
+	height: 340px;
+	background-color: #FFF;
+	margin: 15px auto;
+}
+.login_user, .login_password, .login_checkbox {
+	margin: 0 auto;
+	overflow: hidden;
+	width: 80%;
+	padding: 25px 47px 0 4px;
+}
+.login_select select:hover {
+	border: 1px solid rgb(6, 147, 201);
+}
+.login_select {
+	margin-top: 25px;
+	margin-left: 24px;
+	width: 180px;
+	height: 40px;
+	border-radius: 5px;
+	box-shadow: 0 0 5px #E6E6E6;
+	position: relative;
+}
+.login_select select {
+	/*清除select的边框样式 */
+	border: none;
+	/*清除select聚焦时候的边框颜色 */
+	outline: none;
+	/*将select的宽高等于div的宽高 */
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	/*隐藏select的下拉图标 */
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	/*  //通过padding-left的值让文字居中 */
+	padding-left: 30px;
+}
+/*使用伪类给select添加自己想用的图标 */
+.login_select:after {
+	float: right;
+	content: "";
+	width: 15px;
+	height: 15px;
+	background: url(../aerfa/myresource/images/st_icon_open.png) no-repeat center;
+	/*通过定位将图标放在合适的位置 */
+	position: absolute;
+	right: 5px;
+	top: 35%;
+	/*给自定义的图标实现点击下来功能 */
+	pointer-events: none;
+}
+.login_prompt {
+	margin-left: 250px;
+	height: 10px;
+	/* text-align:center; */
+	font-family: '寰蒋闆呴粦';
+	font-size: 10px;
+	color: #FF0000;
+	margin-top: -30px;
+}
+.login_user span, .login_password span {
+	margin-top: 5px;
+	width: 40px;
+	height: 40px;
+	display: block;
+	float: right;
+	text-align: center;
+	vertical-align: text-bottom;
+}
+
+.login_user span img, .login_password span img {
+	width: 20px;
+	margin-top: 3px;
+}
+
+.login_user input, .login_password input {
+	width: 355px;
+	height: 40px;
+	padding-left: 5px;
+	font-size: 14px;
+	border: none;
+	background-color: #FFF;
+}
+
+.login_btn {
+	width: 180px;
+	margin-right: 24px;
+	box-shadow: inset 0 0 5px #999;
+	border-radius: 5px;
+	float: right;
+	display: block;
+	height: 50px;
+	border: none;
+	margin-top: 50px;
+	color: #FFF;
+	font-size: 18px;
+	cursor: pointer;
+}
+
+.login_reset {
+	width: 180px;
+	margin-right: 55px;
+	box-shadow: inset 0 0 5px #999;
+	border-radius: 5px;
+	float: left;
+	display: block;
+	height: 50px;
+	border: none;
+	margin-left: 24px;
+	margin-top: -50px;
+	color: #FFF;
+	font-size: 18px;
+	cursor: pointer;
+}
+.login_reset:hover {
+	background-color: rgb(41, 171, 223);
+}
+.login_btn:hover {
+	background-color: rgb(41, 171, 223);
+}
+.login_btn {
+	background-color: rgb(6, 147, 201);
+}
+.login_reset {
+	/* background-color: #FFF; */
+	background-color: rgb(6, 147, 201);
+}
+.hvr-round-corners {
+	display: inline-block;
+	vertical-align: middle;
+	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-transition-duration: 0.3s;
+	transition-duration: 0.3s;
+	-webkit-transition-property: border-radius;
+	transition-property: border-radius;
+}
+.login_checkbox span {
+	width: 100px;
+	height: 22px;
+	display: block;
+	float: left;
+	background-color: #0782D0;
+	text-align: center;
+	vertical-align: text-bottom;
+}
+.checkbox {
+	position: relative;
+	height: 30px;
+}
+.checkbox input[type='checkbox'] {
+	position: absolute;
+	left: 110;
+	top: 0;
+	width: 22px;
+	height: 22px;
+	opacity: 0;
+}
+.checkbox label {
+	position: absolute;
+	left: 140px;
+	top: 0;
+	height: 20px;
+	line-height: 20px;
+}
+.checkbox label:before {
+	content: '';
+	position: absolute;
+	left: -30px;
+	top: 0;
+	width: 20px;
+	height: 20px;
+	border: 1px solid #ddd;
+	border-radius: 50%;
+	transition: all 0.3s ease;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+}
+
+.checkbox label:after {
+	content: '';
+	position: absolute;
+	left: -22px;
+	top: 3px;
+	width: 6px;
+	height: 12px;
+	border: 0;
+	border-right: 1px solid #fff;
+	border-bottom: 1px solid #fff;
+	background: #fff;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transition: all 0.3s ease;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+}
+
+.checkbox input[type='checkbox']:checked+label:before {
+	background: #4cd764;
+	border-color: #4cd764;
+}
+
+.checkbox input[type='checkbox']:checked+label:after {
+	background: #4cd764;
+}
+
+.divborder {
+	border: 1px solid #E6E6E6;
+	height: 40px;
+	width: 400px;
+}
+
+.divborder:hover {
+	border: 1px solid rgb(6, 147, 201);
+}
+
+input:-webkit-autofill {
+	z-index: 100;
+	-webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+/* 登录定义样式结束 */
+</style>
+
+</head>
+<body style="overflow: hidden;">
+	<div class="login_wrap">
+	    <div class="login_title">欢迎使用α管理系统 </div>
+	    <form class="login_container" action="" method="post" id="loginForm">
+		<div class="login_container_wrap">
+	        <div style="height: 20px"></div>
+	        <div class="login_user">
+	       		<div class="divborder" id="divborder1">
+					<span><img id="divborder_img" src="../aerfa/myresource/images/persongray.png"></span>
+					<input type="text" class="username" name="username" id="username" placeholder="请在此输入用户名" value="">
+				</div>
+			</div>
+			<div class="login_password">
+				<div class="divborder" id="divborder2">
+					<span><img id="divborder2_img" src="../aerfa/myresource/images/lock.png"></span>
+					<input type="password" class="password" name="password" id="password" placeholder="请在此输入密码" value="">
+				</div>
+			</div> 
+			<div class="login_select">
+			    <select onchange="show();">
+ 					<option value="1">阿尔法管理系统</option>
+			    </select>
+			</div>
+			<div class="login_prompt" style="margin-top: 10px;margin-left: 25px;"></div>
+			<input type="button" onclick="rs();" value="重　置" class="login_btn hvr-round-corners" style="margin-top: 15px;">
+			<input type="submit" name="" id="submit" value="　登　录　" class="login_reset hvr-round-corners">
+
+		</div>
+		</form>
+	</div>
+	<div style="bottom: -20px;position: absolute;width:100%;height:80px;text-align:center;z-index:5;font-family: &#39;微软雅黑&#39;;margin: 10px auto;">
+		<div style="width:100%;color:#fff;font-size:12px;line-height:2;">
+			<span style="font-size: 10px;"><img src="../aerfa/myresource/images/horn.png" alt="" style="height:12px;width:12px;padding-bottom:4px;vertical-align:middle;"> 友情提示：为获得更好的用户体验，请使用Google Chrome浏览器</span>
+			<a href="https://www.google.cn/chrome/" style="font-size: 10px;color: rgba(25, 235, 255, 1);">点击下载</a><br>
+			<span style="font-size: 10px;">© 2019-2029  阿尔法股份有限公司 版权所有 </span>
+		</div>
+	</div>
+	
+    <div th:include="sys/include :: footer"></div>
+    <script type="text/javascript">
+    $(function() {
+    	//合成事件 hover()
+    	$("#divborder1").hover(function (){
+    		$("#divborder_img").attr("src","../aerfa/myresource/images/person.png");
+    	},function (){
+    		$("#divborder_img").attr("src","../aerfa/myresource/images/persongray.png");
+    	});
+    	//合成事件 hover()
+    	$("#divborder2").hover(function (){
+    		$("#divborder2_img").attr("src","../aerfa/myresource/images/lockblue.png");
+    	},function (){
+    		$("#divborder2_img").attr("src","../aerfa/myresource/images/lock.png");
+    	});
+    });
+    </script>
+    
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<th:block th:include="sys/include :: treeview-css"/>
+
+<body class="hold-transition box box-main">
+    <div class="ibox float-e-margins">
+    	<input id="treeId"   name="treeId"    type="hidden"/>
+        <input id="treeName" name="treeName"  type="hidden"/>
+		<div class="ibox-content">
+        	<label for="keyword">关键字：</label><input type="text" class="empty" id="keyword" maxlength="50">
+		    <button class="btn" id="btn" onclick="searchNode()"> 搜索 </button>
+		    <a class="dropdown-toggle" onclick="expanTreeAll()" id="expan">
+                <i class="fa fa-chevron-down">展开</i>
+            </a>
+            <a class="dropdown-toggle" onclick="collapseTreeAll()" id="collapse">
+                <i class="fa fa-chevron-up">折叠</i>
+            </a>
+            
+			<div id="treeview" class="test"></div>
+						
+			<div class="layui-layer-btn">
+				<a class="layui-layer-btn0" th:onclick="'javascript:loadTreeToParent()'"><i class="fa fa-check"></i> 确定</a>
+				<a class="layui-layer-btn1" onclick="$.modal.close()"><i class="fa fa-close"></i> 关闭</a>
+			</div>
+        </div>
+    </div>
+
+    <div th:include="sys/include :: footer"></div>
+    <th:block th:include="sys/include :: treeview-js"/>
+	<script th:src="@{/aerfa/myresource/js/sys/org/tree.js}" type="text/javascript"></script>
+</body>
+</html>

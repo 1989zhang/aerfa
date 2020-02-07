@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-loginInfo-view" th:object="${loginInfo}">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">人员名称：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="personName" name="personName" th:field="*{personName}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">登录地点：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="loginLocation" name="loginLocation" th:field="*{loginLocation}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">登录时间：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="loginInTimeStr" name="loginInTimeStr" th:field="*{loginInTimeStr}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">退出时间：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="loginOutTimeStr" name="loginOutTimeStr" th:field="*{loginOutTimeStr}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">登录凭证：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="loginVoucher" name="loginVoucher" th:field="*{loginVoucher}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">浏览器类型：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="browserType" name="browserType" th:field="*{browserType}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">操作系统：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="osType" name="osType" th:field="*{osType}">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div th:include="sys/include :: footer"></div>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<th:block th:include="sys/include :: treeview-css"/>
+<head>
+	<style>
+		.selectedTreeNodeShown {
+    		border: 0px;
+    		padding: 3px;
+		}
+	</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated">
+        <div class="row">
+            <div class="col-sm-3">
+                 <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>数据源</h5>
+                            <div class="ibox-tools pull-right">
+							    <a class="dropdown-toggle" onclick="expanTreeAll()" id="expan">
+                                    <i class="fa fa-chevron-down">展开</i>
+                                </a>
+                                <a class="dropdown-toggle" onclick="collapseTreeAll()" id="collapse">
+                                    <i class="fa fa-chevron-up">折叠</i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+							<div id="treeview" class="test"></div>
+                        </div>
+                 </div>
+            </div>
+            <div class="col-sm-9 animated fadeInRight">
+            	<div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>插入的字段</h5>
+                        </div>
+                        <div class="ibox-content">
+							<ol class="dataSourceTreeNodeSelected">
+                			</ol>
+                			<button class="btn btn-primary btn-block m" onclick="insertSetting()"><i class="fa fa-arrow-right"></i> 下一步（设置显示字段类型）</button>
+                        </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+    <div th:include="sys/include :: footer"></div>
+    <th:block th:include="sys/include :: treeview-js"/>
+    <script th:inline="javascript">
+    var templateId = [[${templateId}]];
+    var locationMark = [[${locationMark}]];
+    </script>
+    <script th:inline="javascript">
+    //初始化
+    $(function() {
+        var defaultData;
+    	$.ajax({
+    	    type: "post",
+    	    url: "/tdm/data_source_sql/tree/"+templateId,
+    	    dataType: "json",
+    	    success: function (result) { 
+    		   defaultData=result;
+    		   $('#treeview').treeview({
+    			   data: defaultData,
+    			   showCheckbox: true,
+    			   onNodeChecked: function(event, node) {//树的勾选事件
+    				   showAndDisplayCheckedNode(true, node);
+    			   },
+    			   onNodeUnchecked: function(event, node) {//树的取消勾选事件
+    				   showAndDisplayCheckedNode(false, node);
+    			   }
+    		   });
+    		   $("#collapse").hide();
+    	    }
+    	});
+    });
+
+    //展开树
+    function expanTreeAll(){
+  	   $('#treeview').treeview('expandAll', { silent: true });
+  	   $("#expan").hide();
+  	   $("#collapse").show();
+    }
+    //折叠树
+    function collapseTreeAll(){
+       $('#treeview').treeview('collapseAll', { silent: true });
+       $("#collapse").hide();
+       $("#expan").show();
+    }
+    //显示或隐藏勾选的数据源列
+    function showAndDisplayCheckedNode(isShow, node){
+    	 var $DataSourceTreeNodeSelected = $(".dataSourceTreeNodeSelected");
+    	 if (isShow) {
+             $DataSourceTreeNodeSelected.append('<li class="selectedTreeNodeShown"  data-field-index="' + node.index  +
+                 '" nodeId="' + node.id + '" data-field-alias="' + node.text + '">' + node.text + '(' + node.attributes.DataSourceSqlName + ')</li>');
+         } else {
+             $DataSourceTreeNodeSelected.find('li[nodeId=' + node.id + ']').remove();
+         }
+    }
+    /* 打开填入字段样式设置 */
+    function insertSetting(){
+    	var checkedNodes=$('#treeview').treeview('getChecked');
+    	var nodeIds="";
+    	if(checkedNodes.length>0){
+    		for (var i= 0; i < checkedNodes.length;i++){
+    			nodeIds+=checkedNodes[i].id+",";
+            }
+       	    var url = prefix + '/to_insert_setting?templateId='+templateId+'&locationMark='+locationMark+'&nodeIds='+nodeIds;
+            $.modal.open("设置详细信息", url);
+    	}else{
+    		$.modal.msgError("请勾选填入字段！");
+    	}
+    	
+    }
+    </script>
+</body>
+</html>

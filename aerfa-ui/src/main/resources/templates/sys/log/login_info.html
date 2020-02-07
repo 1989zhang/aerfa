@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated">
+        <!--搜索区域开始-->
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+            	<form role="form" class="form-inline" id="form-personLoginInfo-search"> 		
+	                <div class="form-group">
+	                    <label>人员名称：</label>
+	                    <input type="text" id="personName" name="personName" class="form-control">
+	                </div>
+	                <div class="form-group">
+                         <label>登录状态：</label>
+                         <select class="form-control form-selectdown" id="loginStatus" name="loginStatus" th:with="loginStatusDicList=${@dic.getDic('login_status')}">
+		         	         <option value="">所有</option>
+		         			 <option th:each="dic:${loginStatusDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+	                     </select>
+                     </div>
+	                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search($('form').attr('id'))"><i class="fa fa-search"></i>&nbsp;查询</a>
+            	</form>
+            </div>
+        </div>
+        <!--搜索区域结束-->
+        <div class="ibox float-e-margins">
+        	<div class="ibox-content">     
+                  <table id="bootstrap-table"></table>
+        	</div>
+        </div>
+    </div>
+    <div th:include="sys/include :: footer"></div>
+
+    <script th:inline="javascript">
+    
+    	var loginStatusDatas = [[${@dic.getDic('login_status')}]];
+        //初始化参数和数据
+        $(function() {
+            var options = {
+                url: prefix + "/login_info_list",
+                viewUrl: prefix+ "/to_view_login_info/{id}",//查看地址
+                id:'id',//id字段
+                modalName: "登录日志",
+                showExport:false,//不开启导出功能
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'personName', 
+					title : '人员名称',
+					align: 'center'
+				},
+				{
+					field : 'loginIp', 
+					title : '登录ip',
+					align: 'center'
+				},
+				{
+					field : 'loginLocation', 
+					title : '登录地点',
+					align: 'center'
+				},
+				{
+					field : 'loginInTime', 
+					title : '登录时间',
+					align: 'center'
+				},
+				{
+					field : 'passFailNum', 
+					title : '密码错误次数',
+					align: 'center'
+				},
+				{
+					field : 'loginOutTime', 
+					title : '退出时间',
+					align: 'center'
+				},
+				{
+					field : 'lastAccessTime', 
+					title : '最新操作时间',
+					align: 'center'
+				},
+				{
+					field : 'loginStatus', 
+					title : '登录状态',
+					align: 'center',
+					formatter: function(value, row, index) {
+		            	return $.table.formatDicLabel(loginStatusDatas, value);
+		            }
+				},
+				{
+		            title: '查看',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.view(\'' + row.id + '\')"><i class="fa fa-edit"></i>详情</a> ');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+(一):layim.js自己修改过，修改内容如下：
+1:修改了"版权所有"的内容。
+2:为了拓展webim联系人好友右键菜单，根据guoshanchina php在 layim-event="chat" 附近, class="layim-前新增了  
+   id="layim-'+i.type+'{{ data.id }}"
+3:为了拓展webim联系人群组右键菜单，根据guoshanchina php在 layim-event="spread" 附近, lay-type="{{ spread }}"前新增了  
+   data-groupidx="{{ item.id }}"
+4:为了拓展webim普通群聊天面板人员右键管理,根据guoshanchina php在  <a href="javascript:;"><img src= 附近, <li data-uid="'+a.id+' 后新增了
+   id="layim-member'+a.id+'" 
+5:为了拓展查看并修改本人资料，根据 guoshanchina php在 class="layui-layim-user" 后面新增了
+   

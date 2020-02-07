@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<th:block th:include="sys/include :: editable-css"/>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated">
+    	<table id="bootstrap-table"></table>
+   		<div class="form-group">
+			<div class="form-control-static col-sm-offset-10">
+				<button onclick="saveTableData()" type="button" class="btn btn-primary">保存</button>
+				<button onclick="$.modal.close()" type="button" class="btn btn-danger" >关闭</button>
+			</div>
+		</div>
+    </div>
+    <div th:include="sys/include :: footer"></div>
+    <th:block th:include="sys/include :: editable-js"/>
+    
+    <script th:inline="javascript">
+    	var templateId = [[${templateId}]];
+    	var locationMark = [[${locationMark}]];
+    	var nodeIds = [[${nodeIds}]];
+    </script>
+    <script th:inline="javascript">
+  	//初始化参数和数据
+    $(function() {
+        var options = {
+            url: prefix + "/setting_field_list?templateId="+templateId+"&locationMark="+locationMark+"&nodeIds="+nodeIds,
+            id:'id',//id字段
+            pagination:false,
+            showRefresh:false,
+            showColumns:false,
+            showToggle:false,
+            showExport:false,
+            columns: [{
+	            checkbox: false
+	        },
+	        {
+				field : 'fieldId', 
+				title : '字段ID',
+				width: '10%',
+				align: 'center',
+			},{
+				field : 'fieldName', 
+				title : '字段名称',
+				width: '15%',
+				align: 'center',
+			},{
+                field: 'showType',
+                title: '类型',
+                width: '15%',
+                align: 'center',
+                editable: createEditTable('select','类型','data_show_type')
+            },{
+				field : 'horizontalAlign', 
+				title : '水平位置',
+				width: '15%',
+				align: 'center',
+                editable: createEditTable('select','水平位置','data_horizontal_align')
+			},{
+				field : 'fontName', 
+				title : '字体',
+				width: '15%',
+				align: 'center',
+                editable: createEditTable('select','字体','data_font_name')
+			},{
+				field : 'fontSize', 
+				title : '字号',
+				width: '15%',
+				align: 'center',
+                editable: createEditTable('select','字号','data_font_size')
+			},{
+				field : 'isBlock', 
+				title : '是否加粗',
+				width: '15%',
+				align: 'center',
+				editable: createEditTable('select','是否加粗','whether_status')
+			}]
+        };
+        $.table.init(options);
+    });
+  	
+  	function saveTableData(){
+  		var url= prefix +"/save_table_data";
+  		var refreshDataUrl="/tdm/template/to_template_content/"+templateId;
+  		var tableData=JSON.stringify($('#bootstrap-table').bootstrapTable('getData'));
+  		$.operate.sendAjax(url,"","","",{tableData:tableData,locationMark:locationMark}, function (retData) {
+  			if(retData.code==0){
+  				$.modal.alertSuccess(retData.data);
+  				window.parent.refreshMenuItem(refreshDataUrl);
+  			}else{
+  				$.modal.alertSuccess(retData.msg);
+  			}
+  		});
+  	}
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+
+<style type="text/css">
+#wrapper {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#page-wrapper {
+	padding-top:10px;
+    height: 100%;
+}
+
+#library_content {
+	padding-top:5px;
+   	height: 95%;
+}
+
+</style>
+
+<body class="gray-bg top-navigation">
+    <div id="wrapper">
+        <div id="page-wrapper" class="gray-bg">
+            <div class="row border-bottom white-bg">
+                <nav class="navbar navbar-static-top" role="navigation">
+                    <ul class="nav navbar-nav">
+                        <li id="standard">
+                            <a role="button" href="#" onclick="setLibraryContent('/iqa/knowledge/to_standard')">标准知识库</a>
+                        </li>
+                        <li>
+                            <a role="button" href="#" onclick="">|</a>
+                        </li>
+                        <li>
+                            <a role="button" href="#" onclick="setLibraryContent('/iqa/knowledge/to_unknown')">未知问题库</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="library-main" id="library_content">
+            </div>
+        </div>
+    </div>
+	<div th:include="sys/include :: footer"></div>
+
+	<script th:inline="javascript">
+
+	function setLibraryContent(dataUrl){
+		var flag = true;
+		if (dataUrl == undefined || $.trim(dataUrl).length == 0){
+			return false;
+		}
+		$('.library-main .library-frame').each(function () {
+            if ($(this).data('url') == dataUrl) {
+            	flag = false;
+            	return false;
+            }
+		});
+		if(flag){// 添加选项卡对应的iframe
+	        var str1 = '<iframe class="library-frame" width="100%" height="100%" src="' + dataUrl + '" frameborder="0" data-url="' + dataUrl + '" seamless></iframe>';
+	        $('#library_content').empty();
+	        $('#library_content').append(str1);
+		}
+		$("#standard").removeClass("active");//点开其他的把第一个删掉
+	}
+	
+	$(function() {
+		setLibraryContent('/iqa/knowledge/to_standard');
+		$("#standard").addClass("active");//默认点开第一个
+	});
+	
+	</script>
+</body>
+</html>

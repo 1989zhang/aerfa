@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<th:block th:include="sys/include :: steps-css" />
+<th:block th:include="sys/include :: chosen-css" />
+
+<style type="text/css">
+	/*由于加了一行需要重写内容高度80px一行*/
+	.wizard-big.wizard > .content {
+    	min-height: 400px;
+	}
+	/*由于下拉框被隐藏重写下拉高度100px*/
+	.chosen-container-multi .chosen-results {
+  		overflow-y: hidden;
+	}
+	.chosen-drop{
+		height: 120px;
+		overflow-y: scroll;
+	}
+</style>
+
+<body class="gray-bg">
+    <p>
+		请根据步骤和提示点击“下一步”生成代码
+	</p>
+    <form id="codeParamForm" action="/support/code/generate" class="wizard-big" th:object="${codeParam}">
+    
+        <h1>基本信息</h1>
+        <fieldset>
+            <h2>重要基本信息</h2>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <label>表名称 *</label>
+                        <input id="tableName" name="tableName" type="text" class="form-control required" th:field="*{tableName}">
+                    </div>
+                    <div class="form-group">
+                        <label>表名前缀 </label>
+                        <input id="reomveTablePrefix" name="reomveTablePrefix" type="text" class="form-control" th:field="*{reomveTablePrefix}">
+                    </div>
+                    <div class="form-group">
+                        <label>包名 *</label>
+                        <input id="packageName" name="packageName" type="text" class="form-control required" th:field="*{packageName}">
+                    </div>
+                    <div class="form-group">
+                        <label>创建者 *</label>
+                        <input id="author" name="author" type="text" class="form-control required" th:field="*{author}">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="text-center">
+                        <div style="margin-top: 20px">
+                        	<i class="fa fa-sign-in" style="font-size: 180px;color: #e5e5e5 "></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        
+        <h1>参数设置</h1>
+        <fieldset>
+            <h2>代码生成参数</h2>
+            <div class="row">
+                <div class="col-sm-12">
+					<div class="form-group">
+	                    <label>查询列 </label>
+                        <select data-placeholder="选择查询列" id="searchColumns" name="searchColumns" multiple class="chosen-select" th:with="retDicList=${@dic.getSelect('tableColumn',codeParam.tableName)}">
+                            <option th:each="dic:${retDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+                        </select>
+	                </div>
+                </div>
+                <div class="col-sm-12">
+					<div class="form-group">
+	                    <label>唯一验证列 </label>
+                        <select data-placeholder="选择唯一验证列" id="onlyCheckColumns" name="onlyCheckColumns" multiple class="chosen-select" th:with="retDicList=${@dic.getSelect('tableColumn',codeParam.tableName)}">
+                            <option th:each="dic:${retDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+                        </select>
+	                </div>
+                </div>
+                <div class="col-sm-12">
+					<div class="form-group">
+	                    <label>列表展示列 </label>
+                        <select data-placeholder="选择列表展示列" id="tableShowColumns" name="tableShowColumns" multiple class="chosen-select" th:with="retDicList=${@dic.getSelect('tableColumn',codeParam.tableName)}">
+                            <option th:each="dic:${retDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+                        </select>
+	                </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <h1>确认完成</h1>
+        <fieldset>
+            <h2>提示</h2>
+            <div class="text-center" style="margin-top: 5px">
+                <h3 class="text-muted">代码将以zip包导出；由于是基于阿尔法项目构建，所以导入实际项目需略作修改。</h3>
+            </div>
+            <div style="margin-top:40px">
+                <h4 class="text-danger">&nbsp;下拉字典列必须和数据字典类型按照顺序一一对应，建议先维护数据字典。</h4>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+					<div class="form-group">
+	                    <label>下拉字典列 </label>
+                        <select data-placeholder="选择下拉字典列" id="pullDicColumns" name="pullDicColumns" multiple class="chosen-select" th:with="retDicList=${@dic.getSelect('tableColumn',codeParam.tableName)}">
+                            <option th:each="dic:${retDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+                        </select>
+	                </div>
+                </div>
+                <div class="col-sm-12">
+					<div class="form-group">
+	                    <label>对应数据字典类型 </label>
+                        <select data-placeholder="选择对应数据字典类型" id="pullDicTypeColumns" name="pullDicTypeColumns" multiple class="chosen-select" th:with="retDicList=${@dic.getSelect('dicType','')}">
+                            <option th:each="dic:${retDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+                        </select>
+	                </div>
+                </div>
+            </div>
+            
+        </fieldset>
+    </form>
+
+    <div th:include="sys/include :: footer"></div>
+    <th:block th:include="sys/include :: steps-js" />
+    <th:block th:include="sys/include :: chosen-js" />
+    
+    <script type="text/javascript">
+    $(document).ready(function () {
+    	//下一步验证提示
+        $("#codeParamForm").steps({
+            bodyTag: "fieldset",
+            onStepChanging: function (event, currentIndex, newIndex) {
+            	var form = $(this);
+                return form.valid();
+            },
+            onStepChanged: function (event, currentIndex, priorIndex) {
+            },
+            onFinishing: function (event, currentIndex) {
+            	
+            	//为了排除都没选的情况，所以判断有点儿复杂，找出未一一对应的情况
+            	var pullDicColumnsStr=$.common.trim($("#pullDicColumns").val());
+            	var pullDicTypeColumnsStr=$.common.trim($("#pullDicTypeColumns").val());	
+
+            	if(pullDicColumnsStr.length==0&&pullDicTypeColumnsStr.length!=0){
+            		$.modal.alertError("下拉字典列和数据字典类型未一一对应！");
+            		return false;
+            	}
+            	if(pullDicColumnsStr.length!=0&&pullDicTypeColumnsStr.length==0){
+            		$.modal.alertError("下拉字典列和数据字典类型未一一对应！");
+            		return false;
+            	}
+                var pullDicColumnsArr=pullDicColumnsStr.split(",");
+                var pullDicTypeColumnsArr=pullDicTypeColumnsStr.split(",");
+                if(pullDicColumnsArr.length!=pullDicTypeColumnsArr.length){
+                	$.modal.alertError("下拉字典列和数据字典类型未一一对应！");
+                	return false;
+                }
+                
+                var form = $(this);
+                return form.valid();
+            },
+            onFinished: function (event, currentIndex) {
+                var form = $(this);
+                form.submit();
+            },
+            onCanceled: function (event) { 
+            	$.modal.close();
+            }
+        });
+        // 多选下拉选项
+        $("#searchColumns").chosen({
+            width: "100%"
+        });
+        $("#onlyCheckColumns").chosen({
+            width: "100%"
+        });
+        $("#tableShowColumns").chosen({
+            width: "100%"
+        });
+        $("#pullDicColumns").chosen({
+            width: "100%"
+        });
+        $("#pullDicTypeColumns").chosen({
+            width: "100%"
+        });
+        
+    });
+    </script>
+</body>
+
+</html>

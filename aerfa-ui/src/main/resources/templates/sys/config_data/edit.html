@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<body class="white-bg">
+
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-configData-add" th:object="${configData}">
+			<input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">参数编码：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="dataCode" name="dataCode" th:field="*{dataCode}"/>
+				</div>
+			</div>	
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">参数值：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="dataValue" name="dataValue" th:field="*{dataValue}"/>
+				</div>
+			</div>	
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">排序号：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="orderNo" name="orderNo" th:field="*{orderNo}"/>
+				</div>
+			</div>	
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">备注描述：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="remark" name="remark" th:field="*{remark}"/>
+				</div>
+			</div>	
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">保存</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+
+	</div>
+    <div th:include="sys/include :: footer"></div>
+    
+    <script th:inline="javascript">
+		$("#form-configData-add").validate({
+			rules:{
+				dataCode:{
+					required:true,
+					remote: {
+                		url: prefix + "/check_data_code_unique",
+                		type: "post",
+                		dataType: "json",
+                		data: {
+                			"id" : function() {
+                        		return $("input[name='id']").val();
+                    		},
+                			"dataCode" : function() {
+                        		return $("input[name='dataCode']").val();
+                    		}
+                		},
+                		dataFilter: function(data, type) {
+                			if ($.common.parseJson(data).code == 0) return true;
+                    		else return false;
+                		}
+            		}
+				},
+			},
+			messages: {
+				"dataCode": {
+           		 	remote: "参数编码已经存在"
+        		}
+    		},
+			submitHandler: function(form) {
+				$.operate.save(prefix + "/save_add", $('#form-configData-add').serialize());
+			}
+		});
+	</script>
+</body>
+</html>

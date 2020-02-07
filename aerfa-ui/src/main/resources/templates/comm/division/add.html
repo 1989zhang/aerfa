@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-division-add" th:object="${division}">
+			<input id="id" name="id" type="hidden"><!--判断唯一要用到id，避免出现undefine-->
+			<input id="parentId" name="parentId" type="hidden" th:field="*{parentId}"/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">父级区划：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="parentName" name="parentName" readonly="readonly" th:field="*{parentName}"/>
+				</div>
+			</div>
+		    <div class="form-group">
+				<label class="col-sm-3 control-label">区划代码：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="code" name="code">
+				</div>
+			</div>
+		    <div class="form-group">
+				<label class="col-sm-3 control-label">区划名称：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="name" name="name">
+				</div>
+			</div>
+		    <div class="form-group">
+				<label class="col-sm-3 control-label">区划简称：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="shortName" name="shortName">
+				</div>
+			</div>
+		    <div class="form-group">
+				<label class="col-sm-3 control-label">区划等级：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="level" name="level" th:with="levelDicList=${@dic.getDic('division_level')}">
+		         		<option th:each="dic:${levelDicList}" th:text="${dic.fullName}" th:value="${dic.code}" th:field="*{level}"></option>
+	                </select> 
+				</div>
+			</div>
+		    <div class="form-group">
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="remark" name="remark">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">保存</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="sys/include :: footer"></div>
+
+    <script th:inline="javascript">
+		$("#form-division-add").validate({
+			rules:{
+				code:{
+					required:true,
+					remote: {
+                		url: prefix + "/check_code_unique",
+                		type: "post",
+                		dataType: "json",
+                		data: {
+                			"id" : function() {
+                        		return $("input[name='id']").val();
+                    		},
+                			"code" : function() {
+                        		return $("input[name='code']").val();
+                    		}
+                		},
+                		dataFilter: function(data, type) {
+                			if ($.common.parseJson(data).code == 0) return true;
+                    		else return false;
+                		}
+            		}
+				},
+			},
+			messages: {
+				"code": {
+           		 	remote: "区划代码已经存在"
+        		}
+    		},
+			submitHandler: function(form) {
+				$.operate.save(prefix + "/save_add", $('#form-division-add').serialize());
+			}
+		});
+	</script>
+	
+</body>
+</html>

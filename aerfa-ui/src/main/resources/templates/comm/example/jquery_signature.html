@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+
+<style type="text/css">
+	div {
+		margin-top:0.5em;
+		margin-bottom:0.5em;
+	}
+	input {
+		padding: .5em;
+		margin: .5em;
+	}
+	select {
+		padding: .5em;
+		margin: .5em;
+	}
+	
+	#signatureparent {
+		color:darkblue;
+		background-color:darkgrey;
+		/*max-width:600px;*/
+		padding:20px;
+	}
+	#signatureparent2 {
+		color:darkblue;
+		background-color:darkgrey;
+		padding:10px;
+	}
+	/*This is the div within which the signature canvas is fitted*/
+	#signature {
+		border: 2px dotted black;
+		background-color:lightgrey;
+	}
+	#signature2 {
+		border: 2px dotted black;
+		background-color:lightgrey;
+	}
+	/* Drawing the 'gripper' for touch-enabled devices */ 
+	html.touch #content {
+		float:left;
+		width:100%;
+	}
+</style>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+    	<!--第一个image-->
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+	            <div class="row">
+		            <div class="col-sm-6">
+		            	<div id="content">
+							<div id="signatureparent">
+								<div>提示：这是个转为image类型的电子签名。</div>
+								<div id="signature"></div></div>
+							<div id="tools" align="center"></div>
+						</div>
+		            </div>
+		            <div class="col-sm-6 animated fadeInRight">
+		            	<div id="displayarea"></div>
+		            </div>
+		        </div>
+		        <div class="row">
+		            <div class="col-sm-6">
+		            	<div id="content">
+							<div id="signatureparent2">
+								<div>提示：这是个转为svg的电子签名。</div>
+								<div id="signature2"></div></div>
+							<div id="tools2" align="center"></div>
+						</div>
+		            </div>
+		            <div class="col-sm-6 animated fadeInRight">
+		            	<div id="displayarea2"></div>
+		            </div>
+		        </div>
+            </div>
+        </div>
+    </div>
+	<div th:include="sys/include :: footer"></div>
+	<th:block th:include="sys/include :: signature-js"/>
+
+<script th:inline="javascript">
+(function($){
+	$(document).ready(function() {
+		//This is the part where jSignature is initialized.
+		var $sigdiv = $("#signature").jSignature({'UndoButton':false});
+		var $tools = $('#tools') ;
+	
+		$('<input type="button" value="重新签名">').bind('click', function(e){
+			$sigdiv.jSignature('reset')
+		}).appendTo($tools);
+		
+		$('<input type="button" value="确认签名">').bind('click', function(e){
+			uploadSignImage($sigdiv.jSignature('getData','image'));
+		}).appendTo($tools);
+		
+		
+		//第二个svg
+		//This is the part where jSignature is initialized.
+		var $sigdiv2 = $("#signature2").jSignature({'UndoButton':false});
+		var $tools2 = $('#tools2') ;
+		$('<input type="button" value="重新签名">').bind('click', function(e){
+			$sigdiv2.jSignature('reset')
+		}).appendTo($tools2);
+		$('<input type="button" value="确认签名">').bind('click', function(e){
+			uploadSignSvg($sigdiv2.jSignature('getData','svg'));
+		}).appendTo($tools2);
+	
+	})
+})(jQuery);
+
+//点击上传签名方法
+function uploadSignImage(signImage){
+	var $displayarea = $('#displayarea') ;
+	$displayarea.empty();
+	var i = new Image();
+	i.src = "data:" + signImage[0] + "," + signImage[1];
+	$(i).appendTo($displayarea); // append the image (SVG) to DOM.
+	
+	//$(signImage).appendTo($displayarea);
+	/*var formData = new FormData(); 
+	formData.append('signImage', signImage);  //添加图片信息的参数
+	$.ajax({
+        type: "POST",
+        url: baseUrl+'elecsign/save_sign',
+        data:formData,
+        processData: false, // 告诉jQuery不要去处理发送的数据
+        contentType: false, // 告诉jQuery不要去设置Content-Type请求
+        async: false,
+        cache: false, //上传文件不需要缓存
+        success: function(data) {
+        	layer.open({
+        		  offset: ['100px','200px'],
+        		  title: '提示信息',
+        		  content:data,
+        		  btn: ['确认'],
+        		  yes: function(index, layero){
+        			  opener.doViewFile();
+        	          window.close();  
+        		  },
+        		  cancel: function(){ 
+        		    return false;
+        		  }
+        		});
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("上传失败，请检查网络后重试");
+        }
+    });*/
+}
+
+function uploadSignSvg(signSvg){
+	var $displayarea2 = $('#displayarea2') ;
+	$displayarea2.empty();
+	$displayarea2.append(signSvg[1]);//显示后面的即可
+}
+</script>
+</body>
+</html>

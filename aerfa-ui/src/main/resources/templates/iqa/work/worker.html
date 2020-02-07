@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-7">
+            <div class="ibox float-e-margins">
+            	<div class="ibox-title">
+                    <h5>客服列表</h5>
+                    <div class="ibox-tools pull-right">
+		                <a class="dropdown-toggle" onclick="addCategory()" id="addCategory">
+                           <i class="fa fa-plus">刷新</i>
+                        </a>
+                     </div>
+                </div>
+         	    <div class="ibox-content">
+                   <table id="bootstrap-table"></table>
+            	</div>
+            </div>
+        </div>
+        <div class="col-sm-5">
+         	<div class="ibox float-e-margins">
+            	<div class="ibox-title">
+                    <h5>工作概览</h5>
+                </div>
+         	    <div class="ibox-content">
+                   <div class="row">
+                        <div class="col-xs-4">
+                            <small class="stats-label">待处理</small>
+                            <h4>8条</h4>
+                        </div>
+                   </div>
+            	</div>
+            	<div class="ibox-content">
+                   <div class="row">
+                        <div class="col-xs-4">
+                            <small class="stats-label">当条处理</small>
+                            <h4>18条</h4>
+                        </div>
+                   </div>
+            	</div>
+            	<div class="ibox-content">
+                   <div class="row">
+                        <div class="col-xs-4">
+                            <small class="stats-label">当月处理</small>
+                            <h4>198条</h4>
+                        </div>
+                   </div>
+            	</div>
+            </div>
+        </div>
+    </div>
+	</div>
+	<div th:include="sys/include :: footer"></div>
+	<script th:inline="javascript">
+	//初始化
+$(function() {
+	var options = {
+		      url: prefix+"/list",
+		      modalName: "知识库",
+		      createUrl: prefix+"/to_add/{id}",//传的是orgid，因为替换原有必须为{id}
+		      updateUrl: prefix+"/to_edit/{id}",
+		      removeUrl: prefix+"/remove/{id}",
+		      id:'id',//id字段
+		      sortOrder:'desc',//默认排序规则设置
+		      showRefresh:false,
+		      showColumns:false,
+		      showToggle:false,
+		      showExport:false,
+		      columns: [{
+		      	checkbox: false
+		      },{
+		      	title: '标准问法',
+		        field: 'content',
+		        width: '25%',
+		        align: "center"
+		      },{
+		      	field: 'cardNo',
+		        title: '标准答案',
+		        width: '25%',
+		        align: "center"
+		      },{
+		      	field: 'cardNo',
+		        title: '知识分类',
+		        width: '15%',
+		        align: "center"
+			  },{
+		      	field: 'phoneNo',
+		        title: '命中次数',
+		        width: '5%',
+		        align: "center"
+			  },{
+		      	field: 'phoneNo',
+		        title: '有帮助',
+		        width: '5%',
+		        align: "center"
+			  },{
+		      	field: 'phoneNo',
+		        title: '没有帮助',
+		        width: '5%',
+		        align: "center"
+			  },{
+	          	field: 'status',
+	            title: '状态',
+	            width: '5%',
+	            align: "center",
+	            formatter: function(value,row,index) {
+	            	if(row.status==1){
+	            		return "启用";
+	            	}else if(row.status==0){
+	            		return "关闭";
+	            	}
+	            }
+	          }]
+		};
+		$.table.init(options);
+});
+	</script>
+</body>
+</html>

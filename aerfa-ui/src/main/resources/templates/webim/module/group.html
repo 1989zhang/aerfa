@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+
+<style type="text/css">
+	.mt15 {
+	    padding-top: 15px;
+	}
+	.layui-form-label {
+	    float: left;
+	    display: block;
+	    width: 100px;
+	    font-weight: 400;
+	    line-height: 20px;
+	    text-align: right;
+	    padding: 9px 15px;
+	}
+</style>
+
+<body>	    
+<form class="layui-form layui-row mt15" action="">
+  <div class="layui-form-item layui-col-xs11">
+    <label class="layui-form-label">群名称</label>
+    <div class="layui-input-block">
+      <input type="text" name="groupName" id="groupName" lay-verify="required" autocomplete="off" placeholder="为你们的群取个给力的名字吧！" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item layui-col-xs11">
+    <label class="layui-form-label">群简介</label>
+    <div class="layui-input-block">
+      <input type="text" name="des" id="des" lay-verify="required" autocomplete="off" placeholder="简单介绍一下吧！" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item layui-col-xs11">
+    <label class="layui-form-label">群规模</label>
+    <div class="layui-input-block">
+		<input type="radio" name="number" value="200" title="200人" >
+		<input type="radio" name="number" value="500" title="500人" checked="">    	
+		<input type="radio" name="number" value="1000" title="1000人">    	
+    </div>
+  </div>  
+  <div class="layui-form-item layui-col-xs11">
+    <label class="layui-form-label">加群验证</label>
+    <div class="layui-input-block">
+		<input type="radio" name="approval" value="1" title="需要验证">
+		<input type="radio" name="approval" value="-1" title="无需验证" checked="">    	
+    </div>
+  </div>    
+  <div class="layui-form-item layui-col-xs10 layui-col-xs-offset1 pt30">
+    <div class="layui-input-block">
+      <a lay-submit class="layui-btn btncolor sure" >确认创建</a>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>    
+</form>
+
+	<div th:include="sys/include :: footer"></div>
+	<script th:inline="javascript">
+		var sid=[[${sid}]];
+	</script>
+	
+<script th:inline="javascript">
+layui.use(['form','layim','laypage'], function(socket){
+  var layim = layui.layim
+  , layer = layui.layer
+  ,laytpl = layui.laytpl
+  ,form = layui.form
+  ,$ = layui.jquery
+  ,laypage = layui.laypage
+  ,param =  location.search;
+  
+  var url = prefix + "/get_information?id="+[[${id}]]+"&type="+[[${type}]];  //获得URL参数。
+  $.get(url, {}, function(data){
+    var res = eval('(' + data + ')');
+    if(res.code != 0){
+        return layer.msg(res.msg);
+    } 
+    var html = laytpl(LAY_tpl.innerHTML).render({
+      data: res.data,
+      mine: 100
+    });
+    $('#LAY_view').html(html);
+    
+    $('body').on('click', '.sure', function () {//添加好友
+        var othis = $(this);
+		var data = {
+			des:$("#des").val(),
+			groupName:$("#groupName").val(),
+			number:$("input[name='number']:checked").val(),
+			approval:$("input[name='approval']:checked").val(),
+		};         
+        commitGroupInfo(othis,data);       
+    });
+  });
+});
+
+
+
+function commitGroupInfo(othis,data){
+    if (!data.groupName) {
+        return false;
+    }
+    var validateTotalUrl= prefix +'/validate_total/'+sid;
+    $.post( validateTotalUrl , {}, function(res){
+        var resData = eval('(' + res + ')');
+        if(resData.code == 0){
+        	var saveAddUrl= prefix +'/save_add';
+            $.post(saveAddUrl, {groupName: data.groupName}, function(respSaveData){
+                var respData = eval('(' + respSaveData + ')');
+                if(respData.code == 0){
+                	layer.confirm('建群成功成功！', {icon: 3, title:'提示'}, function(index){
+                		//将群 追加到主面板
+                        var avatar = './uploads/person/'+respData.data.groupid+'.jpg'; 
+                        var default_avatar = '/aerfa/myresource/images/default_group.jpg';
+                        parent.parent.layui.layim.addList({
+                            type: 'group'
+                            , avatar:default_avatar //好友头像
+                            , groupname: data.groupName //群名称
+                            , id: respData.data.groupid //群id
+                        });
+                        parent.layer.close(layer.index);
+                	});
+                }else{
+                    return layer.msg(resData.msg);
+                }
+            });
+            //conn.createGroupNew(options);
+        }else{
+            return layer.msg(resData.msg);
+        }
+        layer.close(layer.index);
+    });
+}
+
+
+</script>
+
+</body>
+</html>

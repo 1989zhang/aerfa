@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-noteCalendar-add" th:object="${noteCalendar}">
+			<input id="id" name="id" type="hidden" th:field="*{id}"/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">开始日期：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="startDate" th:field="*{startDate}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">结束日期：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="endDate" th:field="*{endDate}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">日程内容：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" name="mark" th:field="*{mark}">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-8">
+					<button type="submit" class="btn btn-primary">保存</button>
+					<button onclick="$.modal.close()" class="btn btn-warning" type="button">关闭</button>
+					<button onclick="delNoteCalendar()" class="btn btn-danger" type="button">删除</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div th:include="sys/include :: footer"></div>
+	<script th:inline="javascript">
+		function delNoteCalendar(){
+			var id = $("#id").val();
+			var url= prefix + "/remove/"+id;
+			var data = { "ids": id };
+			$.operate.save(url,data);
+		}
+	</script>
+</body>
+</html>

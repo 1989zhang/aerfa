@@ -1,0 +1,20 @@
+//校验和提交form数据方法
+$("#form-redis-storage-add").validate({
+	rules:{
+		parmCode:{
+			required:true
+		},
+		expireTime:{
+			required:true
+		},
+		type:{
+			required:true
+		},
+		parmValue:{
+			required:true
+		}
+	},
+	submitHandler:function(form){
+		$.operate.save(prefix + "/save_add_storage", $('#form-redis-storage-add').serialize());
+	}
+});

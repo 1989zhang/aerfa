@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<body class="white-bg">
+
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-template-add" th:object="${template}">
+			<input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">模板名称：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="explainName" name="explainName" th:field="*{explainName}"/>
+				</div>
+			</div>	
+			<div class="form-group">
+				<label class="col-sm-3 control-label">模板文件：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="file" accept="application/msword,application/vnd.ms-excel" id="templateFile" name="templateFile">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">保存</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+
+	</div>
+    <div th:include="sys/include :: footer"></div>
+    
+    <script th:inline="javascript">
+		$("#form-template-add").validate({
+			rules:{
+				explainName:{
+					required:true
+				}
+			},
+			messages: {
+    		},
+			submitHandler: function(form) {
+				$.operate.submitFile(prefix + "/save_add", "form-template-add");
+			}
+		});
+	</script>
+</body>
+</html>

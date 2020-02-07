@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<th:block th:include="sys/include :: switch-css"/>
+<style type="text/css">
+.layui-laydate-header .laydate-prev-y, .layui-laydate-header .laydate-prev-m,
+.layui-laydate-header .laydate-next-y, .layui-laydate-header .laydate-next-m
+{
+	display: none !important;
+}
+
+.laydate-day-mark::after {
+	background-color: #f14063 !important;
+}
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated">
+    <!--搜索区域开始-->
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <form role="form" class="form-inline" id="workDay-form">
+                 <div class="form-group">
+                     <label>当前年份：</label>
+                     <select id="currentYear" name="currentYear" onchange="changeYear(this)" class="form-control form-selectdown">
+                	 </select>
+                 </div>
+                 <div class="form-group" style="padding-right:0px;">
+            	 		<label>编辑模式：</label>
+                 </div>
+                 <div class="form-group" style="padding-left:0px;padding-right:20px;">
+                 		<input type="checkbox" name="openEdit" id="openEdit" class="custom-switch" checked>
+                 </div>
+                 <div class="form-group" style="margin-top:5px">
+                     <p><code>提示：红色标记为非工作日，如需维护请开启编辑模式。</code></p>
+                 </div>
+                 <div class="form-group">
+                    <a class="btn btn-primary btn-rounded btn-sm" onclick="manageWorkTime()"><i class="fa fa-search"></i>&nbsp;工作时间管理</a>
+                 </div>
+             </form>
+         </div>
+      </div>
+      <!--搜索区域结束-->
+      <div class="ibox float-e-margins">
+         <div class="ibox-content">
+	 		<div class="row">
+	          	<div class="col-sm-3">
+	          		<div  id="month01"></div>
+	          	</div>
+	          	<div class="col-sm-3">
+	          		<div  id="month02"></div>
+	          	</div>
+	          	<div class="col-sm-3">
+	          		<div  id="month03"></div>
+	          	</div>
+	          	<div class="col-sm-3">
+	          		<div  id="month04"></div>
+	          	</div>
+       	 	</div>
+       	 	<div class="row" style="padding-top:10px">
+	          	<div class="col-sm-3">
+	          		<div  id="month05"></div>
+	          	</div>
+	          	<div class="col-sm-3">
+	          		<div  id="month06"></div>
+	          	</div>
+	          	<div class="col-sm-3">
+	          		<div  id="month07"></div>
+	          	</div>
+	          	<div class="col-sm-3">
+	          		<div  id="month08"></div>
+	          	</div>
+       	   </div>
+       	   <div class="row" style="padding-top:10px">
+	          	<div class="col-sm-3">
+	          		<div  id="month09"></div>
+	          	</div>
+	          	<div class="col-sm-3">
+	          		<div  id="month10"></div>
+	          	</div>
+	          	<div class="col-sm-3">
+	          		<div  id="month11"></div>
+	          	</div>
+	          	<div class="col-sm-3">
+	          		<div  id="month12"></div>
+	          	</div>
+       	   </div>
+        </div>
+     </div>
+</div>
+<div th:include="sys/include :: footer"></div>
+<th:block th:include="sys/include :: switch-js"/>
+</body>
+<script type="text/javascript">
+    new DG.OnOffSwitch({
+        el: '#openEdit',
+        height: 35,
+        textOn:'打开',
+        textOff:'关闭',
+        listener:function(name, checked){  
+        }
+    });
+</script>
+<script>
+$(function() {
+	var curYear = new Date().getFullYear();
+	//首先初始化各种信息。
+	initCurrentYearSelect(curYear);//初始化年份选择框
+	//laydate引入延迟初始化日期控件
+	setTimeout("initPageCaladar("+curYear+")","500");
+});
+
+/* 初始化年份选择框 */
+function initCurrentYearSelect(curYear) {
+	var opptionStr = "";
+	for (var i = curYear; i < curYear+10; i++) {
+		opptionStr += "<option value='"+i+"'>" + i + "</option>";
+	}
+	$("#currentYear").html(opptionStr);
+	$("#currentYear").val(curYear);
+}
+
+/* 年份选择改变 */
+function changeYear(ele) {
+	var curYear = $(ele).val();
+	initPageCaladar(curYear);
+}
+
+/*初始化日期控件*/
+function initPageCaladar(year) {
+	var data = {"year":year};
+	$.ajax({
+		url : prefix + "/render_date",
+		type : "post",
+		dataType : "json",
+		data : data,
+		success : function(data) {
+			var dateJsonList=data.data;
+			for(var i=0,l=dateJsonList.length;i<l;i++){
+				laydate.render({
+					elem: '#month'+dateJsonList[i].month,position: 'static',
+					showBottom: false,
+					value : dateJsonList[i].monthMin,
+					min : dateJsonList[i].monthMin,
+					max : dateJsonList[i].monthMax,
+					mark : dateJsonList[i].mark,
+					ready : function(date) {
+						//去除当前第一个默认日期选中样式
+						$(".layui-this").removeClass("layui-this");
+					},
+					done: function(value, date, endDate){
+						initDateClickFun(value);
+					}
+				});
+			}
+		}
+	});
+}
+
+/* 注册日期的点击事件，让12个日历只能显示一个被选中的。*/
+function initDateClickFun(value) {
+	//去除其他选择的日期
+	$(".layui-laydate-content table td").not(".laydate-disabled").on("click", function(e) {
+		$(".layui-this").not(this).removeClass("layui-this");
+	});
+	if ($("#openEdit").is(':checked')) {//启用了编辑模式
+		var dateStr = {"dateStr":value};
+		$.ajax({
+			url : prefix + "/change_status",
+			type : "post",
+			dataType : "json",
+			data : dateStr,
+			success : function(data) {
+				$.modal.msgRenovate(data.data,modal_status.SUCCESS);
+			}
+		});
+	}	
+}
+
+/* 管理工作时间 */
+function manageWorkTime(){
+	var url=prefix + "/to_work_time";
+	$.modal.open("工作时间管理", url);
+}
+</script>
+</html>

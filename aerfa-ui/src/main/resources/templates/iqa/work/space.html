@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="sys/include :: header"></head>
+
+<style type="text/css">
+.feed-element:hover{ 
+	background-color:#f3f3f4;cursor:pointer;
+}
+.communicate-chat-box .chat-date {
+    opacity: 0.6;
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.communicate-chat-box .content {
+    padding: 15px 15px;
+    
+}
+
+.communicate-chat-box .content .author-name {
+    font-weight: bold;
+    margin-bottom: 3px;
+    font-size: 11px;
+}
+
+.communicate-chat-box .content > div {
+    padding-bottom: 20px;
+}
+
+.communicate-chat-box .content .chat-message {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    line-height: 14px;
+    max-width: 80%;
+    background: #f3f3f4;
+    margin-bottom: 10px;
+}
+
+.communicate-chat-box .content .chat-message.active {
+    background: #1ab394;
+    color: #fff;
+}
+
+.communicate-chat-box .content .left {
+    text-align: left;
+    clear: both;
+}
+
+.communicate-chat-box .content .left .chat-message {
+    float: left;
+}
+
+.communicate-chat-box .content .right {
+    text-align: right;
+    clear: both;
+}
+
+.communicate-chat-box .content .right .chat-message {
+    float: right;
+}
+
+.communicate-chat-box .form-chat {
+    padding: 10px 10px;
+}
+</style>
+
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-3">
+         		<div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>点击接入会话</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="">当前状态</i>
+                            </a>
+                            <a class="collapse-link">
+                                <i class="fa fa-random">会话接入</i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-pause">暂时离开</i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="feed-activity-list">
+                            <div class="feed-element" onclick="dealWithQuestion()" >
+                                <div>
+                                    <strong>井幽幽</strong>
+                                    <small class="pull-right">4月11日 00:00</small>
+                                    <div>所以单身的应该在这条留言，互相勾搭一下。特别有钱人又帅可以直接私信我！</div>
+                                </div>
+                            </div>
+                            <div class="feed-element" onclick="dealWithQuestion()">
+                                <div>
+                                    <strong>井幽幽</strong>
+                                    <small class="pull-right">4月11日 00:00</small>
+                                    <div>所以单身的应该在这条留言，互相勾搭一下。特别有钱人又帅可以直接私信我！</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="col-sm-7">
+         	<div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>与 Beau-zihan 聊天中</h5>
+                </div>
+                <div class="ibox-content no-padding communicate-chat-box">
+                	<!--mini聊天窗口开始-->
+
+            <div class="content" id="content" style="height:600px;overflow: auto;">
+
+                <div class="left">
+                    <div class="author-name">
+                        Beau-zihan <small class="chat-date">
+                        10:02
+                    </small>
+                    </div>
+                    <div class="chat-message active">
+                        你好
+                    </div>
+
+                </div>
+                <div class="right">
+                    <div class="author-name">
+                        游客
+                        <small class="chat-date">
+                            11:24
+                        </small>
+                    </div>
+                    <div class="chat-message">
+                        你好，请问H+有帮助文档吗？
+                    </div>
+                </div>
+                <div class="left">
+                    <div class="author-name">
+                        Beau-zihan
+                        <small class="chat-date">
+                            08:45
+                        </small>
+                    </div>
+                    <div class="chat-message active">
+                        有，购买的H+源码包中有帮助文档，位于docs文件夹下
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="author-name">
+                        游客
+                        <small class="chat-date">
+                            11:24
+                        </small>
+                    </div>
+                    <div class="chat-message">
+                        那除了帮助文档还提供什么样的服务？
+                    </div>
+                </div>
+            </div>
+            <div class="form-chat">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control"> <span class="input-group-btn"> 
+                    <button
+                        class="btn btn-primary" type="button" onclick="appendAndSendMessage()">发送
+                     </button> 
+                    </span>
+                </div>
+            </div>
+
+        <!--mini聊天窗口结束-->
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+         	<div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>客户信息</h5>
+                </div>
+                <div class="ibox-content">
+                    <p><i class="fa fa-send-o"></i> 接入方式：<a href="javascript:;" target="_blank">http://www.zi-han.net</a>
+                    </p>
+                    <p><i class="fa fa-qq"></i> 浏览器：<a href="javascript:;">516477188</a>
+                    </p>
+                    <p><i class="fa fa-weixin"></i> 操作系统：<a href="javascript:;">zheng-zihan</a>
+                    </p>
+                    <p><i class="fa fa-credit-card"></i> IP地址：<a href="javascript:;">zheng-zihan@qq.com </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+	<div th:include="sys/include :: footer"></div>
+	<script th:inline="javascript">
+	function dealWithQuestion(){
+		alert(11);
+	}
+	
+	function appendAndSendMessage(){
+		$("#content").append('<div class="left"><div class="author-name">Beau-zihan <small class="chat-date">10:02</small></div><div class="chat-message active">你好</div></div>')
+		$("#content").append('<div class="right"><div class="author-name">Beau-zihan <small class="chat-date">10:02</small></div><div class="chat-message">你好</div></div>')
+	}
+	</script>
+	
+</body>
+</html>

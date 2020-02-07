@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+
+<head>
+	<style>
+		.ExcelOrWordContentDiv {
+			height: 100%;
+		    overflow: scroll;
+		    overflow-x: scroll;
+		}
+		
+		.cellClick {
+		    background-color: #e6e6e6;
+		    border-color: #8c8c8c
+		}
+		
+		.excelMenuAction {
+		    font-size: 14px;
+		}
+		
+		.selectedTreeNodeShown {
+		    border: 0px;
+		    padding: 3px;
+		}
+		
+		.afterCellSetting{
+		
+		}
+		
+		.afterCellZoneSetting{
+		    background-color: #a8b8e6;
+		}
+		
+		
+		.replaceTarget {
+		    color: #5cb85c;
+		}
+		
+		.replaceTargetClick {
+		    background-color: #e6e6e6;
+		}
+		
+		.afterWordSetting {
+		
+		}
+		.contentdivsplit{
+		    width:100%;
+		    padding-top:30px;
+		}
+	</style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated">
+    	<div id="excelContentDiv">
+            <form class="form-inline">
+                <fieldset>
+                    <div class="form-group">
+                        <label>表单:</label>
+                        <select class="form-control"></select>
+                    </div>
+                </fieldset>
+            </form>
+            <div class="contentdivsplit"></div>
+            <div class="ExcelOrWordContentDiv">
+                <table class="table-bordered">
+                    <thead class="excel-table-header"></thead>
+                    <tbody class="excel-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div th:include="sys/include :: footer"></div>
+    <th:block th:include="sys/include :: bootstrapmenu-js" />
+    <script th:inline="javascript">
+    var templateId = [[${templateId}]];
+    </script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+    	//添加左键点击菜单
+    	var initBootstrapMenu = function ($TableHeader, $TableBody, sheet) {
+            new BootstrapMenu(".excelCell", {
+                menuEvent: 'click',
+                fetchElementData: function ($elem) {
+                    return $elem;
+                },
+                actionsGroups: [
+                    ['rowInsert', 'colInsert', 'defineInsert'],
+                    ['replaceContent'], ['removeSetting']
+                ],
+                actions: {
+                    rowInsert: {
+                        name: '数据插入',
+                        classNames: 'excelMenuAction',
+                        onClick: function ($elem) {
+                            showInsertSetting($elem);
+                        },
+                        isEnabled: function ($elem) {
+                            return !$elem.hasClass('afterCellSetting');
+                        }
+                    },
+                    removeSetting: {
+                        name: '删除配置',
+                        classNames: 'excelMenuAction',
+                        onClick: function ($elem) {
+                            removeOneCellSetting($elem);
+                        },
+                        isEnabled: function ($elem) {
+                            return $elem.hasClass('afterCellSetting');
+                        }
+                    }
+                }
+            }); 
+    	};
+    	
+    	//加载已有的配置信息,设置是否可删除配置和插入内容,这个要优化
+    	var showAllCellSetting = function ($TableHeader, $TableBody, sheet) {
+    		var url =  prefix + '/template_excel_fill_info';
+    		$.operate.sendAjax(url,"","","",{templateId: templateId},function (retData) {
+    			var data=retData.data;
+    			if(!$.common.isEmpty(data)){
+        			var dataArr=data.split(",");
+        			for(var i=0;i<dataArr.length;i++){
+        				var oneDataArr=dataArr[i].split(":");
+        				var rowNumber=oneDataArr[0]-1;
+        				var colNumber=oneDataArr[1]-1;
+        				var fillField=oneDataArr[2];
+        				var $Cell = $TableBody.find('td[cell-id="' + rowNumber + '#' + colNumber + '"]');
+        				$Cell.addClass("afterCellSetting");
+        	            $Cell.html('<var class="text-danger">' + fillField + '</var>');	
+        			}
+        		}
+    		});
+    	};
+    	
+    	//展示excel表格内容：第二步绘制excell页面
+    	var showTable = function ($TableHeader, $TableBody, sheet) {
+    		//根据excel表格内容绘制table，先绘制第一ABCD等
+            var tableHtml = '<tr><th>';
+
+            for (var x = 0; x < sheet.columnNumber; x++) {
+                tableHtml += '<th width="' + sheet.columnWidth[x] + '" style="text-align: center">' + changeNumberOrderToCharOrder(x) + '</th>';
+            }
+            tableHtml += '</tr>';
+            $TableHeader.html(tableHtml);
+            tableHtml = '';
+            //循环每行的内容
+            for (var rowIndex = 0; rowIndex < sheet.rows.length; rowIndex++) {
+                var row = sheet.rows[rowIndex];
+                if (row) {
+                    var rowNumber = row.index + 1;
+                    if (row.height != undefined) {
+                        tableHtml += '<tr style="height: ' + row.height + '"><td width="20">' + rowNumber + '</td>';
+                    } else {
+                        tableHtml += '<tr><td>' + rowNumber + '</td>';
+                    }
+
+                    if (row.cells) {
+                        var forNumber = row.cells.length;
+                        if (row.cells.length > sheet.columnNumber) {
+                            forNumber = sheet.columnNumber;
+                        }
+                        for (var cellIndex = 0; cellIndex < forNumber; cellIndex++) {
+                            var cell = row.cells[cellIndex];
+                            if (cell != undefined) {
+                                if (!cell.display) {
+                                    continue;
+                                }
+                                if (cell.index > sheet.columnNumber) {
+                                    break;
+                                }
+                                tableHtml += '<td class="excelCell"  cell-id="' + rowIndex + '#' + cellIndex + '"  data-row-index="' + rowIndex + '" data-column-index="' + cellIndex + '"';
+                                if (cell.rowSpan != undefined) {
+                                    tableHtml += ' rowspan="' + cell.rowSpan + '"';
+                                }
+                                if (cell.columnSpan != undefined) {
+                                    tableHtml += 'colspan="' + cell.columnSpan + '" ';
+                                }
+                                if (cell.align != undefined) {
+                                    tableHtml += 'align="' + cell.align + '" ';
+                                }
+                                if (cell.valign != undefined) {
+                                    tableHtml += 'valign="' + cell.valign + '" ';
+                                }
+                                if (cell.fontsize != undefined || cell.fontWeight != undefined || cell.width != undefined) {
+                                    tableHtml += 'style="';
+                                    if (cell.fontSize) {
+                                        tableHtml += 'font-size:' + cell.fontSize + '%;';
+                                    }
+                                    if (cell.fontWeight) {
+                                        tableHtml += 'font-weight: ' + cell.fontWeight + ';';
+                                    }
+                                    if (cell.width) {
+                                        tableHtml += 'width:' + cell.width + ';';
+                                    }
+                                    tableHtml += '">';
+                                }
+                                if (cell.value) {
+                                    tableHtml += cell.value + '</td>';
+                                } else {
+                                    tableHtml += '</td>';
+                                }
+                            } else {
+                                tableHtml += '<td class="excelCell" cell-id="' + rowIndex + '#' + cellIndex + '" data-row-index="' + rowIndex + '" data-column-index="' + cellIndex + '" width="' + sheet.columnWidth[cellIndex] + '"></td>';
+                            }
+                        }
+                        if (sheet.columnNumber > row.cells.length) {
+                            for (var x = 0; x < sheet.columnNumber - row.cells.length; x++) {
+                                var columnIndex = row.cells.length + x;
+                                tableHtml += '<td class="excelCell" cell-id="' + rowIndex + '#' + columnIndex + '" data-row-index="' + rowIndex + '" data-column-index="' + columnIndex + '"width="' + sheet.columnWidth[x + row.cells.length] + '" ></td>';
+                            }
+                        }
+                    } else {
+                        for (var x = 0; x < sheet.columnNumber; x++) {
+                            tableHtml += '<td class="excelCell" cell-id="' + rowIndex + '#' + x + '" data-row-index="' + rowIndex + '" data-column-index="' + x + '" width="' + sheet.columnWidth[x] + '" ></td>';
+                        }
+                    }
+                }
+                tableHtml += '</tr>';
+            }
+            //显示table
+            $TableBody.html(tableHtml);
+            //添加点击变色
+            $TableBody.find(".excelCell").click(function () {
+                $TableBody.find(".excelCell").removeClass("cellClick");
+                $(this).addClass("cellClick");
+            });
+            //初始化右键菜单
+            initBootstrapMenu($TableHeader, $TableBody, sheet);
+          	//加载已有的配置信息
+            showAllCellSetting($TableHeader, $TableBody, sheet);
+    	};
+    	//根据数据显示excel内容：第一步元素分割
+    	var showExcelTemplateFileContent = function ($ContentDiv, sheets) {
+    		//初始化头 表单选择
+            var headHtml = '';
+            for (var x = 0; x < sheets.length; x++) {
+                if (sheets[x].columnNumber > 0) {
+                    headHtml += '<option value="' + x + '">' + sheets[x].sheetName + '</option>';
+                }
+            }
+            var $SelectContent = $ContentDiv.find("select");
+            $SelectContent.html(headHtml);
+            $SelectContent.unbind();
+            var $ExcelTableHeader = $ContentDiv.find(".excel-table-header");
+            var $ExcelTableBody = $ContentDiv.find(".excel-table-body");
+            //如果有多个的话就选择触发加载其他的工作区，一般用不上
+            $SelectContent.change(function () {
+                showTable($ExcelTableHeader, $ExcelTableBody, sheets[$(this).val()]);
+            });
+            //默认加载第一个,初始化表格，并添加右键菜单
+            showTable($ExcelTableHeader, $ExcelTableBody, sheets[$($SelectContent.find("option")[0]).val()]);
+    	};
+    	//定义初始化获取模板内容页面
+        var initAddAndEditTemplateHtml = function (templateId) {
+    		 var url=prefix+"/template_content";
+    		 $.operate.sendAjax(url,"","","",{templateId: templateId},function (data) {
+        		 var $ExcelContentDiv = $("#excelContentDiv");
+            	 showExcelTemplateFileContent($ExcelContentDiv, data.data);
+        	 });
+    	};
+    	//开始初始化模板内容页面
+        initAddAndEditTemplateHtml(templateId);
+    });
+    
+ 	// 展示填充规则
+    function showInsertSetting($elem) {
+ 		var startRow=$elem.data("row-index")+1;
+ 		var startColumn=$elem.data("column-index")+1;
+        var url =  "/tdm/fill_rule" + '/to_fill_rule?templateId=' + templateId +"&locationMark="+startRow+","+startColumn;
+        createMenuItem(url, "填充规则");
+    }
+ 	
+ 	// 删除填充规则
+    function removeOneCellSetting($elem) {
+       	var startRow=$elem.data("row-index")+1;
+ 		var startColumn=$elem.data("column-index")+1;
+        var url =  "/tdm/fill_rule" + '/remove?templateId=' + templateId +"&locationMark="+startRow+","+startColumn;
+        var refreshDataUrl="/tdm/template/to_template_content/"+templateId;
+    	$.operate.manage(url,'','确认要删除配置吗?',refreshDataUrl);
+ 	}
+    </script>
+
+</body>
+
+</html>

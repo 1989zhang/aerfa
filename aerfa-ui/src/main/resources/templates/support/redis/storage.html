@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form role="form" class="form-inline" id="form-storage-search">
+                     <div class="form-group">
+                         <label>key：</label>
+                         <input type="text" id="parmCode" name="parmCode" class="form-control">
+                     </div>
+                     <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search($('form').attr('id'))"><i class="fa fa-search"></i>&nbsp;查询</a>
+                     <a class="btn btn-danger btn-rounded btn-sm" onclick="cleanUpRedis()"><i class="fa fa-refresh"></i>&nbsp;清除缓存</a>
+                 </form>
+             </div>
+          </div>
+          <div class="ibox float-e-margins">
+              <div class="ibox-content">
+                   <div id="toolbar" >
+                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.add()">
+                          <i class="glyphicon glyphicon-plus" aria-hidden="true" ></i>新增
+                      </button>
+                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.batRemove()">
+                          <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>删除
+                      </button>
+                   </div>
+                   <table id="bootstrap-table"></table>
+              </div>
+          </div>
+    </div>
+    
+    <div th:include="sys/include :: footer"></div>
+    <script th:src="@{/aerfa/myresource/js/support/redis/storage.js}" type="text/javascript"></script>
+
+</body>
+
+</html>

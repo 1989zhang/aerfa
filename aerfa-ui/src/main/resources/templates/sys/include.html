@@ -1,0 +1,196 @@
+<head th:fragment="header">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title> 阿尔法管理系统 </title>
+    <meta name="keywords" content="aerfa系统,后台bootstrap框架,响应式后台">
+    <meta name="description" content="aerfa是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+     <!--ico图标引入在static下-->
+     <link th:href="@{favicon.ico}" rel="shortcut icon">
+
+     <!--基础css引入:包括bootstrap的css等-->
+     <link th:href="@{/aerfa/css/bootstrap.min.css?v=3.3.6}" rel="stylesheet">
+     <link th:href="@{/aerfa/css/font-awesome.css?v=4.4.0}" rel="stylesheet">
+     <link th:href="@{/aerfa/css/animate.css}" rel="stylesheet">
+     <link th:href="@{/aerfa/css/style.css?v=4.1.0}" rel="stylesheet">
+     
+     <!--  自己引入的 Bootstrap table css-->
+     <link th:href="@{/aerfa/myplugins/bootstrap-table/bootstrap-table.min.css}" rel="stylesheet">
+
+     <!-- layui layer的css-->
+     <link th:href="@{/aerfa/myplugins/layer-master/css/layui.css}" rel="stylesheet">
+     
+     <!-- iCheck checkbox框css-->
+     <link th:href="@{/aerfa/css/plugins/iCheck/custom.css}" rel="stylesheet">
+     
+     <!--我的拓展覆盖css-->
+     <link th:href="@{/aerfa/myresource/css/sys/extend.css}" rel="stylesheet">
+        
+</head>
+
+
+<div th:fragment="footer">
+     <!--访问地址前缀组装 -->
+     <script th:inline="javascript">
+     	  var prefix = [[${prefix}]];
+     </script>
+     <!--baseUrl地址组装 -->
+     <script th:inline="javascript">
+     	  var Scheme= [[${#httpServletRequest.getScheme()}]];
+          var snip= [[${#httpServletRequest.getServerName()}]];
+          var port= [[${#httpServletRequest.getServerPort()}]];
+          var projname = [[${#httpServletRequest.getContextPath()}]];
+          var baseUrl=Scheme+"://"+snip+":"+port+projname+"/"
+      </script>
+      
+     <!--引入jquery的js等-->
+     <script th:src="@{/aerfa/js/jquery.min.js}" type="text/javascript"></script>
+     <script th:src="@{/aerfa/js/bootstrap.min.js}" type="text/javascript"></script>
+     
+     <!-- 自己引入的Bootstrap table js -->
+     <script th:src="@{/aerfa/myplugins/bootstrap-table/bootstrap-table.min.js}"></script>
+     <script th:src="@{/aerfa/myplugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js}"></script>
+     <!--自己引入的Bootstrap导出文件 -->
+     <script th:src="@{/aerfa/myplugins/bootstrap-table/extensions/export/bootstrap-table-export.js}"></script>
+     <script th:src="@{/aerfa/myplugins/bootstrap-table/extensions/export/tableExport.js}"></script>
+     
+     <!-- iCheck checkbox框-->
+     <script th:src="@{/aerfa/js/plugins/iCheck/icheck.min.js}" type="text/javascript"></script>
+    
+     <!-- 遮罩层 -->
+	 <script th:src="@{/aerfa/myplugins/jquery-blockui/jquery.blockUI.js}"></script>
+	 
+	 <!-- layui layer的js:官方强烈推荐用什么引入什么,免得提交重复等-->
+     <!--<script th:src="@{/aerfa/myplugins/layer-master/layui.all.js}"></script>-->
+     <!-- 为了 layer的webim所以提出来每个都引用且官方强烈推荐用什么引入什么;免得提交重复等;-->
+     <script th:src="@{/aerfa/myplugins/layer-master/layui.js}" type="text/javascript"></script>
+     <!--引入具有延迟特性laydate的render要用需延迟-->
+	 <script th:inline="javascript">
+	    var layer,laydate;
+	 	layui.use(['layer','laydate'], function(){
+	 		layer = layui.layer;
+	 		laydate = layui.laydate;
+	 	});
+	 </script>
+	 
+     <!--jquery-validate 表单验证插件 -->
+	 <script th:src="@{/aerfa/myplugins/jquery-validate/jquery.validate.min.js}"></script>
+	 <script th:src="@{/aerfa/myplugins/jquery-validate/messages_zh.min.js}"></script>
+
+     <!--我的拓展覆盖js-->
+     <script th:src="@{/aerfa/myresource/js/sys/extend.js}" type="text/javascript"></script>
+     <!--我的公共方法js-->
+     <script th:src="@{/aerfa/myresource/js/sys/common.js}" type="text/javascript"></script>
+
+</div>
+
+
+<!-- 自定义webim网页即时通讯插件-->
+<div th:fragment="webim-css">
+    <link th:href="@{/aerfa/myresource/css/webim/contextMenu.css}" rel="stylesheet">
+	<link th:href="@{/aerfa/myresource/css/webim/main.css}" rel="stylesheet">
+</div>
+<div th:fragment="webim-js">
+ 	<script th:inline="javascript">
+ 		var personNickName=[[${person.nickName}]];//右下角显示的名称
+ 		var personId=[[${person.id}]];//session的id即sid
+    </script>
+
+    <script th:src="@{/aerfa/myresource/js/webim/contextMenu.js}" type="text/javascript"></script>
+    <script th:src="@{/aerfa/myresource/js/webim/right_menu.js}" type="text/javascript"></script>
+ 	<script th:src="@{/aerfa/myresource/js/webim/main.js}" type="text/javascript"></script>
+</div>
+
+<!-- bootstrap-treetable树形且是表单视图插件 -->
+<div th:fragment="treetable-css">
+    <link th:href="@{/aerfa/myplugins/bootstrap-treetable/bootstrap-treetable.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="treetable-js">
+    <script th:src="@{/aerfa/myplugins/bootstrap-treetable/bootstrap-treetable.js}" type="text/javascript"></script>
+</div>
+
+<!-- bootstrap-editable可编辑表单插件 -->
+<div th:fragment="editable-css">
+    <link th:href="@{/aerfa/myplugins/bootstrap-editable/css/bootstrap-editable.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="editable-js">
+    <script th:src="@{/aerfa/myplugins/bootstrap-editable/js/bootstrap-editable.js}" type="text/javascript"></script>
+    <script th:src="@{/aerfa/myplugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js}" type="text/javascript"></script>
+</div>
+
+<!-- bootstrap-treeview树形视图插件 -->
+<div th:fragment="treeview-css">
+    <link th:href="@{/aerfa/myplugins/bootstrap-treeview/bootstrap-treeview.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="treeview-js">
+    <script th:src="@{/aerfa/myplugins/bootstrap-treeview/bootstrap-treeview.js}" type="text/javascript"></script>
+</div>
+
+<!-- bootstrap-menu 组成菜单选项插件，比如点击excel表格要用 -->
+<div th:fragment="bootstrapmenu-js">
+    <script th:src="@{/aerfa/myplugins/bootstrap-menu/BootstrapMenu.js}" type="text/javascript"></script>
+</div>
+
+
+<!-- baidu-echarts 前台报表展示插件 -->
+<div th:fragment="echarts-js">
+    <script th:src="@{/aerfa/myplugins/baidu-echarts/echarts-all.js}" type="text/javascript"></script>
+</div>
+
+<!-- 下拉多选插件 -->
+<div th:fragment="chosen-css">
+    <link th:href="@{/aerfa/myplugins/chosen/chosen.css}" rel="stylesheet"/>
+</div> 
+<div th:fragment="chosen-js">
+    <script th:src="@{/aerfa/myplugins/chosen/chosen.jquery.js}" type="text/javascript"></script>
+</div>
+
+<!-- jquery的时间时钟选择插件 -->
+<div th:fragment="clockpicker-css">
+    <link th:href="@{/aerfa/myplugins/jquery-clockpicker/clockpicker.css}" rel="stylesheet"/>
+</div> 
+<div th:fragment="clockpicker-js">
+    <script th:src="@{/aerfa/myplugins/jquery-clockpicker/clockpicker.js}" type="text/javascript"></script>
+</div>
+
+<!-- 选择区划城市插件 -->
+<div th:fragment="citypicker-css">
+    <link th:href="@{/aerfa/myplugins/city-picker/css/city-picker.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="citypicker-js">  
+    <!-- 这个是静态数据其实也很好，但是我们用后台的division动态数据方便维护 -->
+    <!--<script th:src="@{/aerfa/myplugins/city-picker/js/city-picker.data.js}" type="text/javascript"></script>-->
+    <script th:src="@{/aerfa/myplugins/city-picker/js/city-picker.division.data.js}" type="text/javascript"></script>
+	<script th:src="@{/aerfa/myplugins/city-picker/js/city-picker.js}" type="text/javascript"></script>
+</div>
+
+<!-- cropbox图像裁剪插件 -->
+<div th:fragment="cropbox-css">
+    <link th:href="@{/aerfa/myplugins/cropbox/cropbox.css}" rel="stylesheet"/>
+</div>
+<div th:fragment="cropbox-js">
+    <script th:src="@{/aerfa/myplugins/cropbox/cropbox.js}" type="text/javascript"></script>
+</div>
+
+<!-- 上一步下一步插件 -->
+<div th:fragment="steps-css">
+    <link th:href="@{/aerfa/css/plugins/steps/jquery.steps.css}" rel="stylesheet"/>
+</div> 
+<div th:fragment="steps-js">
+    <script th:src="@{/aerfa/js/plugins/staps/jquery.steps.min.js}" type="text/javascript"></script>
+</div>
+	
+<!-- jquery的switch开关插件 -->
+<div th:fragment="switch-css">
+    <link th:href="@{/aerfa/myplugins/jquery-switch/css/on-off-switch.css}" rel="stylesheet"/>
+</div> 
+<div th:fragment="switch-js">
+    <script th:src="@{/aerfa/myplugins/jquery-switch/js/on-off-switch.js}" type="text/javascript"></script>
+    <script th:src="@{/aerfa/myplugins/jquery-switch/js/on-off-switch-onload.js}" type="text/javascript"></script>
+</div>
+
+<!-- jquery-signature电子手写签名插件 -->
+<div th:fragment="signature-js">
+    <script th:src="@{/aerfa/myplugins/jquery-signature/libs/flashcanvas.min.js}" type="text/javascript"></script>
+    <script th:src="@{/aerfa/myplugins/jquery-signature/libs/jSignature.min.noconflict.js}" type="text/javascript"></script>
+</div>
