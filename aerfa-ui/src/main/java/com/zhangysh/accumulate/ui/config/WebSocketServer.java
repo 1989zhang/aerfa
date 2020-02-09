@@ -11,18 +11,19 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+
+import com.zhangysh.accumulate.common.constant.MarkConstant;
+import com.zhangysh.accumulate.ui.iqa.service.IqaReplyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.ContextLoader;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zhangysh.accumulate.common.constant.WebimDefineConstant;
 import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.iqa.transobj.AefiqaAskDto;
 import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimMessageDto;
-import com.zhangysh.accumulate.ui.iqa.service.IqaKnowledgeService;
 
 /**
  * WebSocket主服务器，传递sessionid取token
@@ -34,7 +35,13 @@ import com.zhangysh.accumulate.ui.iqa.service.IqaKnowledgeService;
 public class WebSocketServer {
 			
 	private static final Logger logger=LoggerFactory.getLogger(WebSocketServer.class);
-	
+	private static IqaReplyService iqaReplyService;
+
+	@Autowired
+	public void setIqaReplyService(IqaReplyService iqaReplyService) {
+		WebSocketServer.iqaReplyService = iqaReplyService;
+	}
+
 	//静态变量，用来记录当前在线连接数。
 	private static int onlineCount = 0;
     //与某个客户端的连接会话，需要通过它来给客户端发送数据
@@ -43,7 +50,7 @@ public class WebSocketServer {
     private String sid;
     
     //ConcurrentHashMap是线程安全的，而HashMap是线程不安全的。
-    public static ConcurrentHashMap<String,Session> mapUS = new ConcurrentHashMap<String,Session>(); //根据id找session 
+    public static ConcurrentHashMap<String,Session> mapUS = new ConcurrentHashMap<String,Session>(); //根据id找session
     private static ConcurrentHashMap<Session,String> mapSU = new ConcurrentHashMap<Session,String>();//根据session找id
 	    
     /**
@@ -179,15 +186,16 @@ public class WebSocketServer {
 		askDto.setIqaToken(fromJson.getString("id").substring(0, 32));
 		askDto.setAskContent(questionContent);
 		String replyContent="";
-
-		/*IqaKnowledgeService iqaKnowledgeService = (IqaKnowledgeService) ContextLoader.getCurrentWebApplicationContext().getBean("IqaKnowledgeService");
-		String replayStr=iqaKnowledgeService.getReply(askDto);
-		JSONObject retJson=JSON.parseObject(replayStr);*/
-		
 		if(StringUtil.isEmpty(questionContent)) {
 			replyContent="Hi，我是智能小法。有什么问题可以直接问我！";
-		}else {
-			replyContent="Hi，我是智能小法。有什么问题可以直接问我！";
+		}else{
+			String replayStr=iqaReplyService.getReply(askDto);
+			JSONObject retJson=JSON.parseObject(replayStr);
+			if(MarkConstant.MARK_RESULT_VO_SUCESS.equals(retJson.getInteger(MarkConstant.MARK_RESULT_VO_CODE))){
+				replyContent=retJson.getString(MarkConstant.MARK_RESULT_VO_DATA);
+			}else{
+				replyContent="你问的问题小法不懂，小法正在学习中！";
+			}
 		}
 		AefwebimMessageDto autoMessage=new AefwebimMessageDto();
     	autoMessage.setId(WebimDefineConstant.WEBIM_AIXF_PERSON_ID+"");
@@ -205,7 +213,7 @@ public class WebSocketServer {
 	/**
 	 * 实现服务器主动推送
 	 * 
-	 * @param sid 推送给哪个sessionid
+	 * @param toSessionId 推送给哪个sessionid
 	 * @param message 消息
 	 */
 	private void sendMessageText(String toSessionId, String message) throws IOException {

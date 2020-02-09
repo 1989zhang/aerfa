@@ -40,15 +40,12 @@ public class IqaReplyController extends BaseController{
 	 ****/
 	@RequestMapping(value="/reply",method = RequestMethod.POST)
     @ResponseBody
-	public String getReply(HttpServletRequest request,@RequestBody AefiqaAskDto askDto) {
-		
+	public String getReply(@RequestBody AefiqaAskDto askDto) {
 		Long orgId=1L;
-		String askContent="好";
-		String replyStr=replyService.getReply(orgId, askContent);
+		String replyStr=replyService.getReply(orgId, askDto.getAskContent());
 		if(StringUtil.isNotEmpty(replyStr)) {
 			return toHandlerResultStr(true, replyStr, null, null);
 		}
 		return toHandlerResultStr(false, null, CodeMsgConstant.SYS_DATA_ACHIEVE_ERROR.fillArgs(IqaDefineConstant.ASK_NO_QUESTION_ANSWER), null);
 	}
-	
 }
