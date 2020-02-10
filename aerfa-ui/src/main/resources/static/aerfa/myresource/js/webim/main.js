@@ -1,6 +1,6 @@
 $(function(){
 	layui.use('layim', function(layim){ 		
-	    var sid = webimToken+personId;
+	    var sidIdentityStr = websocketWebimToken+personId;
 		//layim基础配置初始化配置
 		layim.config({
 			//,brief: true //是否简约模式（若开启则不显示主面板）
@@ -77,7 +77,7 @@ $(function(){
           }else{  
               //实现化WebSocket对象，指定要连接的服务器地址与端口 建立连接  
               //等同于socket = new WebSocket("ws://localhost:8083/checkcentersys/websocket/20");  
-              socket = new WebSocket((baseUrl+"websocket/"+sid).replace("http","ws")); 
+              socket = new WebSocket((baseUrl+"websocket/"+sidIdentityStr).replace("http","ws"));
               //打开事件  
               socket.onopen = function() {  
                   console.log("您的浏览器支持WebSocket且已打开");

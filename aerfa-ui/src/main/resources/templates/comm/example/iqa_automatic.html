@@ -45,7 +45,7 @@
 	var autoIqaSocket;
     var randomStr=$.common.randomString(32);
     var userName="游客"+randomStr.substring(0,5);
-	var iqaIdentityStr=autoToken+randomStr;
+	var iqaIdentityStr=websocketAutoToken+randomStr;
 	$(function(){
         if(typeof(WebSocket) == "undefined") {  
             console.log("您的浏览器不支持WebSocket");  

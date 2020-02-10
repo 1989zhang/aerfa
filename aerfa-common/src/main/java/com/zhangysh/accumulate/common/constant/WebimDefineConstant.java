@@ -101,4 +101,14 @@ public class WebimDefineConstant {
 	public static final String WEBSOCKET_TOKEN_TYPE_AUTO="02";
 	/** WebSocket产品类型认证标记:03是manual人工客服 **/
 	public static final String WEBSOCKET_TOKEN_TYPE_MANUAL="03";
+
+	/** WebSocket产品类型认证字符:webim网页聊天 **/
+	public static final String WEBSOCKET_TOKEN_NAME_WEBIM="websocketWebimToken";
+	public static final String WEBSOCKET_TOKEN_VALUE_WEBIM="40284381702e745c01702e745c620001";
+	/** WebSocket产品类型认证字符:auto智能回复 **/
+	public static final String WEBSOCKET_TOKEN_NAME_AUTO="websocketAutoToken";
+	public static final String WEBSOCKET_TOKEN_VALUE_AUTO="40284381702e745c01702e745c620002";
+	/** WebSocket产品类型认证字符:manual人工客服 **/
+	public static final String WEBSOCKET_TOKEN_NAME_MANUAL="websocketManualToken";
+	public static final String WEBSOCKET_TOKEN_VALUE_MANUAL="40284381702e745c01702e745c620003";
 }

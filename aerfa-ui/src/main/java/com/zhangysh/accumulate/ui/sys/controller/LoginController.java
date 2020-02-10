@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.zhangysh.accumulate.common.constant.WebimDefineConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -145,6 +146,11 @@ public class LoginController {
 
 		modelMap.put("person", personVo);
 		modelMap.put("org", orgVo);
+		//几个特殊的token值便于websocket连接使用
+		modelMap.put(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_WEBIM, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_WEBIM);
+		modelMap.put(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_AUTO, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_AUTO);
+		modelMap.put(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_MANUAL, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_MANUAL);
+
 		return "sys/index";
 	}
 	
