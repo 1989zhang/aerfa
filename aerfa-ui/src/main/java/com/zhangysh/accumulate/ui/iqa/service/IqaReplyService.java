@@ -16,12 +16,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(name = "${feign.back.name}")
 public interface IqaReplyService {
 
-    /****
+    /**
      * 根据问题和用户标示ID，获取问题的答案
      * @param askDto 请求的用户标识和问题
      * @return 获取到的答案
      ****/
     @RequestMapping(value = "/iqa/reply",method = RequestMethod.POST)
     public String getReply(@RequestBody AefiqaAskDto askDto);
+
+    /**
+     * 根据token即sessionId判断用户是否合法
+     * @param iqaToken 用户session标识
+     * @return 获取到判断结果
+     ****/
+    @RequestMapping(value = "/iqa/legal",method = RequestMethod.POST)
+    public String getLegal(@RequestBody String iqaToken);
 
 }

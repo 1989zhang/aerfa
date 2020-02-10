@@ -34,18 +34,30 @@ public class IqaReplyController extends BaseController{
     
 	/****
 	 * 根据问题和用户标示ID，获取问题的答案
-	 * @param request 请求对象
      * @param askDto 请求的用户标识和问题
      * @return 获取到的答案
 	 ****/
 	@RequestMapping(value="/reply",method = RequestMethod.POST)
     @ResponseBody
 	public String getReply(@RequestBody AefiqaAskDto askDto) {
+		logger.info("getReply:"+askDto);
 		Long orgId=1L;
 		String replyStr=replyService.getReply(orgId, askDto.getAskContent());
 		if(StringUtil.isNotEmpty(replyStr)) {
 			return toHandlerResultStr(true, replyStr, null, null);
 		}
 		return toHandlerResultStr(false, null, CodeMsgConstant.SYS_DATA_ACHIEVE_ERROR.fillArgs(IqaDefineConstant.ASK_NO_QUESTION_ANSWER), null);
+	}
+
+	/**
+	 * 根据token即sessionId判断用户是否合法
+	 * @param iqaToken 用户session标识
+	 * @return 获取到判断结果
+	 ****/
+	@RequestMapping(value = "/iqa/legal",method = RequestMethod.POST)
+	@ResponseBody
+	public String getLegal(@RequestBody String iqaToken){
+		logger.info("getLegal:"+iqaToken);
+		return toHandlerResultStr(true, "token合法", null, null);
 	}
 }
