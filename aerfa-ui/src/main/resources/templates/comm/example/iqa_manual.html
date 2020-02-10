@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="sys/include :: header"></head>
+<link th:href="@{/aerfa/myresource/css/iqa/communicate.css}" rel="stylesheet">
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-1">
+        </div>
+        <div class="col-sm-10">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>与 智能小法 聊天中</h5>
+                </div>
+                <div class="ibox-content no-padding communicate-chat-box">
+                    <!--mini聊天窗口开始-->
+                    <div class="content" id="content" style="height:600px;overflow: auto;">
+
+                    </div>
+                    <div class="form-chat">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" id="messageContent">
+                            <span class="input-group-btn">
+	                    <button
+                                class="btn btn-primary" type="button" onclick="appendAndSendMessage()">发送
+	                     </button>
+	                    </span>
+                        </div>
+                    </div>
+                    <!--mini聊天窗口结束-->
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-1">
+        </div>
+    </div>
+</div>
+<div th:include="sys/include :: footer"></div>
+<script th:src="@{/aerfa/myresource/js/iqa/communicate.js}" type="text/javascript"></script>
+
+<script th:inline="javascript">
+    //初始化WebSocket
+    var autoIqaSocket;
+    var randomStr=$.common.randomString(32);
+    var userName="游客"+randomStr.substring(0,5);
+    var iqaIdentityStr=manualToken+randomStr;
+    $(function(){
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else{
+            //实现化WebSocket对象，指定要连接的服务器地址与端口 建立连接
+
+            autoIqaSocket = new WebSocket((baseUrl+"websocket/"+iqaIdentityStr).replace("http","ws"));
+            //打开事件
+            autoIqaSocket.onopen = function() {
+                console.log("您的浏览器支持WebSocket且已打开");
+            };
+            //获得消息事件
+            autoIqaSocket.onmessage = function(msg) {
+                console.log(msg.data);
+                receiveMessage(JSON.parse(msg.data));
+            };
+            //关闭事件
+            autoIqaSocket.onclose = function() {
+                console.log("Socket已关闭");
+            };
+            //发生了错误事件
+            autoIqaSocket.onerror = function() {
+                alert("Socket发生了错误");
+            }
+        }
+    });
+
+    //发送并填充输入信息等操作
+    function appendAndSendMessage(){
+        var messageContent=$("#messageContent").val();
+        if($.common.isEmpty(messageContent)){
+            $.modal.alertError("内容不能为空");
+            return ;
+        }
+        //发送信息组装
+        var mineObj = {};
+        mineObj.username=userName;
+        mineObj.avatar="/aerfa/myresource/images/default_personal.jpg";
+        mineObj.id=iqaIdentityStr;
+        mineObj.mine=true;
+        mineObj.content=messageContent;
+
+        var toObj = {};
+        toObj.avatar="/aerfa/myresource/images/default_personal.jpg";
+        toObj.id=10;
+        toObj.sign="无签名";
+        toObj.username="智能小法";
+        toObj.name="智能小法";
+        toObj.type="auto";
+        var messageObj = {};
+        messageObj.mine=mineObj;
+        messageObj.to=toObj;
+        //发送信息
+        sendMessage(messageObj);
+        //填充信息
+        appendMessage("content","right",userName,$.common.currentFullDate(),messageContent);
+        //清空信息
+        $("#messageContent").val("");
+    }
+    //发送消息
+    function sendMessage(data){
+        autoIqaSocket.send(JSON.stringify({
+            message:data
+        }));
+    }
+    //收到消息展示到页面
+    function receiveMessage(data){
+        appendMessage("content","left",data.username,$.common.parseFullDate(data.timestamp),data.content);
+    }
+
+</script>
+
+</body>
+</html>
