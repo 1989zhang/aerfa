@@ -16,7 +16,7 @@ $(function(){
 			//初始化接口
 		    init: {
 		        url: baseUrl + 'webim/init/user_data',
-		        data: {"sid": sid}
+		        data: {"sid": personId}
 		    }
 	
 		    //查看群员接口
@@ -50,9 +50,9 @@ $(function(){
 		    //,voice: false //声音提醒，默认开启，声音文件为：default.mp3
 		    
 		    //,msgbox: layui.cache.dir + 'css/modules/layim/html/msgbox.html' //消息盒子页面地址，若不开启，剔除该项即可
-		    ,msgbox: baseUrl + 'webim/tips_info/to_msgbox/'+sid
+		    ,msgbox: baseUrl + 'webim/tips_info/to_msgbox/'+personId
 		    //,find: layui.cache.dir + 'css/modules/layim/html/find.html' //发现页面地址，若不开启，剔除该项即可
-		    ,find: baseUrl + 'webim/friend/to_find/'+sid
+		    ,find: baseUrl + 'webim/friend/to_find/'+personId
 		    ,chatLog: layui.cache.dir + 'css/modules/layim/html/chatlog.html' //聊天记录页面地址，若不开启，剔除该项即可
 		  });
 	

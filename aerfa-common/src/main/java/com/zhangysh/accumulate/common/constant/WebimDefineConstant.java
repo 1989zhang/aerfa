@@ -85,4 +85,20 @@ public class WebimDefineConstant {
 	/** 提示信息:申请信息重复，填入名称参数 **/
 	public static final String WEBIM_APPLY_TIPS_REPEAT="你添加{}的申请已存在,请勿重复申请";
 
+	/** WebSocket消息类型:webim的friend **/
+	public static final String WEBSOCKET_MESSAGE_TYPE_FRIEND="friend";
+	/** WebSocket消息类型:webim的group **/
+	public static final String WEBSOCKET_MESSAGE_TYPE_GROUP="group";
+	/** WebSocket消息类型:webim的all **/
+	public static final String WEBSOCKET_MESSAGE_TYPE_ALL="all";
+	/** WebSocket消息类型:智能问答的auto **/
+	public static final String WEBSOCKET_MESSAGE_TYPE_AUTO="auto";
+	/** WebSocket消息类型:人工客服的manual **/
+	public static final String WEBSOCKET_MESSAGE_TYPE_MANUAL="manual";
+	/** WebSocket产品类型认证标记:01是webim网页聊天 **/
+	public static final String WEBSOCKET_TOKEN_TYPE_WEBIM="01";
+	/** WebSocket产品类型认证标记:02是auto智能回复 **/
+	public static final String WEBSOCKET_TOKEN_TYPE_AUTO="02";
+	/** WebSocket产品类型认证标记:03是manual人工客服 **/
+	public static final String WEBSOCKET_TOKEN_TYPE_MANUAL="03";
 }

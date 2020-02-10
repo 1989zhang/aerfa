@@ -54,7 +54,7 @@ public class IqaReplyController extends BaseController{
 	 * @param iqaToken 用户session标识
 	 * @return 获取到判断结果
 	 ****/
-	@RequestMapping(value = "/iqa/legal",method = RequestMethod.POST)
+	@RequestMapping(value = "/legal",method = RequestMethod.POST)
 	@ResponseBody
 	public String getLegal(@RequestBody String iqaToken){
 		logger.info("getLegal:"+iqaToken);
