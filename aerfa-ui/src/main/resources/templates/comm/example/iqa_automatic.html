@@ -105,8 +105,8 @@
     //初始化WebSocket 
 	var autoIqaSocket;
     var randomStr=$.common.randomString(32);
-    var userName="用户"+randomStr.substring(0,5);
-	var iqaIdentityStr='402843816f85552e016f85552ee20000'+randomStr;
+    var userName="游客"+randomStr.substring(0,5);
+	var iqaIdentityStr=randomStr;
 	$(function(){
         if(typeof(WebSocket) == "undefined") {  
             console.log("您的浏览器不支持WebSocket");  
@@ -175,7 +175,7 @@
 		//发送信息
 		sendMessage(messageObj);
 		//填充信息
-		appendMessage("content","right",userName,$.common.currentNormalDate(),messageContent);
+		appendMessage("content","right",userName,$.common.currentFullDate(),messageContent);
         //清空信息
 		$("#messageContent").val("");
 	}

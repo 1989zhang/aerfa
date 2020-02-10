@@ -59,7 +59,6 @@ public class WebSocketServer {
      */
     @OnOpen
     public void onOpen(Session session,@PathParam("sid") String sid) throws IOException{
-    	if(!dealWithOpenBeforeExpand(sid)) {return;}//连接不合法
     	this.session = session;
     	this.sid=sid;
     	mapUS.put(sid,session);
@@ -67,7 +66,6 @@ public class WebSocketServer {
     	addOnlineCount();//在线数加1
     	logger.info("有新窗口开始监听:"+sid+",当前在线人数为:" + getOnlineCount());
     	dealWithOpenAfterExpand(sid);
-    	logger.info("连接成功拓展方法执行完成");
     }
     /**
      * 收到客户端消息后调用的方法
@@ -183,7 +181,7 @@ public class WebSocketServer {
 		String questionContent=fromJson.getString("content");
 		logger.info("智能回答的消息处理"+questionContent);
 		AefiqaAskDto askDto=new AefiqaAskDto();
-		askDto.setIqaToken(fromJson.getString("id").substring(0, 32));
+		askDto.setIqaToken("");
 		askDto.setAskContent(questionContent);
 		String replyContent="";
 		if(StringUtil.isEmpty(questionContent)) {
@@ -224,26 +222,15 @@ public class WebSocketServer {
 		}
 	}
 
-	/****
-	 * 页面客户端和服务器连接成功前的拓展方法，例如： 判断用户是否合法
-	 ***/
-	public boolean dealWithOpenBeforeExpand(String sid) {
-		if (sid.startsWith("402843816f85552e016f85552ee20000")) {
-			return true;
-		}
-		return true;
-	}
-
-	/****
+	/**
 	 * 页面客户端和服务器连接成功后的拓展方法，例如： 发送智能问答提示信息
 	 * @throws IOException 
 	 ***/
 	public void dealWithOpenAfterExpand(String sid) throws IOException {
-		if (sid.startsWith("402843816f85552e016f85552ee20000")) {
+		if(StringUtil.isNotEmpty(sid)&&sid.length()>=32){
 			Map<String,Object> fromMap=new HashMap<String,Object>();
 			fromMap.put("id", sid);
-			fromMap.put("username", "游客"+sid.substring(31, sid.length()));
-			fromMap.put("id", sid);
+			fromMap.put("username", "游客"+sid);
 			sendMessage(JSON.parseObject(JSON.toJSONString(fromMap)),null,"auto");
 		}
 	}

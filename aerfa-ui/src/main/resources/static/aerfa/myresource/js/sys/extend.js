@@ -588,7 +588,7 @@
             	return $.common.parseNormalDate(new Date().getTime());
             },
             //获取当前全面日期,例如：2020-01-08 23:49:32
-            currentNormalDate:function(){
+            currentFullDate:function(){
             	return $.common.parseFullDate(new Date().getTime());
             },
             // 指定随机数返回
