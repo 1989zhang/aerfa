@@ -131,7 +131,7 @@ public class LoginController {
 	/**
 	 *账号密码校验成功后跳转到sys主页面
 	 *@param request 请求对象
-	 *@param model spring的mvc返回对象
+	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的主页面
 	 ****/
 	@RequestMapping(value="/index")
@@ -157,7 +157,7 @@ public class LoginController {
 	/**
 	 *跳转到第一个通用页面
 	 *@param request 请求对象
-	 *@param model spring的mvc返回对象
+	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的通用页面
 	 ****/
 	@RequestMapping(value="/current")
