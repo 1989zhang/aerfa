@@ -2,70 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="sys/include :: header"></head>
-
-<style type="text/css">
-.feed-element:hover{ 
-	background-color:#f3f3f4;cursor:pointer;
-}
-.communicate-chat-box .chat-date {
-    opacity: 0.6;
-    font-size: 10px;
-    font-weight: normal;
-}
-
-.communicate-chat-box .content {
-    padding: 15px 15px;
-    
-}
-
-.communicate-chat-box .content .author-name {
-    font-weight: bold;
-    margin-bottom: 3px;
-    font-size: 11px;
-}
-
-.communicate-chat-box .content > div {
-    padding-bottom: 20px;
-}
-
-.communicate-chat-box .content .chat-message {
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    line-height: 14px;
-    max-width: 80%;
-    background: #f3f3f4;
-    margin-bottom: 10px;
-}
-
-.communicate-chat-box .content .chat-message.active {
-    background: #1ab394;
-    color: #fff;
-}
-
-.communicate-chat-box .content .left {
-    text-align: left;
-    clear: both;
-}
-
-.communicate-chat-box .content .left .chat-message {
-    float: left;
-}
-
-.communicate-chat-box .content .right {
-    text-align: right;
-    clear: both;
-}
-
-.communicate-chat-box .content .right .chat-message {
-    float: right;
-}
-
-.communicate-chat-box .form-chat {
-    padding: 10px 10px;
-}
-</style>
-
+<link th:href="@{/aerfa/myresource/css/iqa/communicate.css}" rel="stylesheet">
 
 <body class="gray-bg">
 <div class="wrapper wrapper-content">
@@ -101,6 +38,8 @@
     </div>
 </div>
 	<div th:include="sys/include :: footer"></div>
+    <script th:src="@{/aerfa/myresource/js/iqa/communicate.js}" type="text/javascript"></script>
+
 	<script th:inline="javascript">
     //初始化WebSocket 
 	var autoIqaSocket;
@@ -133,25 +72,12 @@
             }    
         }
 	});
-	
-	//收到消息展示到页面
-	function receiveMessage(data){
-		appendMessage("content","left",data.username,$.common.parseFullDate(data.timestamp),data.content);
-	}
-	
-	//把信息添加append到对应的地方
-	function appendMessage(divId,location,userName,dateStr,content){
-		if(location=="left"){
-			$("#"+divId).append('<div class="left"><div class="author-name">'+userName+'&nbsp;<small class="chat-date">'+dateStr+'</small></div><div class="chat-message active">'+content+'</div></div>')	
-		}else{
-			$("#"+divId).append('<div class="right"><div class="author-name">'+userName+'&nbsp;<small class="chat-date">'+dateStr+'</small></div><div class="chat-message">'+content+'</div></div>')
-		}
-	}
+
 	//发送并填充输入信息等操作
 	function appendAndSendMessage(){
 		var messageContent=$("#messageContent").val();
 		if($.common.isEmpty(messageContent)){
-			$.modal.alertError("问题内容不能为空");
+			$.modal.alertError("内容不能为空");
 			return ;
 		}
 		//发送信息组装
@@ -184,6 +110,10 @@
 		autoIqaSocket.send(JSON.stringify({
   		    message:data
         }));
+	}
+	//收到消息展示到页面
+	function receiveMessage(data){
+		appendMessage("content","left",data.username,$.common.parseFullDate(data.timestamp),data.content);
 	}
 	
 	</script>
