@@ -33,7 +33,12 @@ public class WebimDefineConstant {
 	public static final String WEBIM_INIT_GROUP_DATA_MEMBERS="members";
 	/** 网页即时通讯webim初始化群信息人员详情标签  **/
 	public static final String WEBIM_INIT_GROUP_DATA_LIST="list";
-	
+
+	/** webim的消息内容标签id **/
+	public static final String WEBIM_JSON_LABEL_ID="id";
+	/** webim的消息内容标签type **/
+	public static final String WEBIM_JSON_LABEL_TYPE="type";
+
 	/** 网页即时通讯webim好友或群组搜索返回总数量标签**/
 	public static final String WEBIM_SEARCH_PAGE_COUNT="count";
 	/** 网页即时通讯webim好友或群组搜索返回每页数量标签**/

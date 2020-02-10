@@ -59,13 +59,19 @@ public class WebSocketServer {
      */
     @OnOpen
     public void onOpen(Session session,@PathParam("sid") String sid) throws IOException{
-    	this.session = session;
-    	this.sid=sid;
-    	mapUS.put(sid,session);
-    	mapSU.put(session,sid);
-    	addOnlineCount();//在线数加1
-    	logger.info("有新窗口开始监听:"+sid+",当前在线人数为:" + getOnlineCount());
-    	dealWithOpenAfterExpand(sid);
+        String retBeforeStr=dealWithOpenBeforeExpand(sid);
+		JSONObject retBeforeJson=JSON.parseObject(retBeforeStr);
+        if(MarkConstant.MARK_RESULT_VO_SUCESS.equals(retBeforeJson.getInteger(MarkConstant.MARK_RESULT_VO_CODE))){
+			this.session = session;
+			this.sid=sid;
+			mapUS.put(sid,session);
+			mapSU.put(session,sid);
+			addOnlineCount();//在线数加1
+			logger.info("有新窗口开始监听:"+sid+",当前在线人数为:" + getOnlineCount());
+			dealWithOpenAfterExpand(sid);
+		}else{
+			logger.info("有非法进入连接:"+sid);
+		}
     }
     /**
      * 收到客户端消息后调用的方法
@@ -78,10 +84,9 @@ public class WebSocketServer {
         JSONObject messageInfoJson=jsonMessage.getJSONObject("message");
         JSONObject mineJson=messageInfoJson.getJSONObject("mine");
         JSONObject toJson=messageInfoJson.getJSONObject("to");
-        String type = toJson.getString("type");
+        String type = toJson.getString(WebimDefineConstant.WEBIM_JSON_LABEL_TYPE);
         sendMessage(mineJson,toJson,type);
     }
-    
     /**
      * 连接关闭调用的方法
      */
@@ -102,37 +107,39 @@ public class WebSocketServer {
     	error.printStackTrace();
     	logger.info("发生错误:" + error.getMessage());
     }
-    
-    //线程同步的加减人数计算
+
+	/**
+	 * 线程同步的加减人数计算
+	 **/
     public static synchronized int getOnlineCount() {
         return onlineCount;
     }
-
     public static synchronized void addOnlineCount() {
     	WebSocketServer.onlineCount++;
     }
-
     public static synchronized void subOnlineCount() {
     	WebSocketServer.onlineCount--;
     }
     
 
-    /*****以下为单独方法体*****/
+    //以下为单独方法体
    
    /***
     * 消息组装让后发送消息
     * @throws IOException 
     *****/
-   public void sendMessage(JSONObject fromJson,JSONObject toJson,String type) throws IOException {
+   private void sendMessage(JSONObject fromJson,JSONObject toJson,String type) throws IOException {
 	   switch (type) {
-	       case "friend"://单聊
-	    	    sendMessageFriend(fromJson,toJson);
+	       case WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_FRIEND://webim的单聊
 	    	    //后期接入智能小法,自动回复
 	    	    if(WebimDefineConstant.WEBIM_AIXF_PERSON_ID.equals(toJson.getLong("id"))) {
-	    	    	sendMessageAutomaticXf(fromJson);
-	    	    }
+					fromJson.put(WebimDefineConstant.WEBIM_JSON_LABEL_ID,WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_WEBIM+fromJson.getString(WebimDefineConstant.WEBIM_JSON_LABEL_ID));
+	    	    	sendMessageAutomatic(fromJson,type);
+	    	    }else{
+					sendMessageFriend(fromJson,toJson);
+				}
 	    	    break;
-	       case "group"://群聊
+	       case WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_GROUP://群聊
 	    	    logger.info("群聊的消息处理");
 		    	/*String[] members=to.split(",");
 		    	//发送到在线用户
@@ -141,23 +148,26 @@ public class WebSocketServer {
 		    		sendMessage(member,"hehe");
 		    	}*/
 	    	    break;
-	       case "all"://所有人
+	       case WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_ALL://所有人
 	    	    logger.info("系统发所有的消息处理");
-		    	for(Map.Entry<String,Session> entry:mapUS.entrySet()) {
+		    	/*for(Map.Entry<String,Session> entry:mapUS.entrySet()) {
 		    		String toUserSessionId=entry.getKey();
 		    		sendMessageText(toUserSessionId,"dd");
-		    	}
+		    	}*/
 		    	break;
-	       case "auto"://智能小法,自动回复
-	    	    sendMessageAutomaticXf(fromJson);
+	       case WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_AUTO://智能小法,自动回复
+	    	    sendMessageAutomatic(fromJson,type);
 		    	break;
+		   case WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_MANUAL://初始化,人工客服连接成功回复
+			    sendMessageManual(fromJson);
+			    break;
 	        default:
 	    	    break;
 	   }
    }
 
    /**
-    * 普通发送消息
+    * webim的普通朋友发送消息，由于内容sid不含前缀，所以发送内容的到用户要加前缀标识
 	***/
 	private void sendMessageFriend(JSONObject fromJson, JSONObject toJson) throws IOException {
 		logger.info("单聊的消息处理");
@@ -171,13 +181,13 @@ public class WebSocketServer {
 		messageDto.setMine(false);
 		messageDto.setFromid(fromJson.getString("id"));
 		messageDto.setTimestamp(System.currentTimeMillis());
-		sendMessageText(toJson.getString("id"), JSON.toJSONString(messageDto));
+		sendMessageText(WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_WEBIM+toJson.getString("id"), JSON.toJSONString(messageDto));
 	}
 	
    /**
     * 智能回答回复消息
 	***/
-	private void sendMessageAutomaticXf(JSONObject fromJson) throws IOException {
+	private void sendMessageAutomatic(JSONObject fromJson,String type) throws IOException {
 		String questionContent=fromJson.getString("content");
 		logger.info("智能回答的消息处理"+questionContent);
 		AefiqaAskDto askDto=new AefiqaAskDto();
@@ -199,15 +209,31 @@ public class WebSocketServer {
     	autoMessage.setId(WebimDefineConstant.WEBIM_AIXF_PERSON_ID+"");
     	autoMessage.setUsername("智能小法");
     	autoMessage.setAvatar(fromJson.getString("avatar"));
-    	autoMessage.setType("friend");
+    	autoMessage.setType(type);
     	autoMessage.setContent(replyContent);
     	autoMessage.setCid(0L);
     	autoMessage.setMine(false);
     	autoMessage.setFromid(WebimDefineConstant.WEBIM_AIXF_PERSON_ID+"");
     	autoMessage.setTimestamp(System.currentTimeMillis());  
-    	sendMessageText(fromJson.getString("id"),JSON.toJSONString(autoMessage));
+    	sendMessageText(fromJson.getString(WebimDefineConstant.WEBIM_JSON_LABEL_ID),JSON.toJSONString(autoMessage));
 	}
 
+	/**
+	 * 初始化,人工客服连接成功回复
+	 ***/
+	private void sendMessageManual(JSONObject fromJson) throws IOException {
+		AefwebimMessageDto manualMessage=new AefwebimMessageDto();
+		manualMessage.setId(WebimDefineConstant.WEBIM_AIXF_PERSON_ID+"");
+		manualMessage.setUsername("智能小法");
+		manualMessage.setAvatar(fromJson.getString("avatar"));
+		manualMessage.setType("friend");
+		manualMessage.setContent("");
+		manualMessage.setCid(0L);
+		manualMessage.setMine(false);
+		manualMessage.setFromid(WebimDefineConstant.WEBIM_AIXF_PERSON_ID+"");
+		manualMessage.setTimestamp(System.currentTimeMillis());
+		sendMessageText(fromJson.getString("id"),JSON.toJSONString(manualMessage));
+	}
 	/**
 	 * 实现服务器主动推送
 	 * 
@@ -223,16 +249,30 @@ public class WebSocketServer {
 	}
 
 	/**
+	 * 页面客户端和服务器连接成功前的拓展方法，例如： 判断用户是否合法
+	 ***/
+	private String dealWithOpenBeforeExpand(String sid) {
+		return iqaReplyService.getLegal(sid);
+	}
+
+	/**
 	 * 页面客户端和服务器连接成功后的拓展方法，例如： 发送智能问答提示信息
 	 * @throws IOException 
 	 ***/
-	public void dealWithOpenAfterExpand(String sid) throws IOException {
-		if(StringUtil.isNotEmpty(sid)&&sid.length()>=32){
+	private void dealWithOpenAfterExpand(String sid) throws IOException {
+		String tokenType=sid.substring(30,32);
+		if(WebimDefineConstant.WEBSOCKET_TOKEN_TYPE_AUTO.equals(tokenType)){
 			Map<String,Object> fromMap=new HashMap<String,Object>();
 			fromMap.put("id", sid);
 			fromMap.put("username", "游客"+sid);
-			sendMessage(JSON.parseObject(JSON.toJSONString(fromMap)),null,"auto");
+			sendMessage(JSON.parseObject(JSON.toJSONString(fromMap)),null,WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_AUTO);
+		}else if(WebimDefineConstant.WEBSOCKET_TOKEN_TYPE_MANUAL.equals(tokenType)){
+			Map<String,Object> fromMap=new HashMap<String,Object>();
+			fromMap.put("id", sid);
+			fromMap.put("username", "游客"+sid);
+			sendMessage(JSON.parseObject(JSON.toJSONString(fromMap)),null,WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_MANUAL);
 		}
 	}
+
 	
 }

@@ -38,6 +38,9 @@
     </div>
 </div>
 	<div th:include="sys/include :: footer"></div>
+	<script th:inline="javascript">
+		var websocketAutoToken=[[${websocketAutoToken}]];//auto智能回复认证码
+	</script>
     <script th:src="@{/aerfa/myresource/js/iqa/communicate.js}" type="text/javascript"></script>
 
 	<script th:inline="javascript">

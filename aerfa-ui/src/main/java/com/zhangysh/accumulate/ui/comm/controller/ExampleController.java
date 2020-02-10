@@ -1,6 +1,8 @@
 package com.zhangysh.accumulate.ui.comm.controller;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.zhangysh.accumulate.common.constant.WebimDefineConstant;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,8 @@ public class ExampleController {
 	@RequestMapping(value="/to_iqa_automatic")
 	public String toExampleIqaAutomatic(HttpServletRequest request, ModelMap modelMap) {
 		modelMap.addAttribute("prefix",prefix);
+		//特殊的token值便于websocket连接使用
+		modelMap.put(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_AUTO, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_AUTO);
 		return prefix+"/iqa_automatic";
 	}
 	
@@ -40,6 +44,8 @@ public class ExampleController {
 	@RequestMapping(value="/to_iqa_manual")
 	public String toExampleIqaManual(HttpServletRequest request, ModelMap modelMap) {
 		modelMap.addAttribute("prefix",prefix);
+		//特殊的token值便于websocket连接使用
+		modelMap.put(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_MANUAL, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_MANUAL);
 		return prefix+"/iqa_manual";
 	}
 	
