@@ -1,6 +1,6 @@
 $(function(){
 	layui.use('layim', function(layim){ 		
-	    var sid = personId;
+	    var sid = webimToken+personId;
 		//layim基础配置初始化配置
 		layim.config({
 			//,brief: true //是否简约模式（若开启则不显示主面板）
