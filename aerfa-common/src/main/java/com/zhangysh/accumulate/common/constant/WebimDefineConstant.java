@@ -100,12 +100,6 @@ public class WebimDefineConstant {
 	public static final String WEBSOCKET_MESSAGE_TYPE_AUTO="auto";
 	/** WebSocket消息类型:人工客服的manual **/
 	public static final String WEBSOCKET_MESSAGE_TYPE_MANUAL="manual";
-	/** WebSocket产品类型认证标记:01是webim网页聊天 **/
-	public static final String WEBSOCKET_TOKEN_TYPE_WEBIM="01";
-	/** WebSocket产品类型认证标记:02是auto智能回复 **/
-	public static final String WEBSOCKET_TOKEN_TYPE_AUTO="02";
-	/** WebSocket产品类型认证标记:03是manual人工客服 **/
-	public static final String WEBSOCKET_TOKEN_TYPE_MANUAL="03";
 
 	/** WebSocket产品类型认证字符:webim网页聊天 **/
 	public static final String WEBSOCKET_TOKEN_NAME_WEBIM="websocketWebimToken";
@@ -113,7 +107,9 @@ public class WebimDefineConstant {
 	/** WebSocket产品类型认证字符:auto智能回复 **/
 	public static final String WEBSOCKET_TOKEN_NAME_AUTO="websocketAutoToken";
 	public static final String WEBSOCKET_TOKEN_VALUE_AUTO="40284381702e745c01702e745c620002";
-	/** WebSocket产品类型认证字符:manual人工客服 **/
-	public static final String WEBSOCKET_TOKEN_NAME_MANUAL="websocketManualToken";
-	public static final String WEBSOCKET_TOKEN_VALUE_MANUAL="40284381702e745c01702e745c620003";
+	/** WebSocket产品类型认证字符:manual人工客服工作和消费者 **/
+	public static final String WEBSOCKET_TOKEN_NAME_MANUAL_WORKER="websocketManualWorkerToken";
+	public static final String WEBSOCKET_TOKEN_VALUE_MANUAL_WORKER="40284381702e745c01702e745c620003";
+	public static final String WEBSOCKET_TOKEN_NAME_MANUAL_CUSTOMER="websocketManualCustomerToken";
+	public static final String WEBSOCKET_TOKEN_VALUE_MANUAL_CUSTOMER="40284381702e745c01702e745c620004";
 }
