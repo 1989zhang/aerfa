@@ -1,7 +1,5 @@
 package com.zhangysh.accumulate.back.iqa.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,8 @@ public class IqaReplyController extends BaseController{
 	
 	@Autowired 
 	private IReplyService replyService;
-	
+
+
     private static final Logger logger=LoggerFactory.getLogger(IqaReplyController.class);
     
 	/****
@@ -60,4 +59,20 @@ public class IqaReplyController extends BaseController{
 		logger.info("getLegal:"+iqaToken);
 		return toHandlerResultStr(true, "token合法", null, null);
 	}
+
+	/**
+	 * 根据token即sessionId获取用户json信息
+	 * @param iqaToken 用户session标识
+	 * @return 获取到的用户结果
+	 ****/
+	@RequestMapping(value = "/person",method = RequestMethod.POST)
+	@ResponseBody
+	public String getPerson(@RequestBody String iqaToken){
+		try{
+			return toHandlerResultStr(true, replyService.getPerson(iqaToken), null, null);
+		}catch (Exception e){
+			return toHandlerResultStr(false,null,CodeMsgConstant.SYS_DATA_ACHIEVE_ERROR.fillArgs(e.getMessage()),null);
+		}
+	}
+
 }

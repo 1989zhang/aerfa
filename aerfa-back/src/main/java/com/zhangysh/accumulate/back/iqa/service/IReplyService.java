@@ -1,5 +1,7 @@
 package com.zhangysh.accumulate.back.iqa.service;
 
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
+
 /*****
  * 智能问答，回复相关方法
  * @author zhangysh
@@ -14,4 +16,11 @@ public interface IReplyService {
 	 * @return 匹配到的答案，如果没有匹配到就返回空内容字符;
 	 * ***/
 	String getReply(Long orgId,String askContent);
+
+	/**
+	 * 根据token即sessionId获取用户json信息
+	 * @param iqaToken 用户session标识
+	 * @return 获取到的用户结果
+	 ****/
+	AefsysPersonVo getPerson(String iqaToken);
 }

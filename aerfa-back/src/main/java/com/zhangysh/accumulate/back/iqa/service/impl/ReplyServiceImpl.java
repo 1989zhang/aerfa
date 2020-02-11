@@ -2,6 +2,8 @@ package com.zhangysh.accumulate.back.iqa.service.impl;
 
 import java.util.List;
 
+import com.zhangysh.accumulate.back.sys.service.IPersonService;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +25,9 @@ public class ReplyServiceImpl implements IReplyService{
 	private IQuestionService questionService;
 	@Autowired
 	private IAnswerService answerService;
-	
+	@Autowired
+	private IPersonService personService;
+
 	//这个智能问答目前实现得十分简单，后续加入人工智能
 	@Override
 	public String getReply(Long orgId, String askContent) {
@@ -43,4 +47,10 @@ public class ReplyServiceImpl implements IReplyService{
 		return "";
 	}
 
+	@Override
+	public AefsysPersonVo getPerson(String iqaToken){
+		Long personId=Long.valueOf(iqaToken.substring(32,iqaToken.length()));
+		AefsysPersonVo personVo=personService.getPersonWithOrgNameById(personId);
+		return personVo;
+	}
 }
