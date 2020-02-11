@@ -32,4 +32,12 @@ public interface IqaReplyService {
     @RequestMapping(value = "/iqa/legal",method = RequestMethod.POST)
     public String getLegal(@RequestBody String iqaToken);
 
+    /**
+     * 根据websocket的token获取个人JSON数据
+     * @param iqaToken 用户session标识
+     * @return 获取到的结果
+     ****/
+    @RequestMapping(value = "/iqa/person",method = RequestMethod.POST)
+    public String getPerson(@RequestBody String iqaToken);
+
 }

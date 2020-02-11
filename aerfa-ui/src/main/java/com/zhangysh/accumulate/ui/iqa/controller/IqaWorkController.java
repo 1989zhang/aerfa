@@ -1,7 +1,15 @@
 package com.zhangysh.accumulate.ui.iqa.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSON;
+import com.zhangysh.accumulate.common.constant.CacheConstant;
+import com.zhangysh.accumulate.common.constant.WebimDefineConstant;
+import com.zhangysh.accumulate.common.pojo.TokenModel;
+import com.zhangysh.accumulate.common.util.HttpStorageUtil;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
+import com.zhangysh.accumulate.ui.sys.service.ILoginService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/iqa/work")
 public class IqaWorkController {
 
+	@Resource
+	private ILoginService loginService;
+
 	private String prefix="/iqa/work";//返回界面路径即前缀
 	
 	/**
@@ -25,7 +36,16 @@ public class IqaWorkController {
 	 ****/
 	@RequestMapping(value="/to_space")
 	public String toSpace(HttpServletRequest request, ModelMap modelMap) {
+		String aerfatoken= HttpStorageUtil.getToken(request);
+		String sessionInfoStr=loginService.getSessionByToken(aerfatoken);
+		TokenModel tokenModel= JSON.parseObject(sessionInfoStr,TokenModel.class);
+		String personObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_PERSON)+"";
+		AefsysPersonVo personVo=JSON.parseObject(personObjectJson,AefsysPersonVo.class);
+
 		modelMap.addAttribute("prefix",prefix);
+		modelMap.addAttribute("personId",personVo.getId());
+		modelMap.addAttribute(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_MANUAL_WORKER, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_MANUAL_WORKER);
+		modelMap.addAttribute(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_MANUAL_CUSTOMER, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_MANUAL_CUSTOMER);
 		return prefix+"/space";
 	}
 	
