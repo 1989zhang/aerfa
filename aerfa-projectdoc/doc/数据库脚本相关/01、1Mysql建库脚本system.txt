@@ -196,7 +196,7 @@ create table aefsys_oper_log (
   oper_time       timestamp                             comment '操作时间',
   oper_url        varchar(256)                          comment '请求url',
   oper_system     varchar(64)                           comment '系统名称',
-  oper_module    varchar(64)                           comment '模块名称',
+  oper_module     varchar(64)                           comment '模块名称',
   oper_menu       varchar(64)                           comment '菜单名称',
   oper_button     varchar(64)                           comment '方法名称',
   oper_ip         varchar(32)                           comment '请求ip',
@@ -205,3 +205,35 @@ create table aefsys_oper_log (
   oper_param      varchar(2048)                         comment '请求参数',
   primary key (id)
 ) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='操作日志表';
+
+/*====================================================================*/
+/* table: aefsys_job 定时任务表                                  */
+/*====================================================================*/
+create table aefsys_job (
+  id               int(11)   not null auto_increment     comment 'id标识',
+  job_name         varchar(64)                           comment '任务名称',
+  invoke_target    varchar(500)                          comment '调用目标字符串',
+  cron_expression  varchar(64)                           comment 'cron执行表达式',
+  status           int(11)                               comment '状态1正常0暂停',
+  remark           varchar(256)                          comment '备注描述',
+  create_by        varchar(64)                           comment '创建人员名称',
+  create_time      timestamp                             comment '创建时间',
+  update_by        varchar(64)                           comment '更新人员名称',
+  update_time      timestamp                             comment '更新时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='定时任务表';
+
+/*====================================================================*/
+/* table: aefsys_job_log 定时任务日志表                                  */
+/*====================================================================*/
+create table aefsys_job_log (
+  id              int(11)    not null auto_increment     comment 'id标识',
+  job_id          int(11)                                comment '任务ID',
+  job_name        varchar(64)                            comment '任务名称',
+  invoke_target   varchar(500)                           comment '调用目标字符串',
+  log_content     varchar(2048)                          comment '执行日志',
+  status          int(11)                                comment '执行状态1正常0失败',
+  cost_time       int(11)                                comment '耗时单位毫秒',
+  create_time     timestamp                              comment '创建时间',
+  primary key (id)
+) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='定时任务日志表';
