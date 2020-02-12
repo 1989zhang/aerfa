@@ -13,6 +13,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 import com.zhangysh.accumulate.common.constant.MarkConstant;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
 import com.zhangysh.accumulate.ui.iqa.service.IqaReplyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,6 +123,7 @@ public class WebSocketServer {
     }
     
 
+
     //以下为单独方法体
    
    /***
@@ -159,7 +161,7 @@ public class WebSocketServer {
 	    	    sendMessageAutomatic(fromJson,type);
 		    	break;
 		   case WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_MANUAL://初始化,人工客服连接成功回复
-			    sendMessageManual(fromJson);
+			    sendMessageManual(fromJson,toJson);
 			    break;
 	        default:
 	    	    break;
@@ -221,18 +223,17 @@ public class WebSocketServer {
 	/**
 	 * 初始化,人工客服连接成功回复
 	 ***/
-	private void sendMessageManual(JSONObject fromJson) throws IOException {
+	private void sendMessageManual(JSONObject fromJson,JSONObject toJson) throws IOException {
 		AefwebimMessageDto manualMessage=new AefwebimMessageDto();
-		manualMessage.setId(WebimDefineConstant.WEBIM_AIXF_PERSON_ID+"");
-		manualMessage.setUsername("智能小法");
-		manualMessage.setAvatar(fromJson.getString("avatar"));
-		manualMessage.setType("friend");
-		manualMessage.setContent("");
+		manualMessage.setId(fromJson.getString("id"));
+		manualMessage.setUsername(fromJson.getString("username"));
+		manualMessage.setType(WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_MANUAL);
+		manualMessage.setContent(fromJson.getString("content"));
 		manualMessage.setCid(0L);
 		manualMessage.setMine(false);
-		manualMessage.setFromid(WebimDefineConstant.WEBIM_AIXF_PERSON_ID+"");
+		manualMessage.setFromid(fromJson.getString("id"));
 		manualMessage.setTimestamp(System.currentTimeMillis());
-		sendMessageText(fromJson.getString("id"),JSON.toJSONString(manualMessage));
+		sendMessageText(toJson.getString("id"),JSON.toJSONString(manualMessage));
 	}
 	/**
 	 * 实现服务器主动推送
@@ -260,19 +261,45 @@ public class WebSocketServer {
 	 * @throws IOException 
 	 ***/
 	private void dealWithOpenAfterExpand(String sid) throws IOException {
-		String tokenType=sid.substring(30,32);
-		if(WebimDefineConstant.WEBSOCKET_TOKEN_TYPE_AUTO.equals(tokenType)){
+		//智能问答游客返回消息
+		if(sid.startsWith(WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_AUTO)){
 			Map<String,Object> fromMap=new HashMap<String,Object>();
 			fromMap.put("id", sid);
 			fromMap.put("username", "游客"+sid);
 			sendMessage(JSON.parseObject(JSON.toJSONString(fromMap)),null,WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_AUTO);
-		}else if(WebimDefineConstant.WEBSOCKET_TOKEN_TYPE_MANUAL.equals(tokenType)){
+		}//人工问答游客返回消息,返回的消息相当于客服发给游客
+		else if(sid.startsWith(WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_MANUAL_CUSTOMER)){
+			String manualWorkerStr=getManualWorkerSessionId(sid);
 			Map<String,Object> fromMap=new HashMap<String,Object>();
-			fromMap.put("id", sid);
-			fromMap.put("username", "游客"+sid);
-			sendMessage(JSON.parseObject(JSON.toJSONString(fromMap)),null,WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_MANUAL);
+			if(StringUtil.isNotEmpty(manualWorkerStr)){
+				String personJsonStr=JSON.parseObject(manualWorkerStr).getString(MarkConstant.MARK_RESULT_VO_DATA);
+				AefsysPersonVo personVo=JSON.parseObject(personJsonStr,AefsysPersonVo.class);
+				fromMap.put("content","您好，有什么可以帮到您。");
+				fromMap.put("id",WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_MANUAL_WORKER+personVo.getId());
+				fromMap.put("username",personVo.getNickName());
+			}else{
+				fromMap.put("content","客服人员不在线，请稍后再试。");
+				fromMap.put("id",WebimDefineConstant.WEBIM_AIXF_PERSON_ID+"");
+				fromMap.put("username","");
+			}
+			Map<String,Object> toMap=new HashMap<String,Object>();
+			toMap.put("id", sid);
+			toMap.put("username", "游客"+sid);
+
+			sendMessage(JSON.parseObject(JSON.toJSONString(fromMap)),JSON.parseObject(JSON.toJSONString(toMap)),WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_MANUAL);
 		}
 	}
 
-	
+	/**
+	 * 根据人工游客token类型获取回答工作者信息
+	 **/
+	private String getManualWorkerSessionId(String CustomerSessionId){
+		for(Map.Entry<String,Session> entry:mapUS.entrySet()) {
+			String manualWorkerSessionId=entry.getKey();
+			if(manualWorkerSessionId.startsWith(WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_MANUAL_WORKER)){
+            	return iqaReplyService.getPerson(manualWorkerSessionId);
+			}
+		}
+		return "";
+	}
 }

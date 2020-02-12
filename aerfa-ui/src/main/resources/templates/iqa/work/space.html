@@ -2,141 +2,197 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="sys/include :: header"></head>
+<link th:href="@{/aerfa/myresource/css/iqa/communicate.css}" rel="stylesheet">
 
 <body class="gray-bg">
-<div class="wrapper wrapper-content">
-    <div class="row">
-        <div class="col-sm-3">
-         		<div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <h5>点击接入会话</h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="">当前状态</i>
-                            </a>
-                            <a class="collapse-link">
-                                <i class="fa fa-random">会话接入</i>
-                            </a>
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-sm-3">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>点击接入会话</h5>
+                            <div class="ibox-tools">
+                                <!--<a class="collapse-link">
+                                    <i class="">当前状态</i>
+                                </a>
+                                <a class="collapse-link">
+                                    <i class="fa fa-random">会话接入</i>
+                                </a>-->
+                            </div>
                         </div>
+                        <div class="ibox-content">
+                            <div class="feed-activity-list" id="activityList">
+
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="col-sm-7">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 id="customerChat">与  聊天中</h5>
+                        <input type="hidden" id="customerId">
+                        <input type="hidden" id="customerUsername">
+                    </div>
+                    <div class="ibox-content no-padding communicate-chat-box">
+                        <!--mini聊天窗口开始-->
+                        <div class="content" id="content" style="height:600px;overflow: auto;">
+
+                        </div>
+                        <div class="form-chat">
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" id="messageContent">
+                                <span class="input-group-btn">
+                                <button
+                                    class="btn btn-primary" type="button" onclick="appendAndSendMessage()">发送
+                                </button>
+                                </span>
+                            </div>
+                        </div>
+                        <!--mini聊天窗口结束-->
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>客户信息</h5>
                     </div>
                     <div class="ibox-content">
-                        <div class="feed-activity-list">
-                            <div class="feed-element" onclick="dealWithQuestion()" >
-                                <div>
-                                    <strong>井幽幽</strong>
-                                    <small class="pull-right">4月11日 00:00</small>
-                                    <div>所以单身的应该在这条留言，互相勾搭一下。特别有钱人又帅可以直接私信我！</div>
-                                </div>
-                            </div>
-                            <div class="feed-element" onclick="dealWithQuestion()">
-                                <div>
-                                    <strong>井幽幽</strong>
-                                    <small class="pull-right">4月11日 00:00</small>
-                                    <div>所以单身的应该在这条留言，互相勾搭一下。特别有钱人又帅可以直接私信我！</div>
-                                </div>
-                            </div>
-                        </div>
+                        <p><i class="fa fa-send-o"></i> 接入方式：<a href="javascript:;" target="_blank">http://www.zi-han.net</a>
+                        </p>
+                        <p><i class="fa fa-qq"></i> 浏览器：<a href="javascript:;">516477188</a>
+                        </p>
+                        <p><i class="fa fa-weixin"></i> 操作系统：<a href="javascript:;">zheng-zihan</a>
+                        </p>
+                        <p><i class="fa fa-credit-card"></i> IP地址：<a href="javascript:;">zheng-zihan@qq.com </a>
+                        </p>
                     </div>
-                </div>
-        </div>
-        <div class="col-sm-7">
-         	<div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>与 Beau-zihan 聊天中</h5>
-                </div>
-                <div class="ibox-content no-padding communicate-chat-box">
-                	<!--mini聊天窗口开始-->
-
-            <div class="content" id="content" style="height:600px;overflow: auto;">
-
-                <div class="left">
-                    <div class="author-name">
-                        Beau-zihan <small class="chat-date">
-                        10:02
-                    </small>
-                    </div>
-                    <div class="chat-message active">
-                        你好
-                    </div>
-
-                </div>
-                <div class="right">
-                    <div class="author-name">
-                        游客
-                        <small class="chat-date">
-                            11:24
-                        </small>
-                    </div>
-                    <div class="chat-message">
-                        你好，请问H+有帮助文档吗？
-                    </div>
-                </div>
-                <div class="left">
-                    <div class="author-name">
-                        Beau-zihan
-                        <small class="chat-date">
-                            08:45
-                        </small>
-                    </div>
-                    <div class="chat-message active">
-                        有，购买的H+源码包中有帮助文档，位于docs文件夹下
-                    </div>
-                </div>
-                <div class="right">
-                    <div class="author-name">
-                        游客
-                        <small class="chat-date">
-                            11:24
-                        </small>
-                    </div>
-                    <div class="chat-message">
-                        那除了帮助文档还提供什么样的服务？
-                    </div>
-                </div>
-            </div>
-            <div class="form-chat">
-                <div class="input-group input-group-sm">
-                    <input type="text" class="form-control"> <span class="input-group-btn"> 
-                    <button
-                        class="btn btn-primary" type="button" onclick="appendAndSendMessage()">发送
-                     </button> 
-                    </span>
-                </div>
-            </div>
-
-        <!--mini聊天窗口结束-->
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-2">
-         	<div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>客户信息</h5>
-                </div>
-                <div class="ibox-content">
-                    <p><i class="fa fa-send-o"></i> 接入方式：<a href="javascript:;" target="_blank">http://www.zi-han.net</a>
-                    </p>
-                    <p><i class="fa fa-qq"></i> 浏览器：<a href="javascript:;">516477188</a>
-                    </p>
-                    <p><i class="fa fa-weixin"></i> 操作系统：<a href="javascript:;">zheng-zihan</a>
-                    </p>
-                    <p><i class="fa fa-credit-card"></i> IP地址：<a href="javascript:;">zheng-zihan@qq.com </a>
-                    </p>
                 </div>
             </div>
         </div>
     </div>
-</div>
 	<div th:include="sys/include :: footer"></div>
+    <script th:inline="javascript">
+        var personId=[[${personId}]];//person的id
+        var nickName=[[${nickName}]];//person的nickName
+        var websocketManualWorkerToken=[[${websocketManualWorkerToken}]];//manual人工客服认证码
+    </script>
+    <script th:src="@{/aerfa/myresource/js/iqa/communicate.js}" type="text/javascript"></script>
+
 	<script th:inline="javascript">
-	function dealWithQuestion(){
-		alert(11);
-	}
-	
-	function appendAndSendMessage(){
-		$("#content").append('<div class="left"><div class="author-name">Beau-zihan <small class="chat-date">10:02</small></div><div class="chat-message active">你好</div></div>')
-		$("#content").append('<div class="right"><div class="author-name">Beau-zihan <small class="chat-date">10:02</small></div><div class="chat-message">你好</div></div>')
-	}
+    //初始化WebSocket
+    var autoManualSocket;
+    var userName=nickName;
+    var manualIdentityStr=websocketManualWorkerToken+personId;
+    $(function(){
+        if(typeof(WebSocket) == "undefined") {
+            console.log("您的浏览器不支持WebSocket");
+        }else{
+            //实现化WebSocket对象，指定要连接的服务器地址与端口 建立连接
+
+            autoManualSocket = new WebSocket((baseUrl+"websocket/"+manualIdentityStr).replace("http","ws"));
+            //打开事件
+            autoManualSocket.onopen = function() {
+                console.log("您的浏览器支持WebSocket且已打开");
+            };
+            //获得消息事件
+            autoManualSocket.onmessage = function(msg) {
+                receiveMessage(JSON.parse(msg.data));
+            };
+            //关闭事件
+            autoManualSocket.onclose = function() {
+                console.log("Socket已关闭");
+            };
+            //发生了错误事件
+            autoManualSocket.onerror = function() {
+                alert("Socket发生了错误");
+            }
+        }
+    });
+
+    //发送并填充输入信息等操作
+    function appendAndSendMessage(){
+        var messageContent=$("#messageContent").val();
+        if($.common.isEmpty(messageContent)){
+            $.modal.alertError("内容不能为空");
+            return ;
+        }
+        //发送信息组装
+        var mineObj = {};
+        mineObj.username=userName;
+        mineObj.avatar="/aerfa/myresource/images/default_personal.jpg";
+        mineObj.id=manualIdentityStr;
+        mineObj.content=messageContent;
+
+        var toObj = {};
+        toObj.avatar="/aerfa/myresource/images/default_personal.jpg";
+        toObj.id=$('#customerId').val();
+        toObj.username=$('#customerUsername').val();;
+        toObj.type="manual";
+        var messageObj = {};
+        messageObj.mine=mineObj;
+        messageObj.to=toObj;
+        //发送信息
+        sendMessage(messageObj);
+        //填充信息
+        appendMessage("content","right",userName,$.common.currentFullDate(),messageContent);
+        //清空信息
+        $("#messageContent").val("");
+    }
+    //发送消息
+    function sendMessage(data){
+        autoManualSocket.send(JSON.stringify({
+            message:data
+        }));
+    }
+    //收到消息展示到页面
+    function receiveMessage(data){
+        var dataId=data.id;
+        var customerId=$('#customerId').val();
+        if(dataId!=customerId){
+            appendActivityList(data);
+        }else{
+            updateActivityList(data);
+            appendMessage("content","left",data.username,$.common.parseFullDate(data.timestamp),data.content);
+        }
+    }
+    //把消息添加到待回复列表,如果消息已有就做update
+    function appendActivityList(data){
+        var dataId=data.id;
+        var username=$("#username"+dataId+"").text();
+        if($.common.isEmpty(username)){
+            var dateStr=$.common.parseFullDate(data.timestamp);
+            var appendContent="<div class='feed-element' onclick='dealWithQuestion(&apos;"+dataId+"&apos;)'><div id='"+dataId+"'><strong id='username"+dataId+"'>"+data.username+"</strong><small class='pull-right' id='date"+dataId+"'>"+dateStr+"</small><div id='content"+dataId+"'>"+data.content+"</div></div> </div>";
+            $("#activityList").append(appendContent);
+        }else{
+            updateActivityList(data);
+        }
+    }
+
+    //把消息添加到待回复列表
+    function updateActivityList(data){
+        var dataId=data.id;
+        var dateStr=$.common.parseFullDate(data.timestamp);
+        $("#username"+dataId+"").html(data.username);
+        $("#date"+dataId+"").html(dateStr);
+        $("#content"+dataId+"").html(data.content);
+    }
+
+    //选中记录后切换进聊天框
+    function dealWithQuestion(fromSid){
+        var customerId=$('#customerId').val();
+        if(fromSid!=customerId){
+            var username=$("#username"+fromSid+"").text();
+            var dateStr=$("#date"+fromSid+"").text();
+            var content=$("#content"+fromSid+"").text();
+            $('#customerChat').html("与 "+username+" 聊天中");
+            $('#customerId').val(fromSid);
+            $('#customerUsername').val(username);
+            $("#content").empty();
+            appendMessage("content","left",username,dateStr,content);
+        }
+    }
 	</script>
 	
 </body>
