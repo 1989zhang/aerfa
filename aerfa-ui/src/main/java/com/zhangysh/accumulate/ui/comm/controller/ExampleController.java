@@ -46,7 +46,6 @@ public class ExampleController {
 		modelMap.addAttribute("prefix",prefix);
 		//特殊的token值便于websocket连接使用
 		modelMap.addAttribute(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_MANUAL_CUSTOMER, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_MANUAL_CUSTOMER);
-		modelMap.addAttribute(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_MANUAL_WORKER, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_MANUAL_WORKER);
 		return prefix+"/iqa_manual";
 	}
 	

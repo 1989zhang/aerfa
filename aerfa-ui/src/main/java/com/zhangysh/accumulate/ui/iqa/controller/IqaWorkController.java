@@ -44,8 +44,8 @@ public class IqaWorkController {
 
 		modelMap.addAttribute("prefix",prefix);
 		modelMap.addAttribute("personId",personVo.getId());
+		modelMap.addAttribute("nickName",personVo.getNickName());
 		modelMap.addAttribute(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_MANUAL_WORKER, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_MANUAL_WORKER);
-		modelMap.addAttribute(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_MANUAL_CUSTOMER, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_MANUAL_CUSTOMER);
 		return prefix+"/space";
 	}
 	
