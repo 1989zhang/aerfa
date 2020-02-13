@@ -233,7 +233,8 @@ create table aefsys_job_log (
   job_name        varchar(64)                            comment '任务名称',
   invoke_target   varchar(500)                           comment '调用目标字符串',
   log_content     varchar(2048)                          comment '执行日志',
-  status          int(11)                                comment '执行状态1正常0失败',
+  log_type        varchar(32)                            comment '日志类型',
+  execute_status  int(11)                                comment '执行状态1正常0失败',
   cost_time       int(11)                                comment '耗时单位毫秒',
   create_time     timestamp                              comment '创建时间',
   primary key (id)
