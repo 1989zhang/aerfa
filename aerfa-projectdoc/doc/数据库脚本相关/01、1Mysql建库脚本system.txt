@@ -215,6 +215,7 @@ create table aefsys_job (
   invoke_target    varchar(500)                          comment '调用目标字符串',
   cron_expression  varchar(64)                           comment 'cron执行表达式',
   status           int(11)                               comment '状态1正常0暂停',
+  execute_policy   int(11)                               comment '执行策略1等待执行2立即执行',
   remark           varchar(256)                          comment '备注描述',
   create_by        varchar(64)                           comment '创建人员名称',
   create_time      timestamp                             comment '创建时间',
