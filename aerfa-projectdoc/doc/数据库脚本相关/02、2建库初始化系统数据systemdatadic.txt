@@ -12,6 +12,10 @@ insert into aefsys_data_dic values (9, 'whether_status', '是否状态', '0', '�
 insert into aefsys_data_dic values (10, 'currency_status', '通用状态', null, null, null, 1, 1, null, 1, '通用状态数据字典', null, null, null, null);
 insert into aefsys_data_dic values (11, 'currency_status', '通用状态', '1', '是', null, 1, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (12, 'currency_status', '通用状态', '0', '否', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (13, 'result_status', '结果状态', null, null, null, 1, 1, null, 1, '结果状态数据字典', null, null, null, null);
+insert into aefsys_data_dic values (14, 'result_status', '结果状态', '1', '成功', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (15, 'result_status', '结果状态', '0', '失败', null, 2, 0, null, 1, null, null, null, null, null);
+
 
 /*非通用数据字典*/
 insert into aefsys_data_dic values (101, 'resource_type', '资源类型', null, null, null, 1, 1, null, 1, '资源类型数据字典', null, null, null, null);
