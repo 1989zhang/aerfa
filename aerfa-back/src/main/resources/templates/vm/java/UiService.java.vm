@@ -49,7 +49,7 @@ public interface I${className}Service {
 	/****
 	 * 保存新增的${tableComment}信息 
 	 * @param aerfatoken token对象
-	 * @param ${className} 要保存的${tableComment}对象
+	 * @param ${classname} 要保存的${tableComment}对象
 	 ***/
 	@RequestMapping(value = "/sys/${removePrefixTableName}/save",method = RequestMethod.POST)
 	public String saveAdd(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody ${doclassName} ${classname});
