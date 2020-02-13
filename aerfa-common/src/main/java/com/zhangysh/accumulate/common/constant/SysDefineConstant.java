@@ -35,6 +35,10 @@ public class SysDefineConstant {
 	public static final Long DB_DEFAULT_STATUS_DEFAULT=1L;
 	/**数据库默认状态的非默认标记0**/
 	public static final Long DB_DEFAULT_STATUS_NOT_DEFAULT=0L;
+	/**数据库可用状态的可用标记1**/
+	public static final Long DB_USEABLE_STATUS_VALID=1L;
+	/**数据库可用状态的不可用标记0**/
+	public static final Long DB_DEFAULT_STATUS_INVALID=0L;
 	/**数据库人员登录状态在线标记1**/
 	public static final Long DB_LOGIN_STATUS_ON_LINE=1L;
 	/**数据库人员登录状态离线标记0**/
@@ -43,5 +47,6 @@ public class SysDefineConstant {
 	public static final Long DB_WORK_DAY_STATUS_DUTY=1L;
 	/**数据库工作日上班状态不上班标记0**/
 	public static final Long DB_WORK_DAY_STATUS_RUSH=0L;
+
 	
 }

@@ -43,6 +43,8 @@
         <servlet-api.version>4.0.1</servlet-api.version>
         <!--alibaba的fastjson转换工具版本号-->
         <alibaba.fastjson.version>1.2.49</alibaba.fastjson.version>
+        <!-- 定时任务版本号 -->
+        <org.quartz.version>2.3.0</org.quartz.version>
 
         <!--httpclient本地调用http版本号-->
         <apache.httpclient.version>4.5.6</apache.httpclient.version>
@@ -52,6 +54,9 @@
         <apache.velocity.version>1.7</apache.velocity.version>
         <!--Apache的io常用工具类,生成代码相关输出流版本号-->
         <apache.commons-io.version>2.5</apache.commons-io.version>
+        <!--apache的commons常用工具类 -->
+        <apache.commons-lang3.version>3.7</apache.commons-lang3.version>
+
         <!-- excel和word读取操作包版本号，最好要相同 -->
         <apache.poi.poi.version>3.17</apache.poi.poi.version>
         <apache.poi.ooxml.version>3.17</apache.poi.ooxml.version>
@@ -119,6 +124,12 @@
                 <artifactId>pagehelper</artifactId>
                 <version>${mybatis.pagehelper.version}</version>
             </dependency>
+            <!-- 定时任务 -->
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${org.quartz.version}</version>
+            </dependency>
 
             <!-- httpclient本地调用http执行get和post请求-->
             <dependency>
@@ -156,6 +167,12 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${apache.commons-io.version}</version>
+            </dependency>
+            <!--apache的commons常用工具类 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.commons-lang3.version}</version>
             </dependency>
             <!-- 谷歌二维码 生成包-->
             <dependency>
