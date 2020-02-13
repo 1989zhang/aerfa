@@ -3,6 +3,7 @@ package com.zhangysh.accumulate.back.sys.util;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Service;
 
 /**
  * spring管理环境中的bean
@@ -10,14 +11,15 @@ import org.springframework.context.ApplicationContextAware;
  * @author zhangysh
  * @date 2020年02月12日
  */
-public class SpringContextUtils implements ApplicationContextAware {
-	
-	public static ApplicationContext applicationContext; 
+@Service("springContextUtil")
+public class SpringContextUtil implements ApplicationContextAware {
+
+	//Spring应用上下文环境
+	private static ApplicationContext applicationContext;
 
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		SpringContextUtils.applicationContext = applicationContext;
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		SpringContextUtil.applicationContext = applicationContext;
 	}
 
 	/**
