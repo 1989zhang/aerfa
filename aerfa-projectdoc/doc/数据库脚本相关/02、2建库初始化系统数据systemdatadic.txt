@@ -97,4 +97,7 @@ insert into aefsys_data_dic values (176, 'person_job', '人员职业', '7', '娱
 insert into aefsys_data_dic values (177, 'person_job', '人员职业', '8', '教育/培训/学生', null, 8, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (178, 'person_job', '人员职业', '9', '公务员/行政/事业单位 ', null, 9, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (179, 'person_job', '人员职业', '10', '其他职业', null, 10, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (180, 'execute_policy', '执行策略', null, null, null, 1, 1, null, 1, '执行策略数据字典', null, null, null, null);
+insert into aefsys_data_dic values (181, 'execute_policy', '执行策略', '1', '等待触发执行', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (182, 'execute_policy', '执行策略', '2', '立即触发执行', null, 2, 0, null, 1, null, null, null, null, null);
 
