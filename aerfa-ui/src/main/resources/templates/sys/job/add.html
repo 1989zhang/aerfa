@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-job-add">
+			<input id="id" name="id" type="hidden"><!--判断唯一要用到id，避免出现undefine-->
+		    <div class="form-group">
+				<label class="col-sm-3 control-label">任务名称：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="jobName" name="jobName">
+				</div>
+			</div>
+		    <div class="form-group">
+				<label class="col-sm-3 control-label">调用目标字符串：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="invokeTarget" name="invokeTarget">
+					<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> Bean唯一名称调用示例：thisTestJob.testNoParam()</span>
+					<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> Class类路径调用示例：com.back.service.testJob.testParam('zh')</span>
+					<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 参数英文逗号隔开：支持字符串，布尔类型，长整型，整型，浮点型</span>
+				</div>
+			</div>
+		    <div class="form-group">
+				<label class="col-sm-3 control-label">cron执行表达式：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="cronExpression" name="cronExpression">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">备注：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="remark" name="remark">
+				</div>
+			</div>
+		    <div class="form-group">
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="status" name="status" th:with="statusDicList=${@dic.getDic('useable_status')}">
+		         		<option th:each="dic:${statusDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+	                </select> 
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">执行策略：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="executePolicy" name="executePolicy" th:with="statusDicList=${@dic.getDic('execute_policy')}">
+						<option th:each="dic:${statusDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">保存</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="sys/include :: footer"></div>
+
+    <script th:inline="javascript">
+		$("#form-job-add").validate({
+			rules:{
+			},
+			messages: {
+    		},
+			submitHandler: function(form) {
+				$.operate.save(prefix + "/save_add", $('#form-job-add').serialize());
+			}
+		});
+	</script>
+	
+</body>
+</html>
