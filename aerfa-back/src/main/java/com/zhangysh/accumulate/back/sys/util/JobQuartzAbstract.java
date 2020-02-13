@@ -17,9 +17,9 @@ import org.springframework.beans.BeanUtils;
  * @author zhangysh
  * @date 2020年02月13日
  */
-public abstract class AbstractQuartzJob implements Job {
+public abstract class JobQuartzAbstract implements Job {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractQuartzJob.class);
+    private static final Logger logger = LoggerFactory.getLogger(JobQuartzAbstract.class);
 
     /**
      * 线程本地变量

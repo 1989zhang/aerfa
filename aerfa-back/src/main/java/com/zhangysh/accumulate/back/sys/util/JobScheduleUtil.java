@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class JobScheduleUtil {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractQuartzJob.class);
+    private static final Logger logger = LoggerFactory.getLogger(JobQuartzAbstract.class);
 
     /**
      * 获取表达式触发器
@@ -122,7 +122,7 @@ public class JobScheduleUtil {
      * @return 具体执行任务类
      */
     public static Class<? extends Job> getQuartzJobClass(AefsysJob sysJob) throws Exception{
-        return QuartzJobExecution.class;
+        return JobQuartzExecution.class;
     }
 
     /**
