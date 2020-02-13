@@ -48,5 +48,12 @@ public class SysDefineConstant {
 	/**数据库工作日上班状态不上班标记0**/
 	public static final Long DB_WORK_DAY_STATUS_RUSH=0L;
 
-	
+	/** 系统定时任务相关定义变量：job名称 **/
+	public static final String JOB_NAME="JOB_NAME";
+	/** 系统定时任务相关定义变量：job参数 **/
+	public static final String JOB_JOB_PROPERTIES="JOB_PROPERTIES";
+	/** 系统定时任务相关定义变量：job执行计划等待执行 **/
+	public static final String JOB_EXECUTE_POLICY_WAITING ="1";
+	/** 系统定时任务相关定义变量：job执行计划立即执行 **/
+	public static final String JOB_EXECUTE_POLICY_IMMEDIATELY ="2";
 }
