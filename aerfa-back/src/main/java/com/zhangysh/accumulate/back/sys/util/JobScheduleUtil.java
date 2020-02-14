@@ -56,7 +56,7 @@ public class JobScheduleUtil {
         scheduler.scheduleJob(jobDetail, trigger);
 
         // 暂停任务
-        if (sysJob.getStatus().equals(SysDefineConstant.DB_DEFAULT_STATUS_INVALID)) {
+        if (sysJob.getStatus().equals(SysDefineConstant.DB_USEABLE_STATUS_INVALID)) {
             scheduler.pauseJob(JobScheduleUtil.getJobKey(sysJob.getId()));
         }
     }
@@ -76,7 +76,7 @@ public class JobScheduleUtil {
         createScheduleJob(scheduler, sysJob);
 
         // 暂停任务
-        if (sysJob.getStatus().equals(SysDefineConstant.DB_DEFAULT_STATUS_INVALID)) {
+        if (sysJob.getStatus().equals(SysDefineConstant.DB_USEABLE_STATUS_INVALID)) {
             pauseJob(scheduler, sysJob.getId());
         }
     }

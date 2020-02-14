@@ -83,7 +83,7 @@ public abstract class JobQuartzAbstract implements Job {
         } else {
             sysJobLog.setExecuteStatus(SysDefineConstant.DIC_RESULT_STATUS_SUCESS);
             sysJobLog.setLogType(LogConstant.LOG_TYPE_INFO);
-            sysJobLog.setLogContent(sysJob.getJobName()+"执行成功总共耗时：" + costTimeMs + "毫秒");
+            sysJobLog.setLogContent(sysJob.getJobName()+" 执行成功,总共耗时：" + costTimeMs + "毫秒");
             logger.error("execute 任务执行成功。");
         }
 

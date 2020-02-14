@@ -51,4 +51,28 @@ public interface IJobService {
 	@RequestMapping(value = "/sys/job/delete",method = RequestMethod.POST)
 	public String deleteJobByIds(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken, @RequestBody String ids);
 
+	/***
+	 * 验证cron表达式是否正确
+	 * @param aerfatoken token对象
+	 * @param cronExpression 要验证的cron表达式字符串
+	 **/
+	@RequestMapping(value = "/sys/job/check_expression_valid",method = RequestMethod.POST)
+	public String checkExpressionValid(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken, @RequestBody String cronExpression);
+
+	/****
+	 * 立即执行一次任务
+	 * @param aerfatoken token对象
+	 * @param job 要执行的任务
+	 ***/
+	@RequestMapping(value = "/sys/job/run_once",method = RequestMethod.POST)
+	public String runOnce(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken, @RequestBody AefsysJob job);
+
+	/****
+	 * 改变任务状态
+	 * @param aerfatoken token对象
+	 * @param job 要改变状态的任务
+	 ***/
+	@RequestMapping(value = "/sys/job/change_status",method = RequestMethod.POST)
+	public String changeStatus(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken, @RequestBody AefsysJob job);
+
 }

@@ -1,11 +1,14 @@
 package com.zhangysh.accumulate.ui.sys.controller;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysJobLog;
 import com.zhangysh.accumulate.pojo.sys.transobj.AefsysJobLogDto;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysJobLogVo;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysJobVo;
 import com.zhangysh.accumulate.ui.sys.service.IJobLogService;
+import com.zhangysh.accumulate.ui.sys.service.IJobService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +51,8 @@ public class LogController {
 	private IOperLogService operLogService;
 	@Autowired
 	private IPersonLoginInfoService personLoginInfoService;
+	@Autowired
+	private IJobService jobService;
 	@Autowired
 	private IJobLogService jobLogService;
 
@@ -157,7 +162,14 @@ public class LogController {
 	 * @return templates下的定时任务日志页面
 	 ****/
 	@RequestMapping(value="/to_job_log")
-	public String toSysJobLog(HttpServletRequest request, ModelMap modelMap) {
+	public String toSysJobLog(HttpServletRequest request, ModelMap modelMap,Long jobId) {
+		AefsysJobVo sysJob=new AefsysJobVo();
+		if(StringUtil.isNotNull(jobId)){
+			String aerfatoken=HttpStorageUtil.getToken(request);
+			String jobJsonStr=jobService.getSingle(aerfatoken,jobId);
+			sysJob=JSON.parseObject(jobJsonStr,AefsysJobVo.class);
+		}
+		modelMap.addAttribute("sysJob", sysJob);
 		modelMap.addAttribute("prefix",prefix);
 		return prefix+"/job_log";
 	}

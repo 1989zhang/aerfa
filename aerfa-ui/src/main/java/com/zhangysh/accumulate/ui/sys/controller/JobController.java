@@ -112,4 +112,44 @@ public class JobController {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		return jobService.deleteJobByIds(aerfatoken, ids);
     }
+
+	/***
+	 * 验证cron表达式是否正确
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param cronExpression 表达式字符串
+	 ***/
+	@RequestMapping(value="/check_expression_valid")
+	@ResponseBody
+	public String checkExpressionValid(HttpServletRequest request, ModelMap modelMap,String cronExpression){
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return jobService.checkExpressionValid(aerfatoken,cronExpression);
+	}
+
+	/***
+	 * 立即执行一次任务
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param job 要执行的任务
+	 ***/
+	@RequestMapping(value="/run_once")
+	@ResponseBody
+	public String RunOnce(HttpServletRequest request, ModelMap modelMap,AefsysJob job){
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return jobService.runOnce(aerfatoken, job);
+	}
+
+	/***
+	 * 改变任务状态
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param job 要改变状态的任务
+	 ***/
+	@RequestMapping(value="/change_status")
+	@ResponseBody
+	public String changeStatus(HttpServletRequest request, ModelMap modelMap,AefsysJob job){
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return jobService.changeStatus(aerfatoken, job);
+	}
+
 }

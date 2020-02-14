@@ -38,7 +38,7 @@ public class SysDefineConstant {
 	/**数据库可用状态的可用标记1**/
 	public static final Long DB_USEABLE_STATUS_VALID=1L;
 	/**数据库可用状态的不可用标记0**/
-	public static final Long DB_DEFAULT_STATUS_INVALID=0L;
+	public static final Long DB_USEABLE_STATUS_INVALID=0L;
 	/** 数据字典结果状态成功1 ***/
 	public static final Long DIC_RESULT_STATUS_SUCESS=1L;
 	/** 数据字典结果状态失败0 ***/

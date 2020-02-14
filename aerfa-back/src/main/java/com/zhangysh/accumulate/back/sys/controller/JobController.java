@@ -1,14 +1,12 @@
 package com.zhangysh.accumulate.back.sys.controller;
 
+import com.zhangysh.accumulate.common.constant.CacheConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.alibaba.fastjson.JSON;
 
 import com.zhangysh.accumulate.common.constant.UtilConstant;
@@ -100,4 +98,38 @@ public class JobController extends BaseController{
 	public String deleteJobByIds(HttpServletRequest request,@RequestBody String ids) {
 		return toHandlerResultStr(jobService.deleteJobByIds(ids));
 	}
+
+	/***
+	 * 验证cron表达式是否正确
+	 * @param request 请求对象
+	 * @param cronExpression 验证表达式
+	 ***/
+	@RequestMapping(value = "/check_expression_valid",method = RequestMethod.POST)
+	@ResponseBody
+	public String checkExpressionValid(HttpServletRequest request,@RequestBody String cronExpression) {
+    	return toHandlerResultStr(jobService.checkExpressionValid(cronExpression));
+	}
+
+	/****
+	 * 立即执行一次任务
+	 * @param request 请求对象
+	 * @param job 要执行的任务
+	 ***/
+	@RequestMapping(value = "/run_once",method = RequestMethod.POST)
+	@ResponseBody
+	public String runOnce(HttpServletRequest request, @RequestBody AefsysJob job){
+		return toHandlerResultStr(jobService.runOnce(job.getId()));
+	}
+
+	/****
+	 * 改变任务状态
+	 * @param request 请求对象
+	 * @param job 要改变状态的任务
+	 ***/
+	@RequestMapping(value = "/change_status",method = RequestMethod.POST)
+	@ResponseBody
+	public String changeStatus(HttpServletRequest request, @RequestBody AefsysJob job){
+		return toHandlerResultStr(jobService.changeStatus(job.getId(),job.getStatus()));
+	}
+
 }

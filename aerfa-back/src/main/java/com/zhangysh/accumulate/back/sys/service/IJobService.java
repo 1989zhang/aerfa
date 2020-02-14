@@ -76,5 +76,23 @@ public interface IJobService {
      * @return 删除结果条数
      */
 	 int deleteJobByIds(String ids);
-	
+
+	/**
+	 * 验证cron表达式是否正确
+	 * @param cronExpression 验证表达式
+	 * @return 是否正确
+	 */
+	boolean checkExpressionValid(String cronExpression);
+
+	/****
+	 * 立即执行一次任务
+	 * @param id 定时任务ID
+	 **/
+	boolean runOnce(Long id);
+
+	/****
+	 * 改变任务状态
+	 * @param id 定时任务ID
+	 **/
+	boolean changeStatus(Long id,Long status);
 }

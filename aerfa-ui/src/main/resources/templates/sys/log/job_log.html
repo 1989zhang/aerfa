@@ -9,11 +9,11 @@
             	<form role="form" class="form-inline" id="form-jobLog-search"> 		
 	                <div class="form-group">
 	                    <label>任务名称：</label>
-						<input type="text" id="jobName" name="jobName" class="form-control">
+						<input type="text" id="jobName" name="jobName" class="form-control" th:field="*{sysJob.jobName}">
 	                </div>
 	                <div class="form-group">
 	                    <label>调用目标字符串：</label>
-						<input type="text" id="invokeTarget" name="invokeTarget" class="form-control">
+						<input type="text" id="invokeTarget" name="invokeTarget" class="form-control" th:field="*{sysJob.invokeTarget}">
 	                </div>
 	                <div class="form-group">
 	                    <label>执行状态：</label>
@@ -50,6 +50,7 @@
                 url: prefix + "/job_log_list",
 				removeUrl: prefix + "/remove_job_log/{id}",
 				viewUrl: prefix+ "/to_view_job_log/{id}",//查看地址
+				queryParams: queryParams,
                 modalName: "定时任务日志",
 				sortName:'id',
 				sortOrder:'desc',
@@ -68,13 +69,14 @@
 					title : '调用目标字符串',
 					width: '15%',
 					align: 'center',
+					formatter:formatTableHideContentShort
 				},
 				{
 					field : 'logContent',
 					title : '执行日志',
 					width: '26%',
 					align: 'center',
-					formatter:formatTableHideContentShort
+					formatter:formatTableHideContentMedium
 				},
 				{
 					field : 'logType', 
@@ -119,6 +121,14 @@
             };
             $.table.init(options);
         });
+
+		//触发查询条件
+		function queryParams(params) {
+			var search=$.table.queryParams(params);
+			search.jobName=$("#jobName").val();
+			search.invokeTarget=$("#invokeTarget").val();
+			return search;
+		}
     </script>
 </body>
 </html>
