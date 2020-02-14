@@ -1,5 +1,7 @@
 package com.zhangysh.accumulate.pojo.sys.dataobj;
 
+import com.zhangysh.accumulate.pojo.base.BaseDataObj;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,12 +11,10 @@ import java.util.Date;
  * @author zhangysh
  * @date 2020年02月13日
  */
-public class AefsysJob implements Serializable{
+public class AefsysJob extends BaseDataObj {
 
 	private static final long serialVersionUID = 1L;
-	
-	/** id标识 **/
-	private Long id;
+
 	/** 任务名称 **/
 	private String jobName;
 	/** 调用目标字符串 **/
@@ -27,21 +27,7 @@ public class AefsysJob implements Serializable{
 	private Long executePolicy;
 	/** 备注描述 **/
 	private String remark;
-	/** 创建人员名称 **/
-	private String createBy;
-	/** 创建时间 **/
-	private Date createTime;
-	/** 更新人员名称 **/
-	private String updateBy;
-	/** 更新时间 **/
-	private Date updateTime;
 
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
 	public String getJobName() {
 		return jobName;
 	}
@@ -77,30 +63,6 @@ public class AefsysJob implements Serializable{
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}
-	public String getCreateBy() {
-		return createBy;
-	}
-	public void setCreateBy(String createBy) {
-		this.createBy = createBy;
-	}
-	public Date getCreateTime() {
-		return createTime;
-	}
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-	public String getUpdateBy() {
-		return updateBy;
-	}
-	public void setUpdateBy(String updateBy) {
-		this.updateBy = updateBy;
-	}
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
 	}
 
 	@Override

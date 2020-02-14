@@ -1,11 +1,11 @@
 package com.zhangysh.accumulate.ui.sys.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysJobLog;
+import com.zhangysh.accumulate.pojo.sys.transobj.AefsysJobLogDto;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysJobLogVo;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysJobVo;
+import com.zhangysh.accumulate.ui.sys.service.IJobLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +48,13 @@ public class LogController {
 	private IOperLogService operLogService;
 	@Autowired
 	private IPersonLoginInfoService personLoginInfoService;
-	
+	@Autowired
+	private IJobLogService jobLogService;
+
 	/**
 	 *跳转到sys下操作日志页面
 	 *@param request 请求对象
-	 *@param modelMapl spring的mvc返回对象
+	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的单位页面
 	 ****/
 	@RequestMapping(value="/to_oper_log")
@@ -74,6 +76,21 @@ public class LogController {
 		operLogDto.setPageInfo(pageInfo);operLogDto.setOperLog(operLog);
 		return operLogService.getList(aerfatoken,operLogDto);
 	}
+	/**
+	 *跳转到查看操作日志详细页面
+	 *@param request 请求对象
+	 *@param modelMap spring的mvc返回对象
+	 *@return templates下的单位页面
+	 ****/
+	@RequestMapping(value="/to_view_oper_log/{id}")
+	public String toViewOperLog(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		String retOperLogStr=operLogService.getSingle(aerfatoken, id);
+		AefsysOperLogVo operLog=JSON.parseObject(retOperLogStr,AefsysOperLogVo.class);
+		modelMap.addAttribute("prefix",prefix);
+		modelMap.put("operLog",operLog);
+		return prefix+"/view_oper_log";
+	}
 	/***
 	 *删除操作日志对象，可以删除多个，中间英文,隔开
 	 *@param request 请求对象
@@ -82,7 +99,7 @@ public class LogController {
 	 ***/
 	@RequestMapping(value="/remove_oper_log/{ids}")
     @ResponseBody
-    public String remove(HttpServletRequest request, ModelMap modelMap,@PathVariable("ids") String ids){   
+    public String removeOperLog(HttpServletRequest request, ModelMap modelMap,@PathVariable("ids") String ids){
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		return operLogService.deleteOperLogByIds(aerfatoken, ids);
     }
@@ -114,23 +131,6 @@ public class LogController {
 		personLoginInfoDto.setPageInfo(pageInfo);personLoginInfoDto.setPersonLoginInfo(personLoginInfo);
 		return personLoginInfoService.getList(aerfatoken,personLoginInfoDto);
 	}
-	
-	/**
-	 *跳转到查看操作日志详细页面
-	 *@param request 请求对象
-	 *@param modelMap spring的mvc返回对象
-	 *@return templates下的单位页面
-	 ****/
-	@RequestMapping(value="/to_view_oper_log/{id}")
-	public String toViewOperLog(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
-		String aerfatoken=HttpStorageUtil.getToken(request);
-		String retOperLogStr=operLogService.getSingle(aerfatoken, id);
-		AefsysOperLogVo operLog=JSON.parseObject(retOperLogStr,AefsysOperLogVo.class);
-		modelMap.addAttribute("prefix",prefix);
-		modelMap.put("operLog",operLog);
-		return prefix+"/view_oper_log";
-	}
-	
 	/**
 	 *跳转到查看登录日志详细页面
 	 *@param request 请求对象
@@ -147,5 +147,59 @@ public class LogController {
 		modelMap.addAttribute("prefix",prefix);
 		modelMap.put("loginInfo",loginInfo);
 		return prefix+"/view_login_info";
+	}
+
+
+	/**
+	 * 跳转到sys定时任务日志页面
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @return templates下的定时任务日志页面
+	 ****/
+	@RequestMapping(value="/to_job_log")
+	public String toSysJobLog(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("prefix",prefix);
+		return prefix+"/job_log";
+	}
+	/****
+	 * 获取展示定时任务日志列表，且分页显示
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @return Bootstrap的table对象
+	 ****/
+	@RequestMapping(value="/job_log_list")
+	@ResponseBody
+	public String getJobLogList(HttpServletRequest request, ModelMap modelMap, BsTablePageInfo pageInfo, AefsysJobLog jobLog) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		AefsysJobLogDto jobLogDto=new AefsysJobLogDto();
+		jobLogDto.setPageInfo(pageInfo);jobLogDto.setJobLog(jobLog);
+		return jobLogService.getList(aerfatoken,jobLogDto);
+	}
+	/**
+	 *跳转到查看任务日志详细页面
+	 *@param request 请求对象
+	 *@param modelMap spring的mvc返回对象
+	 *@return templates下的单位页面
+	 ****/
+	@RequestMapping(value="/to_view_job_log/{id}")
+	public String toViewJobLog(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		String retJobLogStr=jobLogService.getSingle(aerfatoken, id);
+		AefsysJobLogVo jobLog=JSON.parseObject(retJobLogStr,AefsysJobLogVo.class);
+		modelMap.addAttribute("prefix",prefix);
+		modelMap.put("jobLog",jobLog);
+		return prefix+"/view_job_log";
+	}
+	/***
+	 *删除任务日志对象，可以删除多个，中间英文,隔开
+	 *@param request 请求对象
+	 *@param modelMap spring的mvc返回对象
+	 *@param ids 要删除的ids集合，是路径获取参数
+	 ***/
+	@RequestMapping(value="/remove_job_log/{ids}")
+	@ResponseBody
+	public String removeJobLog(HttpServletRequest request, ModelMap modelMap,@PathVariable("ids") String ids){
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return jobLogService.deleteJobLogByIds(aerfatoken, ids);
 	}
 }

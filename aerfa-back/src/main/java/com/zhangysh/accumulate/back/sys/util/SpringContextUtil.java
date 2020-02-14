@@ -28,14 +28,22 @@ public class SpringContextUtil implements ApplicationContextAware {
 	public static ApplicationContext getApplicationContext(){
 		return applicationContext;
 	}
+
 	/**
-	 * 获取对象
+	 * 根据bean的唯一标识名称字符串获取对象
 	 *
 	 * @param name
 	 * @return Object
 	 */
 	public static Object getBean(String name) {
 		return applicationContext.getBean(name);
+	}
+
+	/**
+	 * 根据bean的接口类获取对象
+	 ***/
+	public static <T> T getBean(Class<T> clz){
+		return applicationContext.getBean(clz);
 	}
 
 

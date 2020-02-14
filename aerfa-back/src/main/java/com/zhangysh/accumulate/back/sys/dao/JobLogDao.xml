@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.JobLogDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="jobLogResult" type="AefsysJobLog" >
+        <result property="id"    column="id"    />
+        <result property="jobId"    column="job_id"    />
+        <result property="jobName"    column="job_name"    />
+        <result property="invokeTarget"    column="invoke_target"    />
+        <result property="logContent"    column="log_content"    />
+        <result property="logType"    column="log_type"    />
+        <result property="executeStatus"    column="execute_status"    />
+        <result property="costTime"    column="cost_time"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectJobLog">
+        select id, job_id, job_name, invoke_target, log_content, log_type, execute_status, cost_time, create_time from aefsys_job_log
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getJobLogById" parameterType="Long" resultMap="jobLogResult">
+        <include refid="selectJobLog"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listJobLog" parameterType="AefsysJobLog" resultMap="jobLogResult">
+        <include refid="selectJobLog"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="jobId != null  "> and job_id = #{jobId}</if>
+			<if test="jobName != null and jobName != ''"> and job_name like concat('%',#{jobName},'%')  </if>
+			<if test="invokeTarget != null and invokeTarget != ''"> and invoke_target like concat('%',#{invokeTarget},'%')  </if>
+            <if test="logContent != null  and logContent != ''  "> and log_content = #{logContent}</if>
+            <if test="logType != null  and logType != ''  "> and log_type = #{logType}</if>
+            <if test="executeStatus != null  "> and execute_status = #{executeStatus}</if>
+            <if test="costTime != null  "> and cost_time = #{costTime}</if>
+            <if test="createTime != null  "> and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <!--根据主键查询多个对象-->
+	<select id="listBypksJobLog" parameterType="String" resultMap="jobLogResult">
+        <include refid="selectJobLog"/>
+        where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertJobLog" parameterType="AefsysJobLog" useGeneratedKeys="true" keyProperty="id">
+        insert into aefsys_job_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="jobId != null  ">job_id,</if>
+			<if test="jobName != null  and jobName != ''  ">job_name,</if>
+			<if test="invokeTarget != null  and invokeTarget != ''  ">invoke_target,</if>
+			<if test="logContent != null  and logContent != ''  ">log_content,</if>
+			<if test="logType != null  and logType != ''  ">log_type,</if>
+			<if test="executeStatus != null  ">execute_status,</if>
+			<if test="costTime != null  ">cost_time,</if>
+			<if test="createTime != null  ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="jobId != null  ">#{jobId},</if>
+			<if test="jobName != null  and jobName != ''  ">#{jobName},</if>
+			<if test="invokeTarget != null  and invokeTarget != ''  ">#{invokeTarget},</if>
+			<if test="logContent != null  and logContent != ''  ">#{logContent},</if>
+			<if test="logType != null  and logType != ''  ">#{logType},</if>
+			<if test="executeStatus != null  ">#{executeStatus},</if>
+			<if test="costTime != null  ">#{costTime},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateJobLog" parameterType="AefsysJobLog">
+        update aefsys_job_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jobId != null  ">job_id = #{jobId},</if>
+            <if test="jobName != null  and jobName != ''  ">job_name = #{jobName},</if>
+            <if test="invokeTarget != null  and invokeTarget != ''  ">invoke_target = #{invokeTarget},</if>
+            <if test="logContent != null  and logContent != ''  ">log_content = #{logContent},</if>
+            <if test="logType != null  and logType != ''  ">log_type = #{logType},</if>
+            <if test="executeStatus != null  ">execute_status = #{executeStatus},</if>
+            <if test="costTime != null  ">cost_time = #{costTime},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteJobLogById" parameterType="Long">
+        delete from aefsys_job_log where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deleteJobLogByIds" parameterType="String">
+        delete from aefsys_job_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>

@@ -2,8 +2,12 @@ package com.zhangysh.accumulate.back.sys.util;
 
 import java.util.Date;
 
+import com.zhangysh.accumulate.back.sys.service.IJobLogService;
+import com.zhangysh.accumulate.common.constant.LogConstant;
 import com.zhangysh.accumulate.common.constant.SysDefineConstant;
+import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysJob;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysJobLog;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -24,7 +28,7 @@ public abstract class JobQuartzAbstract implements Job {
     /**
      * 线程本地变量
      */
-    private static ThreadLocal<Date> threadLocal = new ThreadLocal<>();
+    private static ThreadLocal<Date> threadLocal = new ThreadLocal<Date>();
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -37,13 +41,12 @@ public abstract class JobQuartzAbstract implements Job {
             }
             after(context, sysJob, null);
         } catch (Exception e) {
-            logger.error("execute 任务执行异常：", e);
             after(context, sysJob, e);
         }
     }
 
     /**
-     * 执行前
+     * 执行前设置个执行时间，方便统计总共耗时
      *
      * @param context 工作执行上下文对象
      * @param sysJob 系统计划任务
@@ -59,30 +62,33 @@ public abstract class JobQuartzAbstract implements Job {
      * @param sysJob 系统计划任务
      */
     protected void after(JobExecutionContext context, AefsysJob sysJob, Exception e) {
+        //获取执行开始时间
         Date startTime = threadLocal.get();
         threadLocal.remove();
 
-        /*final SysJobLog sysJobLog = new SysJobLog();
+        final AefsysJobLog sysJobLog = new AefsysJobLog();
+        sysJobLog.setCreateTime(startTime);
+        sysJobLog.setJobId(sysJob.getId());
         sysJobLog.setJobName(sysJob.getJobName());
-        sysJobLog.setJobGroup(sysJob.getJobGroup());
         sysJobLog.setInvokeTarget(sysJob.getInvokeTarget());
-        sysJobLog.setStartTime(startTime);
-        sysJobLog.setEndTime(new Date());
-        long runMs = sysJobLog.getEndTime().getTime() - sysJobLog.getStartTime().getTime();
-        sysJobLog.setJobMessage(sysJobLog.getJobName() + " 总共耗时：" + runMs + "毫秒");
-        if (e != null)
-        {
-            sysJobLog.setStatus(Constants.FAIL);
-            String errorMsg = StringUtils.substring(ExceptionUtil.getExceptionMessage(e), 0, 2000);
-            sysJobLog.setExceptionInfo(errorMsg);
-        }
-        else
-        {
-            sysJobLog.setStatus(Constants.SUCCESS);
+
+        //计算耗时
+        long costTimeMs = new Date().getTime() - startTime.getTime();
+        sysJobLog.setCostTime(costTimeMs);
+        if (e != null) {//有异常执行失败
+            sysJobLog.setExecuteStatus(SysDefineConstant.DIC_RESULT_STATUS_FAIL);
+            sysJobLog.setLogType(LogConstant.LOG_TYPE_ERROR);
+            sysJobLog.setLogContent(StringUtil.substring(e.getMessage(), 0, 2000));
+            logger.error("execute 任务执行异常：", e);
+        } else {
+            sysJobLog.setExecuteStatus(SysDefineConstant.DIC_RESULT_STATUS_SUCESS);
+            sysJobLog.setLogType(LogConstant.LOG_TYPE_INFO);
+            sysJobLog.setLogContent(sysJob.getJobName()+"执行成功总共耗时：" + costTimeMs + "毫秒");
+            logger.error("execute 任务执行成功。");
         }
 
         // 写入数据库当中
-        SpringUtils.getBean(ISysJobLogService.class).addJobLog(sysJobLog);*/
+        SpringContextUtil.getBean(IJobLogService.class).insertJobLog(sysJobLog);
     }
 
     /**
