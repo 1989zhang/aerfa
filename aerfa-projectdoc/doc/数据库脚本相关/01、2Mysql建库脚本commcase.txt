@@ -1,5 +1,5 @@
 /*====================================================================*/
-/* table: aefcomm_info_publish  信息发布表                                                                                               */
+/* table: aefcomm_info_publish  信息发布表                             */
 /*====================================================================*/
 create table aefcomm_info_publish (
   id           int(11)      not null  auto_increment   comment 'id标识',
@@ -13,11 +13,13 @@ create table aefcomm_info_publish (
   create_time    timestamp                             comment '创建时间',
   update_by      varchar(64)                           comment '更新人员名称',
   update_time    timestamp                             comment '更新时间',
+  create_user_id int(11)                               comment '创建人员ID',
+  create_org_id  int(11)                               comment '创建人员单位ID',
   primary key (id)
 ) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='信息发布表';
 
 /*====================================================================*/
-/* table: aefcomm_info_content  信息发布内容表                                                                     */
+/* table: aefcomm_info_content  信息发布内容表                         */
 /*====================================================================*/
 create table aefcomm_info_content (
   id            int(11)     not null                    comment 'id标识同publish的id',
@@ -25,7 +27,7 @@ create table aefcomm_info_content (
 ) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='信息发布内容表';
 
 /*====================================================================*/
-/* table: aefcomm_division  行政区划表                                                                                      */
+/* table: aefcomm_division  行政区划表                                 */
 /*====================================================================*/
 create table aefcomm_division (
   id            int(11)   not null auto_increment    comment 'id标识',
@@ -46,7 +48,7 @@ create table aefcomm_division (
 ) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='行政区划信息';
 
 /*====================================================================*/
-/* table: aefcomm_work_day  工作日信息                                                                                      */
+/* table: aefcomm_work_day  工作日信息                                 */
 /*====================================================================*/
 create table aefcomm_work_day (
   id                  int(11)   not null auto_increment    comment 'id标识',
