@@ -1,69 +1,115 @@
 package com.zhangysh.accumulate.ui.comm.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.alibaba.fastjson.JSON;
 
-import com.zhangysh.accumulate.common.pojo.BsTableDataInfo;
+import com.zhangysh.accumulate.common.constant.CacheConstant;
+import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
+import com.zhangysh.accumulate.common.util.HttpStorageUtil;
 import com.zhangysh.accumulate.pojo.comm.dataobj.AefcommInfoPublish;
-import com.zhangysh.accumulate.ui.sys.controller.LogController;
+import com.zhangysh.accumulate.pojo.comm.viewobj.AefcommInfoPublishVo;
+import com.zhangysh.accumulate.pojo.comm.transobj.AefcommInfoPublishDto;
+import com.zhangysh.accumulate.ui.comm.service.IInfoPublishService;
 
 /**
- *信息发布相关方法
- *@author 创建者：zhangysh
- *@date 2019年4月4日
+ * 发布调用相关方法
+ * 
+ * @author zhangysh
+ * @date 2020年02月16日
  */
 @Controller
-@RequestMapping("/comm/info_publish")
+@RequestMapping("/sys/info_publish")
 public class InfoPublishController {
 
-	private String prefix="/comm/info_publish";//返回界面路径即前缀
-	private static final Logger logger=LoggerFactory.getLogger(LogController.class);
+    private String prefix="/sys/info_publish";//返回界面路径即前缀
 
+	@Autowired
+	private IInfoPublishService infoPublishService;
+	
 	/**
-	 *跳转到common下信息发布页面
-	 *@param request 请求对象
-	 *@param modelMapl spring的mvc返回对象
-	 *@return templates下的信息发布页面
+	 * 跳转到sys发布页面
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @return templates下的发布页面
 	 ****/
 	@RequestMapping(value="/to_info_publish")
-	public String toSysOperLog(HttpServletRequest request, ModelMap modelMap) {
+	public String toSysInfoPublish(HttpServletRequest request, ModelMap modelMap) {
 		modelMap.addAttribute("prefix",prefix);
 		return prefix+"/info_publish";
 	}
 	
-	/**
-	 *获取信息发布列表信息，且分页显示
-	 *@param request 请求对象
-	 *@param modelMapl spring的mvc返回对象
-	 *@return templates下的单位页面
+	/****
+	 * 获取展示发布列表，且分页显示
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @return Bootstrap的table对象
 	 ****/
-	@RequestMapping(value="/info_publish_list")
-	@ResponseBody
-	public BsTableDataInfo getInfoPublishList(HttpServletRequest request, ModelMap modelMap,String pageSize,String pageNum,String orderByColumn,String isAsc,AefcommInfoPublish searchInfoPublish) {
-		logger.info("分页信息:当前"+pageNum+"页，每页"+pageSize+"条");
-		logger.info("排序列"+orderByColumn+","+isAsc);
-		logger.info("查询对象:标题"+searchInfoPublish.getTitle());
-		
-		List<AefcommInfoPublish> list=new ArrayList<AefcommInfoPublish>();
-		for(int i=0;i<10;i++) {
-			AefcommInfoPublish vo=new AefcommInfoPublish();
-			vo.setTitle("标题"+i);
-			vo.setInfoType("信息公示");
-			list.add(vo);
-		}
-		BsTableDataInfo rspData = new BsTableDataInfo();
-        rspData.setRows(list);
-        rspData.setTotal(100);
-          
-		return rspData;
+	@RequestMapping(value="/list")
+    @ResponseBody
+	public String getList(HttpServletRequest request, ModelMap modelMap,BsTablePageInfo pageInfo,AefcommInfoPublish infoPublish) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		AefcommInfoPublishDto infoPublishDto=new AefcommInfoPublishDto();
+		infoPublishDto.setPageInfo(pageInfo);infoPublishDto.setInfoPublish(infoPublish);
+		return infoPublishService.getList(aerfatoken,infoPublishDto);
 	}
+	
+	/**
+	 * 跳转到sys发布新增页面
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @return templates下的单位新增页面
+	 ****/
+	@RequestMapping(value="/to_add")
+	public String toAdd(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("prefix",prefix);
+		return prefix+"/add";
+	}
+	
+    /***
+	 * 保存填写的发布对象
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象 
+	 * @param infoPublish 保存的对象
+	 ******/
+	@RequestMapping(value="/save_add")
+    @ResponseBody
+    public String saveAdd(HttpServletRequest request, ModelMap modelMap,AefcommInfoPublish infoPublish) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return infoPublishService.saveAdd(aerfatoken, infoPublish);
+	}
+	
+	/****
+	 * 修改发布，先获取发布信息
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象 
+	 * @return templates下的页面
+	 ****/
+	@RequestMapping(value="/to_edit/{id}")
+	public String toEdit(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		String retInfoPublishStr=infoPublishService.getSingle(aerfatoken, id);
+		AefcommInfoPublishVo infoPublishVo=JSON.parseObject(retInfoPublishStr,AefcommInfoPublishVo.class);
+		modelMap.put("prefix", prefix);
+		modelMap.put("infoPublish", infoPublishVo);
+		return prefix+"/edit";
+	}
+	
+	/***
+	 * 删除发布对象，可以删除多个，中间英文,隔开
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象 
+	 * @param ids 要删除的ids集合，是路径获取参数
+	 ***/
+	@RequestMapping(value="/remove/{ids}")
+    @ResponseBody
+    public String remove(HttpServletRequest request, ModelMap modelMap,@PathVariable("ids") String ids){   
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return infoPublishService.deleteInfoPublishByIds(aerfatoken, ids);
+    }
 }

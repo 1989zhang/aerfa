@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.DataPermissionDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="dataPermissionResult" type="AefsysDataPermission" >
+        <result property="id"    column="id"    />
+        <result property="tableNameIdentify"    column="table_name_identify"    />
+        <result property="permissionType"    column="permission_type"    />
+        <result property="permissionSql"    column="permission_sql"    />
+        <result property="roleId"    column="role_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectDataPermission">
+        select id, table_name_identify, permission_type, permission_sql, role_id, remark, create_by, create_time, update_by, update_time from aefsys_data_permission
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getDataPermissionById" parameterType="Long" resultMap="dataPermissionResult">
+        <include refid="selectDataPermission"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listDataPermission" parameterType="AefsysDataPermission" resultMap="dataPermissionResult">
+        <include refid="selectDataPermission"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="tableNameIdentify != null  and tableNameIdentify != ''  "> and table_name_identify = #{tableNameIdentify}</if>
+            <if test="permissionType != null  and permissionType != ''  "> and permission_type = #{permissionType}</if>
+            <if test="permissionSql != null  and permissionSql != ''  "> and permission_sql = #{permissionSql}</if>
+            <if test="roleId != null  "> and role_id = #{roleId}</if>
+            <if test="remark != null  and remark != ''  "> and remark = #{remark}</if>
+            <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
+            <if test="createTime != null  "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null  "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+
+    <!--根据主键查询多个对象-->
+	<select id="listBypksDataPermission" parameterType="String" resultMap="dataPermissionResult">
+        <include refid="selectDataPermission"/>
+        where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertDataPermission" parameterType="AefsysDataPermission" useGeneratedKeys="true" keyProperty="id">
+        insert into aefsys_data_permission
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="tableNameIdentify != null  and tableNameIdentify != ''  ">table_name_identify,</if>
+			<if test="permissionType != null  and permissionType != ''  ">permission_type,</if>
+			<if test="permissionSql != null  and permissionSql != ''  ">permission_sql,</if>
+			<if test="roleId != null  ">role_id,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="tableNameIdentify != null  and tableNameIdentify != ''  ">#{tableNameIdentify},</if>
+			<if test="permissionType != null  and permissionType != ''  ">#{permissionType},</if>
+			<if test="permissionSql != null  and permissionSql != ''  ">#{permissionSql},</if>
+			<if test="roleId != null  ">#{roleId},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateDataPermission" parameterType="AefsysDataPermission">
+        update aefsys_data_permission
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tableNameIdentify != null  and tableNameIdentify != ''  ">table_name_identify = #{tableNameIdentify},</if>
+            <if test="permissionType != null  and permissionType != ''  ">permission_type = #{permissionType},</if>
+            <if test="permissionSql != null  and permissionSql != ''  ">permission_sql = #{permissionSql},</if>
+            <if test="roleId != null  ">role_id = #{roleId},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteDataPermissionById" parameterType="Long">
+        delete from aefsys_data_permission where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deleteDataPermissionByIds" parameterType="String">
+        delete from aefsys_data_permission where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>
