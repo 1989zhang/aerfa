@@ -32,7 +32,10 @@ import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPerson;
 
 
 /**
- *@author 创建者：zhangysh
+ * 日志切面实现方法
+ *
+ * @author 创建者：zhangysh
+ * @date 2018年10月28日
  */
 @Aspect
 @Component
