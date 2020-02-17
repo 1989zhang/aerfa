@@ -1,5 +1,6 @@
 package com.zhangysh.accumulate.back.comm.controller;
 
+import com.zhangysh.accumulate.back.sys.base.aspect.annotation.DataPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
@@ -47,9 +48,11 @@ public class InfoPublishController extends BaseController{
 	 * @param infoPublishDto 分页和查询对象
 	 * @return 获取到的发布对象集合JSON
 	 ****/
+	@DataPermission(tableNameIdentify="aefcomm_info_publish")
 	@RequestMapping(value="/list",method = RequestMethod.POST)
 	@ResponseBody
 	public String getList(HttpServletRequest request,@RequestBody AefcommInfoPublishDto infoPublishDto) {
+		
 		logger.info("getList分页信息:当前{}页，每页{}条",infoPublishDto.getPageInfo().getPageNum(),infoPublishDto.getPageInfo().getPageSize());
 		BsTableDataInfo tableInfo=infoPublishService.listPageInfoPublish(infoPublishDto.getPageInfo(),infoPublishDto.getInfoPublish());
 		return JSON.toJSONStringWithDateFormat(tableInfo,UtilConstant.NORMAL_MIDDLE_DATE);

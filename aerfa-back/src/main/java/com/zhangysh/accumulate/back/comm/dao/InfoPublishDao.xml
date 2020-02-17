@@ -49,6 +49,11 @@
             <if test="updateTime != null  "> and update_time = #{updateTime}</if>
             <if test="createUserId != null  "> and create_user_id = #{createUserId}</if>
             <if test="createOrgId != null  "> and create_org_id = #{createOrgId}</if>
+
+            <if test="params != null and params.dataPermission != ''">
+                and ${params.dataPermission}
+            </if>
+
         </where>
     </select>
 

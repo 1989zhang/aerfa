@@ -1,7 +1,6 @@
 package com.zhangysh.accumulate.back.sys.controller;
 
 import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +71,7 @@ public class PersonController extends BaseController{
 	/****
 	 *验证单位全称是否唯一
 	 *@param request 请求对象
-	 *@param org 要检查的单位包括：名称和id,id为了排除自己
+	 *@param person 要检查的个人包括：名称和id,id为了排除自己
 	 ***/
 	@RequestMapping(value = "/check_account_unique",method = RequestMethod.POST)
 	@ResponseBody

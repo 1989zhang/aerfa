@@ -24,10 +24,10 @@ import com.zhangysh.accumulate.ui.comm.service.IInfoPublishService;
  * @date 2020年02月16日
  */
 @Controller
-@RequestMapping("/sys/info_publish")
+@RequestMapping("/comm/info_publish")
 public class InfoPublishController {
 
-    private String prefix="/sys/info_publish";//返回界面路径即前缀
+    private String prefix="/comm/info_publish";//返回界面路径即前缀
 
 	@Autowired
 	private IInfoPublishService infoPublishService;
