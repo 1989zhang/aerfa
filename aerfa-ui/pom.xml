@@ -75,6 +75,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
+        <!-- Apache的权限认证shiro组件 -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+        </dependency>
         <!-- 解析客户端操作系统、浏览器等工具包 -->
         <dependency>
             <groupId>eu.bitwalker</groupId>

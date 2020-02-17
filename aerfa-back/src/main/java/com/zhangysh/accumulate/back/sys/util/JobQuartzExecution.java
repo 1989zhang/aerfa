@@ -1,4 +1,4 @@
-package com.zhangysh.accumulate.back.sys.plugin.job;
+package com.zhangysh.accumulate.back.sys.util;
 
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysJob;
 import org.quartz.JobExecutionContext;

@@ -1,4 +1,4 @@
-package com.zhangysh.accumulate.back.sys.plugin.job;
+package com.zhangysh.accumulate.back.sys.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

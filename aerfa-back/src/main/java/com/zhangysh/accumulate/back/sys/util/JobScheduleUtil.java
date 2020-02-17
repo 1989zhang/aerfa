@@ -1,7 +1,5 @@
 package com.zhangysh.accumulate.back.sys.util;
 
-import com.zhangysh.accumulate.back.sys.plugin.job.JobQuartzAbstract;
-import com.zhangysh.accumulate.back.sys.plugin.job.JobQuartzExecution;
 import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysJob;
 import org.quartz.*;
