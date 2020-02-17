@@ -1,5 +1,7 @@
 package com.zhangysh.accumulate.back.sys.util;
 
+import com.zhangysh.accumulate.back.sys.plugin.job.JobQuartzAbstract;
+import com.zhangysh.accumulate.back.sys.plugin.job.JobQuartzExecution;
 import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysJob;
 import org.quartz.*;
@@ -152,4 +154,15 @@ public class JobScheduleUtil {
                 return cb.withMisfireHandlingInstructionDoNothing();
         }
     }
+
+    /**
+     * 返回一个布尔值代表一个给定的Cron表达式的有效性
+     *
+     * @param cronExpression Cron表达式
+     * @return boolean 表达式是否有效
+     */
+    public static boolean isValid(String cronExpression) {
+        return CronExpression.isValidExpression(cronExpression);
+    }
+
 }

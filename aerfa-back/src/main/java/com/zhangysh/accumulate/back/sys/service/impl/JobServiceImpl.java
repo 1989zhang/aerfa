@@ -20,7 +20,6 @@ import com.zhangysh.accumulate.back.sys.service.IJobService;
 import com.zhangysh.accumulate.common.pojo.BsTableDataInfo;
 import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
 import com.zhangysh.accumulate.common.util.ConvertUtil;
-import com.zhangysh.accumulate.back.sys.util.JobCronUtil;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
@@ -158,7 +157,7 @@ public class JobServiceImpl implements IJobService {
 
 	@Override
 	public boolean checkExpressionValid(String cronExpression){
-		return JobCronUtil.isValid(cronExpression);
+		return JobScheduleUtil.isValid(cronExpression);
 	}
 
 	@Override
