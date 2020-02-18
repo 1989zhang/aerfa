@@ -15,7 +15,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ErrorController {
 
-	/****
+	/**
+	 * 跳转到没无权限sys403页面
+	 * @param request 请求对象
+	 * @param response 响应对象
+	 * @param modelMap spring的mvc返回对象
+	 * @return thymeleaf在templates下的页面名称登陆界面
+	 ****/
+	@RequestMapping(value="/403")
+	public String toNotAuthorizedError(HttpServletRequest request,HttpServletResponse response, ModelMap modelMap) {
+		return "/error/403";
+	}
+
+	/**
 	 * 跳转到没找到资源sys404页面
 	 * @param request 请求对象
 	 * @param response 响应对象
@@ -26,7 +38,8 @@ public class ErrorController {
 	public String toNotFoundError(HttpServletRequest request,HttpServletResponse response, ModelMap modelMap) {
 		return "/error/404";
 	}
-	/****
+
+	/**
 	 * 跳转到服务器内部错误sys500页面
 	 * @param request 请求对象
 	 * @param response 响应对象
@@ -37,4 +50,5 @@ public class ErrorController {
 	public String toServerHandleError(HttpServletRequest request,HttpServletResponse response, ModelMap modelMap) {
 		return "/error/500";
 	}
+
 }

@@ -1,4 +1,4 @@
-package com.zhangysh.accumulate.ui.plugins.util;
+package com.zhangysh.accumulate.ui.sys.util;
 
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.web.context.request.RequestAttributes;

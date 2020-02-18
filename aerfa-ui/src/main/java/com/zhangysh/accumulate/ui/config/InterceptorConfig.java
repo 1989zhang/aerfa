@@ -9,7 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 /*****
- * 类作用说明
+ * 本作为资源拦截器，后由shiro实现
  * @author zhangysh
  * @date 2019年5月29日
  *****/
@@ -22,7 +22,7 @@ public class InterceptorConfig  implements HandlerInterceptor{
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		logger.info("-----开始进入请求地址拦截-----"+request.getRequestURI());
+		//logger.info("-----开始进入请求地址拦截-----"+request.getRequestURI());
 		return true;
 	}
 	

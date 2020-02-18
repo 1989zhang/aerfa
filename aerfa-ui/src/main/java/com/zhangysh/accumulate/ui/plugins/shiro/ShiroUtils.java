@@ -32,4 +32,13 @@ public class ShiroUtils {
     public static void logout() {
         getSubjct().logout();
     }
+
+    /***
+     * 获取token,不能获取用户了因为只存了后台token。
+     * 前后台分离来说：后台暴露用户，前台存用户不安全。
+     **/
+    public static String getToken(){
+        Subject tokenSubject= SecurityUtils.getSubject();
+        return (String)getSubjct().getPrincipal();
+    }
 }
