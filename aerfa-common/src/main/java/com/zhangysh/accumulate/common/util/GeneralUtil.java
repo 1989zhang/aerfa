@@ -13,7 +13,21 @@ import java.util.TreeSet;
 public class GeneralUtil {
 
     /**
-     * 使用TreeSet实现List去重(有序)
+     * 使用HashSet实现List去重(无序)
+     * @param list 去重对象
+     * @去重结果集合
+     * */
+    public static List removeDuplicationByHashSet(List list) {
+        HashSet set = new HashSet(list);
+        //把List集合所有元素清空
+        list.clear();
+        //把HashSet对象添加至List集合
+        list.addAll(set);
+        return list;
+    }
+
+    /**
+     * 使用TreeSet实现List去重(有序)，对象要实现compareTo
      * @param list 去重对象，
      * @return 去重结果集合
      * */
@@ -26,17 +40,5 @@ public class GeneralUtil {
         return list;
     }
 
-    /**
-     * 使用HashSet实现List去重(无序)
-     * @param list 去重对象，对象要实现compareTo
-     * @去重结果集合
-     * */
-    public static List removeDuplicationByHashSet(List list) {
-        HashSet set = new HashSet(list);
-        //把List集合所有元素清空
-        list.clear();
-        //把HashSet对象添加至List集合
-        list.addAll(set);
-        return list;
-    }
+
 }
