@@ -32,9 +32,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(value = UnauthorizedException.class)
     public void unauthorizedErrorHandler(HttpServletRequest request, HttpServletResponse response, UnauthorizedException ex) throws IOException {
         logger.info("有非法请求被拦截：{}",request.getRequestURI());
-        response.setStatus(UNAUTHORIZED_ERROR_STATUS);
         String requestType = request.getHeader("X-Requested-With");
-
         if ("XMLHttpRequest".equals(requestType)) {// ajax请求
             response.setContentType("application/json;charset=utf-8");
             PrintWriter printWriter = response.getWriter();
