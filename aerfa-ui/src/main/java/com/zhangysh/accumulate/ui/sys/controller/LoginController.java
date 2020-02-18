@@ -6,7 +6,15 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.zhangysh.accumulate.common.constant.WebimDefineConstant;
+import com.zhangysh.accumulate.common.constant.*;
+import com.zhangysh.accumulate.common.pojo.ResultVo;
+import com.zhangysh.accumulate.ui.plugins.shiro.ShiroUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,9 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.zhangysh.accumulate.common.constant.CacheConstant;
-import com.zhangysh.accumulate.common.constant.SysDefineConstant;
-import com.zhangysh.accumulate.common.constant.MarkConstant;
 import com.zhangysh.accumulate.common.pojo.TokenModel;
 import com.zhangysh.accumulate.common.util.HttpStorageUtil;
 import com.zhangysh.accumulate.common.util.IpUtil;
@@ -72,7 +77,7 @@ public class LoginController {
 	 ****/
 	@RequestMapping(value="/login")
 	public String toSysLoginV1(HttpServletRequest request, Model model) {
-		return "sys/login";
+		return "redirect:/";
 	}
 	
 	/****
@@ -94,7 +99,7 @@ public class LoginController {
 	 ****/
 	@RequestMapping(value="/quit")
 	public String doSysQuit(HttpServletRequest request, Model model) {
-		return "redirect:/login "; 
+		return "redirect:/";
 	}
 	
 	/****
@@ -106,26 +111,23 @@ public class LoginController {
 	@RequestMapping(value="/sys/login/check",method = RequestMethod.POST)
 	@ResponseBody
 	public String checkLoginInfo(HttpServletRequest request, HttpServletResponse response,String account,String password) {
-		UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
-		// 获取客户端操作系统
-        String os = userAgent.getOperatingSystem().getName();
-        // 获取客户端浏览器
-        String browser = userAgent.getBrowser().getName();
-        
-		AefsysLoginDto loginDto=new AefsysLoginDto();
-		loginDto.setAccount(account);
-		loginDto.setPassword(password);
-		loginDto.setClientIp(IpUtil.getIpAddr(request));
-		loginDto.setServerIp(IpUtil.getHostIp());
-		loginDto.setBrowserType(browser);
-		loginDto.setOsType(os);
-		String loginInfoResultStr=loginService.checkLoginInfo(loginDto);
-		//成功的时候设置cookie
-		JSONObject loginInfoJson=JSON.parseObject(loginInfoResultStr);
-		if(MarkConstant.MARK_RESULT_VO_SUCESS.equals(loginInfoJson.getInteger(MarkConstant.MARK_RESULT_VO_CODE))) {
-			HttpStorageUtil.setCookieValue(request, response, CacheConstant.COOKIE_NAME_AERFATOKEN, loginInfoJson.getString(MarkConstant.MARK_RESULT_VO_DATA), -1, true);
+		Subject subject= ShiroUtils.getSubjct();
+		//封装用户数据
+        UsernamePasswordToken usernamePassword=new UsernamePasswordToken(account,password);
+        //执行登录方法
+		try {
+			//只要执行login方法，就会去执行UserRealm中的认证逻辑
+			subject.login(usernamePassword);
+			//如果没有异常，代表登录成功
+			//只有获取当前token
+			String backToken=ShiroUtils.getToken();
+			HttpStorageUtil.setCookieValue(request, response, CacheConstant.COOKIE_NAME_AERFATOKEN, backToken, -1, true);
+			return JSON.toJSONString(ResultVo.success(backToken));
+		} catch (AuthenticationException e) {
+			e.printStackTrace();
+			//登录失败
+			return JSON.toJSONString(ResultVo.error(CodeMsgConstant.SYS_ACCOUNT_PASSWORD_WRONG_ERROR));
 		}
-		return  loginInfoResultStr;
 	}
 	
 	/**

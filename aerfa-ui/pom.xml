@@ -80,6 +80,11 @@
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
         </dependency>
+        <!-- Apache的权限认证shiro和thymeleaf整合插件 -->
+        <dependency>
+            <groupId>com.github.theborakompanioni</groupId>
+            <artifactId>thymeleaf-extras-shiro</artifactId>
+        </dependency>
         <!-- 解析客户端操作系统、浏览器等工具包 -->
         <dependency>
             <groupId>eu.bitwalker</groupId>
