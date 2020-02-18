@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head th:include="sys/include :: header"></head>
 <body class="gray-bg">
 	<div class="wrapper wrapper-content animated">
@@ -16,7 +16,7 @@
 						<input type="text" id="infoType" name="infoType" class="form-control">
 	                </div>
 	                <div class="form-group">
-	                    <label>状态1有效0无效：</label>
+	                    <label>状态：</label>
 						<select class="form-control form-selectdown" id="status" name="status" th:with="statusDicList=${@dic.getDic('useable_status')}">
 		         	         <option value="">所有</option>
 		         			 <option th:each="dic:${statusDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
@@ -30,10 +30,10 @@
         <div class="ibox float-e-margins">
         	<div class="ibox-content">
                  <div id="toolbar" >
-                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.add()">
+                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.add()" shiro:hasPermission="comm:infoPublish:add">
                           <i class="glyphicon glyphicon-plus" aria-hidden="true" ></i>新增
                       </button>
-                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.batRemove()">
+                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.batRemove()" shiro:hasPermission="comm:infoPublish:remove">
                           <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>删除
                       </button>
                   </div>
@@ -45,6 +45,8 @@
     <div th:include="sys/include :: footer"></div>
 
     <script th:inline="javascript">
+		var editFlag = [[${@permission.hasPermission('comm:infoPublish:edit')}]];
+		var removeFlag = [[${@permission.hasPermission('comm:infoPublish:remove')}]];
     	var statusDatas = [[${@dic.getDic('useable_status')}]];
         //初始化参数和数据
         $(function() {
@@ -91,8 +93,12 @@
 		            width: '10%',
 		            formatter: function(value, row, index) {
 		            	var actions = [];
-		            	actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+		            	if(editFlag){
+							actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+						}
+						if(removeFlag) {
+							actions.push('<a class="btn btn-danger btn-xs" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						}
 						return actions.join('');
 		            }
 		        }]

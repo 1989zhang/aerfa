@@ -24,7 +24,7 @@
 				</div>
 			</div>
 		    <div class="form-group">
-				<label class="col-sm-3 control-label">状态1有效0无效：</label>
+				<label class="col-sm-3 control-label">状态：</label>
 				<div class="col-sm-8">
 					<select class="form-control" id="status" name="status" th:with="statusDicList=${@dic.getDic('useable_status')}">
 		         		<option th:each="dic:${statusDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
