@@ -32,8 +32,7 @@ public class LoginController extends BaseController{
     
 	/****
 	 * 登陆账号密码校验 
-	 *@param account 账号
-	 *@param password 密码
+	 *@param loginDto 登录对象内含账号密码
 	 *@return ResultVo操作结果对象
 	 ****/
 	@RequestMapping(value="/check",method = RequestMethod.POST)

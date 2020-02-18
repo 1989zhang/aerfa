@@ -125,4 +125,14 @@
 	<delete id="deleteResourceById" parameterType="Long">
         delete from aefsys_resource where id = #{id}
     </delete>
+
+	<!--根据人员的ID获取他拥有的资源集合-->
+	<select id="getPersonResourcesByPersonId" parameterType="Long" resultMap="resourceResult">
+		select aefsys_resource.id,aefsys_resource.resource_name,aefsys_resource.parent_id,aefsys_resource.resource_type,
+		aefsys_resource.status,aefsys_resource.identify,aefsys_resource.url,aefsys_resource.icon,aefsys_resource.order_no,
+		aefsys_resource.remark,aefsys_resource.create_by,aefsys_resource.create_time,aefsys_resource.update_by,aefsys_resource.update_time
+        from aefsys_resource,aefsys_role_resource,aefsys_person_role
+		where aefsys_resource.id=aefsys_role_resource.resource_id and aefsys_role_resource.role_id=aefsys_person_role.role_id and aefsys_person_role.person_id=#{personId}
+    </select>
+
 </mapper>

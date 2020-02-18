@@ -67,5 +67,12 @@ public interface IRoleService {
      * @return 删除结果条数
      */
 	 int deleteRoleByIds(String ids);
-	
+
+
+	 /**
+	  * 根据人员的ID获取他拥有的角色集合
+	  * @param personId 人员ID
+	  * @retrun 人员拥有的角色集合
+	  * ***/
+     List<AefsysRole> getPersonRolesByPersonId(Long personId);
 }

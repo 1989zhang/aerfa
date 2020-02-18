@@ -75,4 +75,11 @@ public interface IResourceService {
      * @return 删除结果条数
      */
 	 int deleteResourceById(Long id);
+
+	/**
+	 * 根据人员的ID获取他拥有的资源集合
+	 * @param personId 人员ID
+	 * @return 人员拥有资源集合
+	 */
+	List<AefsysResource> getPersonResourcesByPersonId(Long personId);
 }

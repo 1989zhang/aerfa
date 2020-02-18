@@ -65,5 +65,9 @@ public class RoleServiceImpl implements IRoleService {
 	public int deleteRoleByIds(String ids){
 		return roleDao.deleteRoleByIds(ConvertUtil.toStrArray(ids));
 	}
-	
+
+	@Override
+	public List<AefsysRole> getPersonRolesByPersonId(Long personId){
+		return roleDao.getPersonRolesByPersonId(personId);
+	}
 }

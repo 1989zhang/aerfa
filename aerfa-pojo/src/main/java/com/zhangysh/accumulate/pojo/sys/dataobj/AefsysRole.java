@@ -8,7 +8,7 @@ import com.zhangysh.accumulate.pojo.base.BaseDataObj;
  * @author zhangysh
  * @date 2019年05月16日
  */
-public class AefsysRole extends BaseDataObj{
+public class AefsysRole extends BaseDataObj implements Comparable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -61,5 +61,11 @@ public class AefsysRole extends BaseDataObj{
 		return "AefsysRole [id=" + id + ", roleName=" + roleName + ", roleCode=" + roleCode + ", status=" + status
 				+ ", orderNo=" + orderNo + ", remark=" + remark + ", createBy=" + createBy + ", createTime="
 				+ createTime + ", updateBy=" + updateBy + ", updateTime=" + updateTime + "]";
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		AefsysRole role=(AefsysRole)o;
+		return this.getOrderNo().compareTo(role.getOrderNo());
 	}
 }

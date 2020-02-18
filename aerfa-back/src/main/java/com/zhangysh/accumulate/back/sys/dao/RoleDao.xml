@@ -101,5 +101,12 @@
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete> 
+    </delete>
+
+    <!--根据人员的ID获取他拥有的角色集合-->
+    <select id="getPersonRolesByPersonId" parameterType="Long" resultMap="roleResult">
+        select id, role_name, role_code, status, order_no, remark, create_by, create_time, update_by, update_time from aefsys_role
+        where exists (select aefsys_person_role.role_id from aefsys_person_role where aefsys_role.id=aefsys_person_role.role_id and aefsys_person_role.person_id=#{personId})
+    </select>
+
 </mapper>

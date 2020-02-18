@@ -102,7 +102,11 @@ public class ResourceServiceImpl implements IResourceService{
     public int deleteResourceById(Long id) {
 		return resourceDao.deleteResourceById(id);
 	}
-	
+
+	@Override
+	public List<AefsysResource> getPersonResourcesByPersonId(Long personId){
+		return resourceDao.getPersonResourcesByPersonId(personId);
+	}
 	/**
 	 *根据父资源ID，迭代获取子资源树形列表-树
 	 *@param parentId 父资源主键

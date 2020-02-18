@@ -1,20 +1,16 @@
 package com.zhangysh.accumulate.back.sys.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.zhangysh.accumulate.back.sys.service.*;
+import com.zhangysh.accumulate.common.util.GeneralUtil;
+import com.zhangysh.accumulate.pojo.sys.dataobj.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
 import com.zhangysh.accumulate.back.support.service.IRedisRelatedService;
-import com.zhangysh.accumulate.back.sys.service.IConfigDataService;
-import com.zhangysh.accumulate.back.sys.service.ILoginService;
-import com.zhangysh.accumulate.back.sys.service.IOrgService;
-import com.zhangysh.accumulate.back.sys.service.IPersonAddressService;
-import com.zhangysh.accumulate.back.sys.service.IPersonLoginInfoService;
-import com.zhangysh.accumulate.back.sys.service.IPersonService;
 import com.zhangysh.accumulate.back.webim.service.IFriendService;
 import com.zhangysh.accumulate.back.webim.service.IGroupService;
 import com.zhangysh.accumulate.back.webim.service.IWebimPersonService;
@@ -27,11 +23,6 @@ import com.zhangysh.accumulate.common.pojo.TokenModel;
 import com.zhangysh.accumulate.common.util.DateOperate;
 import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.common.util.UuidUtil;
-import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysConfigData;
-import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysOrg;
-import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPerson;
-import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPersonAddress;
-import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPersonLoginInfo;
 import com.zhangysh.accumulate.pojo.sys.transobj.AefsysLoginDto;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
 import com.zhangysh.accumulate.pojo.webim.dataobj.AefwebimFriend;
@@ -64,8 +55,11 @@ public class LoginServiceImpl implements ILoginService{
     private IGroupService groupService;
     @Autowired
     private IFriendService friendService;
-    
-    
+	@Autowired
+	private IResourceService resourceService;
+	@Autowired
+	private IRoleService roleService;
+
 	@Override
 	public String checkLoginInfo(AefsysLoginDto loginDto) {
 		//账号密码为空，直接返回
@@ -117,9 +111,7 @@ public class LoginServiceImpl implements ILoginService{
 		//token的model对象构建
 		TokenModel tokenModel=new TokenModel();
 		Map<String, Object> session = new HashMap<String, Object>();
-		//查询出人员所在单位
-		AefsysOrg sysOrg=orgService.getOrgById(sysPerson.getOrgId());
-		if(sysOrg!=null) {sysPersonVo.setOrgName(sysOrg.getFullName());}
+
         //查询出联系地址
 		AefsysPersonAddress personAddress=personAddressService.getPersonAddressByPersonId(sysPerson.getId());
 		if(personAddress!=null) {sysPersonVo.setAddress(personAddress.getFullAddress());}
@@ -132,18 +124,31 @@ public class LoginServiceImpl implements ILoginService{
 				}else {
 					sysPersonVo.setHeadPic(WebimDefineConstant.WEBIM_DEFAULT_PERSONAL_AVATAR);
 				}
-				
 			}
 		}
-		
+
+		//查询出人员所在单位
+		AefsysOrg sysOrg=orgService.getOrgById(sysPerson.getOrgId());
+		if(sysOrg!=null) {sysPersonVo.setOrgName(sysOrg.getFullName());}
+
+		//查询出人员的角色权限和角色对应的资源
+		List<AefsysRole> roleList=roleService.getPersonRolesByPersonId(sysPerson.getId());
+		List<AefsysResource> resourceList=resourceService.getPersonResourcesByPersonId(sysPerson.getId());
+		List<AefsysRole> noRepeatRoleList = GeneralUtil.removeDuplicationByHashSet(roleList);
+		List<AefsysResource> noRepeatResourceList = GeneralUtil.removeDuplicationByHashSet(resourceList);
+
 		session.put(CacheConstant.TOKENMODEL_SESSION_KEY_PERSON, sysPersonVo);
 		session.put(CacheConstant.TOKENMODEL_SESSION_KEY_ORG, sysOrg);
+		session.put(CacheConstant.TOKENMODEL_SESSION_KEY_ROLE,noRepeatRoleList);
+		session.put(CacheConstant.TOKENMODEL_SESSION_KEY_RESOURCE,resourceList);
+
 		//设置属性到对象里面
 		tokenModel.setPersonId(sysPerson.getId());
 		tokenModel.setToken(aerfatoken);
 		tokenModel.setSession(session);
 		redisRelatedService.setTokenInfo(aerfatoken, tokenModel);
 	}
+
 	/****
 	 * 创建或更新个人登录信息PersonLoginInfo：登录信息是一对一存在就修改不存在就新增
 	 * @param sysPerson 查询到的个人对象
