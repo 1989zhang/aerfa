@@ -7,7 +7,7 @@ import com.zhangysh.accumulate.pojo.base.BaseDataObj;
  *@author zhangysh
  *@date 2018年8月27日
  */
-public class AefsysResource extends BaseDataObj implements Comparable{
+public class AefsysResource extends BaseDataObj{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -84,11 +84,5 @@ public class AefsysResource extends BaseDataObj implements Comparable{
 				+ ", url=" + url + ", icon=" + icon + ", orderNo=" + orderNo + ", remark=" + remark + ", createBy="
 				+ createBy + ", createTime=" + createTime + ", updateBy=" + updateBy + ", updateTime=" + updateTime
 				+ "]";
-	}
-
-	@Override
-	public int compareTo(Object o) {
-		AefsysResource resource=(AefsysResource) o;
-		return this.getOrderNo().compareTo(resource.getOrderNo());
 	}
 }
