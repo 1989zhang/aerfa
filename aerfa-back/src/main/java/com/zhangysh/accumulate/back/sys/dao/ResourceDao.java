@@ -67,9 +67,9 @@ public interface ResourceDao {
 	 int deleteResourceById(Long id);
 
 	/**
-	 * 根据人员的ID获取他拥有的资源集合
+	 * 根据人员的ID获取他拥有的直接资源集合，可能要重复的
 	 * @param personId 人员ID
-	 * @return 人员拥有资源集合
+	 * @return 人员拥有的直接资源集合
 	 */
 	List<AefsysResource> getPersonResourcesByPersonId(Long personId);
 }

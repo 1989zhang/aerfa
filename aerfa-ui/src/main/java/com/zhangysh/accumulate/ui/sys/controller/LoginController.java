@@ -1,13 +1,16 @@
 package com.zhangysh.accumulate.ui.sys.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zhangysh.accumulate.common.constant.*;
 import com.zhangysh.accumulate.common.pojo.ResultVo;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysResourceVo;
 import com.zhangysh.accumulate.ui.manage.shiro.ShiroUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -138,8 +141,17 @@ public class LoginController {
 		String orgObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_ORG)+"";
 		AefsysOrg orgVo=JSON.parseObject(orgObjectJson,AefsysOrg.class);
 
+		String topResourceListJsonStr =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_RESOURCE)+"";
+		List<JSONObject> topResourceListJson=JSON.parseObject(topResourceListJsonStr, List.class);
+		//资源带父子结构要重新组装成父子结构对象的，直接转子是JsonArray对象
+		List<AefsysResourceVo> resourceList=new ArrayList<AefsysResourceVo>();
+		for(JSONObject topResourceJson:topResourceListJson){
+			AefsysResourceVo resourceVo=JSONObject.toJavaObject(topResourceJson,AefsysResourceVo.class);
+			resourceList.add(resourceVo);
+		}
 		modelMap.put("person", personVo);
 		modelMap.put("org", orgVo);
+		modelMap.put("menus", resourceList);
 		//特殊的token值便于websocket连接使用
 		modelMap.put(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_WEBIM, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_WEBIM);
 
@@ -159,5 +171,4 @@ public class LoginController {
 		modelMap.addAttribute("prefix","/comm/note_calendar");
 		return "sys/current";
 	}
-	
 }

@@ -1,5 +1,6 @@
 package com.zhangysh.accumulate.ui.manage.shiro;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zhangysh.accumulate.common.constant.CacheConstant;
 import com.zhangysh.accumulate.common.constant.MarkConstant;
@@ -10,6 +11,7 @@ import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysResource;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysRole;
 import com.zhangysh.accumulate.pojo.sys.transobj.AefsysLoginDto;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysResourceVo;
 import com.zhangysh.accumulate.ui.sys.util.ServletUtil;
 import com.zhangysh.accumulate.ui.sys.service.ILoginService;
 import org.apache.shiro.authc.*;
@@ -21,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,8 +53,8 @@ public class UserRealm extends AuthorizingRealm {
         TokenModel tokenModel=JSON.parseObject(sessionInfoStr,TokenModel.class);
         String roleListObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_ROLE)+"";
         List<JSONObject> roleList=JSON.parseObject(roleListObjectJson, List.class);
-        String resourceListObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_RESOURCE)+"";
-        List<JSONObject> resourceList=JSON.parseObject(resourceListObjectJson, List.class);
+        String topResourceListJsonStr =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_RESOURCE)+"";
+        List<JSONObject> topResourceListJson=JSON.parseObject(topResourceListJsonStr, List.class);
 
         // 角色加入AuthorizationInfo认证对象
         Set<String> roleCode=new HashSet<String>();
@@ -63,16 +66,21 @@ public class UserRealm extends AuthorizingRealm {
         }
         info.setRoles(roleCode);
 
+        //资源带父子结构所以重新组装成平行的
+        List<AefsysResourceVo> resourceList=new ArrayList<AefsysResourceVo>();
+        for(JSONObject topResourceJsonObject:topResourceListJson){
+            AefsysResourceVo resourceVo=JSONObject.toJavaObject(topResourceJsonObject,AefsysResourceVo.class);
+            resourceList.addAll(dealWithStructureResourceLine(resourceVo));
+        }
         // 权限加入AuthorizationInfo认证对象
         Set<String> stringPermissions=new HashSet<String>();
-        for(JSONObject resourceJson:resourceList){
-            AefsysResource resource=JSONObject.toJavaObject(resourceJson,AefsysResource.class);
-            if(SysDefineConstant.DB_USEABLE_STATUS_VALID.equals(resource.getStatus())&& StringUtil.isNotEmpty(resource.getIdentify())){
-                stringPermissions.add(resource.getIdentify());
+        for(AefsysResourceVo resourceVo:resourceList){
+            if(SysDefineConstant.DB_USEABLE_STATUS_VALID.equals(resourceVo.getStatus())&& StringUtil.isNotEmpty(resourceVo.getIdentify())){
+                stringPermissions.add(resourceVo.getIdentify());
             }
         }
-
         info.setStringPermissions(stringPermissions);
+
         return info;
     }
 
@@ -105,5 +113,20 @@ public class UserRealm extends AuthorizingRealm {
         String backToken=loginInfoJson.getString(MarkConstant.MARK_RESULT_VO_DATA);
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(backToken, password, getName());
         return info;
+    }
+
+    /**
+     * 处理结构化父子资源到list集合，平行处理
+     */
+    private List<AefsysResourceVo> dealWithStructureResourceLine(AefsysResourceVo resourceVo){
+        List<AefsysResourceVo> retResourceVoList=new ArrayList<AefsysResourceVo>();
+        List<AefsysResourceVo> childrenResourceVo=resourceVo.getChildren();
+        retResourceVoList.add(resourceVo);//添加当前这个
+        if(childrenResourceVo.size()>0){//添加子
+            for(int i=0 ; i<childrenResourceVo.size(); i++){
+                retResourceVoList.addAll(dealWithStructureResourceLine(childrenResourceVo.get(i)));
+            }
+        }
+        return retResourceVoList;
     }
 }

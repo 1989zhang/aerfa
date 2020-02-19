@@ -2,6 +2,9 @@ package com.zhangysh.accumulate.back.sys.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.zhangysh.accumulate.common.constant.SysDefineConstant;
+import com.zhangysh.accumulate.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
@@ -104,9 +107,45 @@ public class ResourceServiceImpl implements IResourceService{
 	}
 
 	@Override
-	public List<AefsysResource> getPersonResourcesByPersonId(Long personId){
-		return resourceDao.getPersonResourcesByPersonId(personId);
+	public List<AefsysResourceVo> getPersonStructResourcesByPersonId(Long personId) {
+		List<AefsysResource> directResources = resourceDao.getPersonResourcesByPersonId(personId);
+		List<AefsysResource> allRepeatPersonResource = new ArrayList<AefsysResource>();
+
+		//首先倒序查询出按钮菜单模块所有的资源集合
+		for (AefsysResource resource : directResources) {
+			allRepeatPersonResource.add(resource);
+			allRepeatPersonResource.addAll(listParentResourceWithDirectStructureByChirdId(resource.getId()));
+		}
+		//权限资源进行去重处理
+		List<AefsysResource> allPersonResource=new ArrayList<AefsysResource>();
+		for(AefsysResource sourceResource:allRepeatPersonResource){
+			boolean repeat=false;
+			for(AefsysResource resource:allPersonResource){
+				if(resource.getId().equals(sourceResource.getId())){
+					repeat=true;
+				}
+			}
+			if(!repeat){
+				allPersonResource.add(sourceResource);
+			}
+		}
+		//首先找出最大的根节点
+		List<AefsysResource> topResourceList=new ArrayList<AefsysResource>();
+		for(AefsysResource resource:allPersonResource){
+           if(SysDefineConstant.DIC_RESOURCE_TYPE_SYSTEM.equals(resource.getResourceType())){
+			   topResourceList.add(resource);
+		   }
+		}
+		//根据根节点找下级节点
+		List<AefsysResourceVo> retResourceVoList=new ArrayList<AefsysResourceVo>();
+		for(AefsysResource topResource:topResourceList){
+			AefsysResourceVo topResourceVo=JSON.parseObject(JSON.toJSONString(topResource),AefsysResourceVo.class);
+			topResourceVo.setChildren(getChildStructResources(topResource,allPersonResource));
+			retResourceVoList.add(topResourceVo);
+		}
+		return retResourceVoList;
 	}
+
 	/**
 	 *根据父资源ID，迭代获取子资源树形列表-树
 	 *@param parentId 父资源主键
@@ -147,5 +186,35 @@ public class ResourceServiceImpl implements IResourceService{
 			}
 		}
 		return retChildListResource;
+	}
+
+	/**
+	 * 根据子资源的ID 循环获取父资源集合，不分结构不分顺序
+	 *
+	 **/
+	private List<AefsysResource> listParentResourceWithDirectStructureByChirdId(Long chirdId){
+		List<AefsysResource> retParentListResource=new ArrayList<AefsysResource>();
+		AefsysResource childResource=getResourceById(chirdId);
+		AefsysResource parentResource=getResourceById(childResource.getParentId());
+		if(StringUtil.isNotNull(parentResource)){
+			retParentListResource.add(parentResource);
+			retParentListResource.addAll(listParentResourceWithDirectStructureByChirdId(parentResource.getId()));
+		}
+		return retParentListResource;
+	}
+
+	/***
+	 * 根据父资源和有权限的所有资源构建结构
+	 ***/
+	private List<AefsysResourceVo> getChildStructResources(AefsysResource parentResource,List<AefsysResource> allResource){
+		List<AefsysResourceVo> childResourceList=new ArrayList<AefsysResourceVo>();
+		for(AefsysResource resource:allResource){
+			if(parentResource.getId().equals(resource.getParentId())) {
+				AefsysResourceVo childResource=JSON.parseObject(JSON.toJSONString(resource), AefsysResourceVo.class);
+				childResource.setChildren(getChildStructResources(childResource,allResource));
+				childResourceList.add(childResource);
+			}
+		}
+    	return childResourceList;
 	}
 }

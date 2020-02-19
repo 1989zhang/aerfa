@@ -7,7 +7,7 @@ insert into aefsys_person values (10, 1, 'webimaixf', 'webimaixf', null, null, '
 
 /*==========初始化资源菜单按钮aefsys_resource数据==========*/
 insert into aefsys_resource values (1, null, '阿尔法后台管理系统', 'system', 1, null, '#', null, 1, null, null, null, null, null);
-insert into aefsys_resource values (2, 1, '系统管理', 'content', 1, null, '#', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (2, 1, '系统管理', 'module', 1, null, '#', null, 1, null, null, null, null, null);
 insert into aefsys_resource values (3, 2, '部门管理', 'menu', 1, null, '/sys/org/to_org', null, 1, null, null, null, null, null);
 insert into aefsys_resource values (4, 3, '部门查询', 'button', 1, 'system:org:view', '#', null, 1, null, null, null, null, null);
 insert into aefsys_resource values (5, 3, '部门新增', 'button', 1, 'system:org:add', '#', null, 2, null, null, null, null, null);

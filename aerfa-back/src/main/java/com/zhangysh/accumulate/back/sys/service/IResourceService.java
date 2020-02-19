@@ -77,9 +77,10 @@ public interface IResourceService {
 	 int deleteResourceById(Long id);
 
 	/**
-	 * 根据人员的ID获取他拥有的资源集合
+	 * 根据人员的ID获取他拥有的资源带父级结构集合：
+	 * 查询逻辑为按钮到菜单到模块到系统，显示逻辑为系统到模块到菜单到按钮
 	 * @param personId 人员ID
-	 * @return 人员拥有资源集合
+	 * @return 人员拥有资源带父子结构集合
 	 */
-	List<AefsysResource> getPersonResourcesByPersonId(Long personId);
+	List<AefsysResourceVo> getPersonStructResourcesByPersonId(Long personId);
 }
