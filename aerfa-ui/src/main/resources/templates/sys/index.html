@@ -45,6 +45,36 @@
                             <li><a class="J_menuItem" href="http://www.baidu.com">百度连接</a></li>
                         </ul>
                     </li>
+                    <!-- 最多支持五级菜单 -->
+                    <li th:each="resource : ${resources}">
+                        <a href="#">
+                            <i th:class="${resource.icon}"></i>
+                            <span class="nav-label" th:text="${resource.resourceName}">一级菜单</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li th:each="bmenu : ${resource.children}">
+                                <a th:if="${#lists.isEmpty(bmenu.children)}" class="J_menuItem" th:text="${bmenu.resourceName}" th:href="@{${bmenu.url}}">二级菜单</a>
+                                <a th:if="${not #lists.isEmpty(bmenu.children)}" href="#">[[${bmenu.resourceName}]]<span class="fa arrow"></span></a>
+                                <ul th:if="${not #lists.isEmpty(bmenu.children)}" class="nav nav-third-level">
+                                    <li th:each="cmenu : ${bmenu.children}">
+                                        <a th:if="${#lists.isEmpty(cmenu.children)}" class="J_menuItem" th:text="${cmenu.resourceName}" th:href="@{${cmenu.url}}">三级菜单</a>
+                                        <a th:if="${not #lists.isEmpty(cmenu.children)}" href="#">[[${cmenu.resourceName}]]<span class="fa arrow"></span></a>
+                                        <ul th:if="${not #lists.isEmpty(cmenu.children)}" class="nav nav-third-level">
+                                            <li th:each="dmenu : ${cmenu.children}">
+                                                <a th:if="${#lists.isEmpty(dmenu.children)}" class="J_menuItem" th:text="${dmenu.resourceName}" th:href="@{${dmenu.url}}">四级菜单</a>
+                                                <a th:if="${not #lists.isEmpty(dmenu.children)}" href="#">[[${dmenu.resourceName}]]<span class="fa arrow"></span></a>
+                                                <ul th:if="${not #lists.isEmpty(dmenu.children)}" class="nav nav-third-level">
+                                                    <li th:each="emenu : ${dmenu.children}"><a class="J_menuItem" th:text="${emenu.resourceName}" th:href="@{${emenu.url}}">五级菜单</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li>
                         <a href="#">
                             <i class="fa fa-gear"></i>

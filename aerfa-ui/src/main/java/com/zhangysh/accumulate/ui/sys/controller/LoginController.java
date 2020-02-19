@@ -1,6 +1,7 @@
 package com.zhangysh.accumulate.ui.sys.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -146,18 +147,18 @@ public class LoginController {
 		//资源带父子结构要重新组装成父子结构对象的，直接转子是JsonArray对象
 		List<AefsysResourceVo> resourceList=new ArrayList<AefsysResourceVo>();
 		for(JSONObject topResourceJson:topResourceListJson){
-			AefsysResourceVo resourceVo=JSONObject.toJavaObject(topResourceJson,AefsysResourceVo.class);
-			resourceList.add(resourceVo);
+			AefsysResourceVo topResourceVo=JSONObject.toJavaObject(topResourceJson,AefsysResourceVo.class);
+			resourceList.addAll(dealWithNoNeedResource(topResourceVo));
 		}
 		modelMap.put("person", personVo);
 		modelMap.put("org", orgVo);
-		modelMap.put("menus", resourceList);
+		modelMap.put("resources", resourceList);
 		//特殊的token值便于websocket连接使用
 		modelMap.put(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_WEBIM, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_WEBIM);
 
 		return "sys/index";
 	}
-	
+
 	/**
 	 *跳转到第一个通用页面
 	 *@param request 请求对象
@@ -170,5 +171,36 @@ public class LoginController {
 		String sessionInfoStr=loginService.getSessionByToken(aerfatoken);
 		modelMap.addAttribute("prefix","/comm/note_calendar");
 		return "sys/current";
+	}
+
+	/***
+	 * 处理的资源树要去掉顶级system和末级button
+	 **/
+	private List<AefsysResourceVo> dealWithNoNeedResource(AefsysResourceVo topResourceVo) {
+		List<AefsysResourceVo> retList=new ArrayList<AefsysResourceVo>();
+		//去掉顶级资源
+		if(SysDefineConstant.DIC_RESOURCE_TYPE_SYSTEM.equals(topResourceVo.getResourceType())){
+			List<AefsysResourceVo> usefulResourceList=topResourceVo.getChildren();
+			for(AefsysResourceVo usefulResource:usefulResourceList){
+				usefulResource.setChildren(dealWithBottomResource(usefulResource));
+				retList.add(usefulResource);
+			}
+		}
+		return retList;
+	}
+
+	/**
+	 * 去除按钮资源，不能供展示
+	 * **/
+	private List<AefsysResourceVo> dealWithBottomResource(AefsysResourceVo resourceVo){
+		List<AefsysResourceVo> childrenList=resourceVo.getChildren();
+		List<AefsysResourceVo> setCildrenList=new ArrayList<AefsysResourceVo>();
+		for(AefsysResourceVo children:childrenList){
+           if(!SysDefineConstant.DIC_RESOURCE_TYPE_BUTTON.equals(children.getResourceType())){
+			   children.setChildren(dealWithBottomResource(children));
+			   setCildrenList.add(children);
+		   }
+		}
+		return setCildrenList;
 	}
 }
