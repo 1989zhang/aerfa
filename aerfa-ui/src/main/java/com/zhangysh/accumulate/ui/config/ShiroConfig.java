@@ -1,7 +1,7 @@
 package com.zhangysh.accumulate.ui.config;
 
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
-import com.zhangysh.accumulate.ui.plugins.shiro.UserRealm;
+import com.zhangysh.accumulate.ui.manage.shiro.UserRealm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;

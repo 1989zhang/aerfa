@@ -8,11 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.zhangysh.accumulate.common.constant.*;
 import com.zhangysh.accumulate.common.pojo.ResultVo;
-import com.zhangysh.accumulate.ui.plugins.shiro.ShiroUtils;
-import org.apache.shiro.SecurityUtils;
+import com.zhangysh.accumulate.ui.manage.shiro.ShiroUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +22,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.zhangysh.accumulate.common.pojo.TokenModel;
 import com.zhangysh.accumulate.common.util.HttpStorageUtil;
-import com.zhangysh.accumulate.common.util.IpUtil;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysOrg;
-import com.zhangysh.accumulate.pojo.sys.transobj.AefsysLoginDto;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysConfigDataVo;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
 import com.zhangysh.accumulate.ui.sys.service.IConfigDataService;
 import com.zhangysh.accumulate.ui.sys.service.ILoginService;
-
-import eu.bitwalker.useragentutils.UserAgent;
 
 /*****
  * 登陆相关方法

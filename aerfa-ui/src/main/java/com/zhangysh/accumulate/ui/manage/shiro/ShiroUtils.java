@@ -1,4 +1,4 @@
-package com.zhangysh.accumulate.ui.plugins.shiro;
+package com.zhangysh.accumulate.ui.manage.shiro;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;

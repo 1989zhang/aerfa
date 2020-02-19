@@ -1,4 +1,4 @@
-package com.zhangysh.accumulate.ui.plugins.shiro;
+package com.zhangysh.accumulate.ui.manage.shiro;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zhangysh.accumulate.common.constant.CacheConstant;
@@ -10,7 +10,6 @@ import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysResource;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysRole;
 import com.zhangysh.accumulate.pojo.sys.transobj.AefsysLoginDto;
-import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
 import com.zhangysh.accumulate.ui.sys.util.ServletUtil;
 import com.zhangysh.accumulate.ui.sys.service.ILoginService;
 import org.apache.shiro.authc.*;
