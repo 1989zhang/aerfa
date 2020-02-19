@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head th:include="sys/include :: header"></head>
 <th:block th:include="sys/include :: treeview-css"/>
 
@@ -51,10 +51,10 @@
                 <div class="ibox float-e-margins">
 	            	<div class="ibox-content">
 	                     <div id="toolbar" >
-	                          <button type="button" class="btn btn-outline btn-default" onclick="addPerson()">
+	                          <button type="button" class="btn btn-outline btn-default" onclick="addPerson()" shiro:hasPermission="sys:person:add">
 	                              <i class="glyphicon glyphicon-plus" aria-hidden="true" ></i>新增
 	                          </button>
-	                          <button type="button" class="btn btn-outline btn-default" onclick="$.operate.batRemove()">
+	                          <button type="button" class="btn btn-outline btn-default" onclick="$.operate.batRemove()" shiro:hasPermission="sys:person:remove">
 	                              <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>删除
 	                          </button>
 	                      </div>

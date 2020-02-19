@@ -11,12 +11,12 @@ $(function() {
         columns: [{
             field: 'fullName',
             title: '名称',
-            width: '30%'
+            width: '40%'
         },
             {
                 field: 'status',
                 title: '状态',
-                width: '10%',
+                width: '15%',
                 align: "center",
                 formatter: function(value, row, index) {
                     return $.table.formatDicLabel(statusDatas, value);
@@ -25,11 +25,11 @@ $(function() {
             {
                 field: 'createTime',
                 title: '创建时间',
-                width: '10%',
+                width: '15%',
                 align: "center"
             },{
                 title: '操作',
-                width: '50%',
+                width: '30%',
                 align: 'center',
                 formatter: function(value,row,index) {
                     var actions = [];

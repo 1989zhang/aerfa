@@ -2,6 +2,9 @@ package com.zhangysh.accumulate.ui.sys.controller;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -36,9 +39,10 @@ public class ResourceController {
 	/**
 	 *跳转到sys资源页面
 	 *@param request 请求对象
-	 *@param modelMapl spring的mvc返回对象
+	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的单位页面
 	 ****/
+	@RequiresPermissions("system:resource:view")
 	@RequestMapping(value="/to_resource")
 	public String toSysResource(HttpServletRequest request, ModelMap modelMap) {
 		modelMap.addAttribute("prefix",prefix);
@@ -46,11 +50,13 @@ public class ResourceController {
 	}
 	
 	/****
-	 *一次性全部展示所有资源，且带父子结构 
-	 *@param request 请求对象
-	 *@param modelMapl spring的mvc返回对象
-	 *@return 所有资源集合
+	 * 一次性全部展示所有资源，且带父子结构
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param resource 资源查询对象
+	 * @return 所有资源集合
 	 ***/
+	@RequiresPermissions("system:resource:list")
 	@RequestMapping(value="/list")
     @ResponseBody
 	public String getList(HttpServletRequest request, ModelMap modelMap,AefsysResource resource) {
@@ -61,11 +67,13 @@ public class ResourceController {
 	}
 	
 	/**
-	 *跳转到sys资源新增页面
-	 *@param request 请求对象
-	 *@param modelMap spring的mvc返回对象
-	 *@return templates下的单位新增页面
+	 * 跳转到sys资源新增页面
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param parentId 资源父级ID
+	 * @return templates下的单位新增页面
 	 ****/
+	@RequiresPermissions("system:resource:add")
 	@RequestMapping(value="/to_add/{parentId}")
 	public String toAdd(HttpServletRequest request, ModelMap modelMap,@PathVariable("parentId") Long parentId) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
@@ -93,8 +101,7 @@ public class ResourceController {
 	/***
 	 *点击父级资源展示资源树,直接跳转
 	 *@param request 请求对象
-	 *@param modelMap spring的mvc返回对象 
-	 *@param id 已选中的父资源id
+	 *@param modelMap spring的mvc返回对象
 	 ***/
 	@RequestMapping(value="/to_select_tree")
 	public String ToSelectTree(HttpServletRequest request,  ModelMap modelMap) {
@@ -108,19 +115,38 @@ public class ResourceController {
 	 *@param modelMap spring的mvc返回对象 
 	 *@param resource 保存的对象
 	 ******/
+	@RequiresPermissions(value={"system:resource:add","sys:resource:edit"},logical= Logical.OR)
 	@RequestMapping(value="/save_add")
     @ResponseBody
     public String saveAdd(HttpServletRequest request, ModelMap modelMap,AefsysResource resource) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		return resourceService.saveAdd(aerfatoken, resource);
 	}
-	
+
+	/**
+	 *跳转到sys资源修改页面
+	 *@param request 请求对象
+	 *@param modelMap spring的mvc返回对象
+	 *@return templates下的单位页面
+	 ****/
+	@RequiresPermissions("system:resource:edit")
+	@RequestMapping(value="/to_edit/{id}")
+	public String toEdit(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		String retResourceStr=resourceService.getSingle(aerfatoken,id);
+		AefsysResourceVo resourceVo=JSON.parseObject(retResourceStr, AefsysResourceVo.class);
+		modelMap.addAttribute("prefix",prefix);
+		modelMap.put("resource",resourceVo);
+		return prefix+"/edit";
+	}
+
 	/***
 	 *删除资源
 	 *@param request 请求对象
 	 *@param modelMap spring的mvc返回对象 
 	 *@param id 要删除的资源id
 	 ***/
+	@RequiresPermissions("system:resource:remove")
 	@RequestMapping(value="/remove/{id}")
     @ResponseBody
 	public String remove(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
@@ -139,20 +165,5 @@ public class ResourceController {
 		String aerfatoken=HttpStorageUtil.getToken(request);
         return resourceService.getTree(aerfatoken);
 	}
-	
-	/**
-	 *跳转到sys资源修改页面
-	 *@param request 请求对象
-	 *@param modelMap spring的mvc返回对象
-	 *@return templates下的单位页面
-	 ****/
-	@RequestMapping(value="/to_edit/{id}")
-	public String toEdit(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
-		String aerfatoken=HttpStorageUtil.getToken(request);
-		String retResourceStr=resourceService.getSingle(aerfatoken,id);
-		AefsysResourceVo resourceVo=JSON.parseObject(retResourceStr, AefsysResourceVo.class);
-		modelMap.addAttribute("prefix",prefix);
-		modelMap.put("resource",resourceVo);
-		return prefix+"/edit";
-	}
+
 }

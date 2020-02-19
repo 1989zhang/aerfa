@@ -122,8 +122,8 @@ public class OrgController {
 	 *@param modelMap spring的mvc返回对象 
 	 *@param org 保存的对象
 	 ******/
-	@RequestMapping(value="/save_add")
 	@RequiresPermissions(value={"sys:org:add","sys:org:edit"},logical= Logical.OR)
+	@RequestMapping(value="/save_add")
     @ResponseBody
     public String saveAdd(HttpServletRequest request, ModelMap modelMap,AefsysOrg org) {
 		String aerfatoken=HttpStorageUtil.getToken(request);

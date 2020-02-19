@@ -8,17 +8,22 @@ insert into aefsys_person values (10, 1, 'webimaixf', 'webimaixf', null, null, '
 /*==========初始化资源菜单按钮aefsys_resource数据==========*/
 insert into aefsys_resource values (1, null, '阿尔法后台管理系统', 'system', 1, null, '#', null, 1, null, null, null, null, null);
 insert into aefsys_resource values (2, 1, '系统管理', 'module', 1, null, '#', null, 1, null, null, null, null, null);
-insert into aefsys_resource values (3, 2, '部门管理', 'menu', 1, null, '/sys/org/to_org', null, 1, null, null, null, null, null);
-insert into aefsys_resource values (4, 3, '部门查询', 'button', 1, 'system:org:view', '#', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (3, 2, '部门管理', 'menu', 1, 'system:org:view', '/sys/org/to_org', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (4, 3, '部门查询', 'button', 1, 'system:org:list', '#', null, 1, null, null, null, null, null);
 insert into aefsys_resource values (5, 3, '部门新增', 'button', 1, 'system:org:add', '#', null, 2, null, null, null, null, null);
 insert into aefsys_resource values (6, 3, '部门修改', 'button', 1, 'system:org:edit', '#', null, 3, null, null, null, null, null);
 insert into aefsys_resource values (7, 3, '部门删除', 'button', 1, 'system:org:remove', '#', null, 4, null, null, null, null, null);
-insert into aefsys_resource values (8, 2, '人员管理', 'menu', 1, null, '/sys/person/to_person', null, 2, null, null, null, null, null);
-insert into aefsys_resource values (9, 8, '人员查询', 'button', 1, 'system:person:view', '#', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (8, 2, '人员管理', 'menu', 1, 'system:person:view', '/sys/person/to_person', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (9, 8, '人员查询', 'button', 1, 'system:person:list', '#', null, 1, null, null, null, null, null);
 insert into aefsys_resource values (10, 8, '人员新增', 'button', 1, 'system:person:add', '#', null, 2, null, null, null, null, null);
 insert into aefsys_resource values (11, 8, '人员修改', 'button', 1, 'system:person:edit', '#', null, 3, null, null, null, null, null);
 insert into aefsys_resource values (12, 8, '人员删除', 'button', 1, 'system:person:remove', '#', null, 4, null, null, null, null, null);
 insert into aefsys_resource values (13, 8, '重置密码', 'button', 1, 'system:person:resetPassword', '#', null, 5, null, null, null, null, null);
+insert into aefsys_resource values (14, 2, '资源管理', 'menu', 1, 'system:resource:view', '/sys/resource/to_resource', null, 3, null, null, null, null, null);
+insert into aefsys_resource values (15, 14, '资源查询', 'button', 1, 'system:resource:list', '#', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (16, 14, '资源新增', 'button', 1, 'system:resource:add', '#', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (17, 14, '资源修改', 'button', 1, 'system:resource:edit', '#', null, 3, null, null, null, null, null);
+insert into aefsys_resource values (18, 14, '资源删除', 'button', 1, 'system:resource:remove', '#', null, 4, null, null, null, null, null);
 
 /*==========初始化角色信息aefsys_role数据==========*/
 insert into aefsys_role values ('1', '超级管理员', 'superAdmin', 1, 1, '超级管理员角色', '超级管理员', '2019-05-16 00:00:00', null, null);

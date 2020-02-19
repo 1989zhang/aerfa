@@ -20,8 +20,8 @@ $(function() {
                 if (item.resourceType == 'system') {
                     return '<span class="label label-danger">系统</span>';
                 }
-                else if (item.resourceType == 'content') {
-                    return '<span class="label label-warning">目录</span>';
+                else if (item.resourceType == 'module') {
+                    return '<span class="label label-warning">模块</span>';
                 }
                 else if (item.resourceType == 'menu') {
                     return '<span class="label label-success">菜单</span>';
@@ -33,22 +33,36 @@ $(function() {
         },{
         	title: '资源标识',
         	field: 'identify',
-            width: '20%',
+            width: '15%',
             align: "center"
         },{
         	field: 'url',
             title: '访问路径',
-            width: '20%',
+            width: '15%',
             align: "center"
+        },{
+            field: 'status',
+            title: '资源状态',
+            width: '10%',
+            align: "center",
+            formatter: function(value, row, index) {
+                return $.table.formatDicLabel(statusDatas, value);
+            }
         },{
         	 title: '操作',
              width: '20%',
              align: "center",
              formatter: function(value,row, index) {
                  var actions = [];
-                 actions.push('<a class="btn btn-info btn-xs" href="#" onclick="$.operate.add(\'' + row.id + '\')"><i class="fa fa-plus"></i>新增</a> ');
-                 actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                 actions.push('<a class="btn btn-danger btn-xs" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                 if(addFlag){
+                     actions.push('<a class="btn btn-info btn-xs" href="#" onclick="$.operate.add(\'' + row.id + '\')"><i class="fa fa-plus"></i>新增</a> ');
+                 }
+                 if(editFlag){
+                     actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                 }
+                 if(removeFlag){
+                     actions.push('<a class="btn btn-danger btn-xs" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                 }
                  return actions.join('');
              }
         }]

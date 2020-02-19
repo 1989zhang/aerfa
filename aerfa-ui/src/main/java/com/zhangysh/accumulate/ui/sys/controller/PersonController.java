@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.zhangysh.accumulate.common.constant.MarkConstant;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,6 +128,7 @@ public class PersonController {
 	 *@param modelMap spring的mvc返回对象 
 	 *@param person 保存的对象
 	 ******/
+	@RequiresPermissions(value={"sys:person:add","sys:person:edit"},logical= Logical.OR)
 	@RequestMapping(value="/save_add")
     @ResponseBody
     public String saveAdd(HttpServletRequest request, ModelMap modelMap,AefsysPerson person) {
@@ -294,7 +296,7 @@ public class PersonController {
 				AefsysPerson person=new AefsysPerson();
 				person.setId(id);
 				person.setHeadPic(uploadFile.getFileLink());
-				//修改个人头像路径
+				//修改个人头像路径·
 				personService.saveAdd(aerfatoken,person);
 				//刷新redis缓存
 				return loginService.refreshSessionByToken(aerfatoken);
