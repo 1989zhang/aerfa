@@ -6,6 +6,7 @@ import com.zhangysh.accumulate.common.constant.MarkConstant;
 import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import com.zhangysh.accumulate.common.pojo.TokenModel;
 import com.zhangysh.accumulate.common.util.IpUtil;
+import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysResource;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysRole;
 import com.zhangysh.accumulate.pojo.sys.transobj.AefsysLoginDto;
@@ -49,14 +50,15 @@ public class UserRealm extends AuthorizingRealm {
         String sessionInfoStr=loginService.getSessionByToken(backToken);
         TokenModel tokenModel=JSON.parseObject(sessionInfoStr,TokenModel.class);
         String roleListObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_ROLE)+"";
-        List<AefsysRole> roleList=JSON.parseObject(roleListObjectJson, List.class);
+        List<JSONObject> roleList=JSON.parseObject(roleListObjectJson, List.class);
         String resourceListObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_RESOURCE)+"";
-        List<AefsysResource> resourceList=JSON.parseObject(resourceListObjectJson, List.class);
+        List<JSONObject> resourceList=JSON.parseObject(resourceListObjectJson, List.class);
 
         // 角色加入AuthorizationInfo认证对象
         Set<String> roleCode=new HashSet<String>();
-        for (AefsysRole role:roleList){
-            if(SysDefineConstant.DB_USEABLE_STATUS_VALID.equals(role.getStatus())) {
+        for (JSONObject roleJson:roleList){
+            AefsysRole role=JSONObject.toJavaObject(roleJson,AefsysRole.class);
+            if(SysDefineConstant.DB_USEABLE_STATUS_VALID.equals(role.getStatus()) && StringUtil.isNotEmpty(role.getRoleCode())) {
                 roleCode.add(role.getRoleCode());
             }
         }
@@ -64,8 +66,9 @@ public class UserRealm extends AuthorizingRealm {
 
         // 权限加入AuthorizationInfo认证对象
         Set<String> stringPermissions=new HashSet<String>();
-        for(AefsysResource resource:resourceList){
-            if(SysDefineConstant.DB_USEABLE_STATUS_VALID.equals(resource.getStatus())){
+        for(JSONObject resourceJson:resourceList){
+            AefsysResource resource=JSONObject.toJavaObject(resourceJson,AefsysResource.class);
+            if(SysDefineConstant.DB_USEABLE_STATUS_VALID.equals(resource.getStatus())&& StringUtil.isNotEmpty(resource.getIdentify())){
                 stringPermissions.add(resource.getIdentify());
             }
         }
