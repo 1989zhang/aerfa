@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head th:include="sys/include :: header"></head>
 <body class="gray-bg">
 	<div class="wrapper wrapper-content animated">
@@ -30,10 +30,10 @@
         <div class="ibox float-e-margins">
         	<div class="ibox-content">
                  <div id="toolbar" >
-                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.add()">
+                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.add()" shiro:hasPermission="sys:role:add">
                           <i class="glyphicon glyphicon-plus" aria-hidden="true" ></i>新增
                       </button>
-                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.batRemove()">
+                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.batRemove()" shiro:hasPermission="sys:role:remove">
                           <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>删除
                       </button>
                   </div>
@@ -44,64 +44,15 @@
     </div>
     <div th:include="sys/include :: footer"></div>
 
+    <!-- 带@放到单独的js会不执行，所以外面定义变量里面引用。-->
     <script th:inline="javascript">
-        //初始化参数和数据
-        $(function() {
-            var options = {
-                url: prefix + "/list",
-                createUrl: prefix + "/to_add",
-                updateUrl: prefix + "/to_edit/{id}",
-                removeUrl: prefix + "/remove/{id}",
-                modalName: "角色",
-                id:'id',//id字段
-                columns: [{
-		            checkbox: true
-		        },
-				{
-					field : 'roleName', 
-					title : '角色名称',
-					align: 'center'
-				},
-				{
-					field : 'roleCode', 
-					title : '角色编码',
-					align: 'center'
-				},
-				{
-					field : 'status', 
-					title : '状态',
-					align: 'center',
-					formatter: function(value,row,index) {
-		            	if(row.status==1){
-		            		return "正常";
-		            	}else if(row.status==0){
-		            		return "停用";
-		            	}
-		            }
-				},
-				{
-					field : 'orderNo', 
-					title : '排序号',
-					align: 'center'
-				},
-				{
-					field : 'remark', 
-					title : '备注',
-					align: 'center'
-				},
-		        {
-		            title: '操作',
-		            align: 'center',
-		            formatter: function(value, row, index) {
-		            	var actions = [];
-		            	actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
-						return actions.join('');
-		            }
-		        }]
-            };
-            $.table.init(options);
-        });
+        var editFlag = [[${@permission.hasPermission('sys:role:edit')}]];
+        var removeFlag = [[${@permission.hasPermission('sys:role:remove')}]];
+        var statusDatas = [[${@dic.getDic('role_status')}]];
+    </script>
+    <script th:src="@{/aerfa/myresource/js/sys/role/role.js}" type="text/javascript"></script>
+    <script th:inline="javascript">
+
     </script>
 </body>
 </html>

@@ -45,7 +45,15 @@
             <if test="updateTime != null  "> and update_time = #{updateTime}</if>
         </where>
     </select>
-     
+
+    <select id="checkRoleUnique" parameterType="AefsysRole" resultMap="roleResult">
+        <include refid="selectRole"/>
+        <where>
+            <if test="id != null ">and id != #{id}</if>
+            <if test="roleCode != null and roleCode != ''"> and role_code = #{roleCode} </if>
+        </where>
+    </select>
+
     <!--根据对象和属性insert新增对象-->
     <insert id="insertRole" parameterType="AefsysRole">
         insert into aefsys_role

@@ -1,4 +1,5 @@
 package com.zhangysh.accumulate.back.sys.service.impl;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -45,7 +46,12 @@ public class RoleServiceImpl implements IRoleService {
 	public List<AefsysRole> listRole(AefsysRole role){
 		return roleDao.listRole(role);
 	}
-	 
+
+	@Override
+	public List<AefsysRole> checkRoleUnique(AefsysRole role){
+		return roleDao.checkRoleUnique(role);
+	}
+
 	@Override
 	public int insertRole(AefsysRole role){
 	    return roleDao.insertRole(role);

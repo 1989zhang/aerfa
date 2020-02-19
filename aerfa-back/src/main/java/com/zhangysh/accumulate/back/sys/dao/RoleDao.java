@@ -1,5 +1,6 @@
 package com.zhangysh.accumulate.back.sys.dao;
 
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysResource;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysRole;
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;	
@@ -27,7 +28,15 @@ public interface RoleDao {
      * @return 角色条件下的集合
      */
 	 List<AefsysRole> listRole(AefsysRole role);
-	
+
+	/****
+	 * 唯一性角色编码标识检测，查询出角色list集合，检查角色roleCode和id
+	 * 因为检测不用like所以单独列出来
+	 * @param role 查询条件
+	 * @return 角色集合
+	 ***/
+	List<AefsysRole> checkRoleUnique(AefsysRole role);
+
 	/**
      * 新增角色
      * 

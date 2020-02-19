@@ -68,10 +68,10 @@ $(function() {
 					actions.push('<a class="btn btn-success btn-xs true " href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit">编辑</i></a> ');
 				}
 			    if(removeFlag){
-					actions.push('<a class="btn btn-danger btn-xs false " href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove">删除</i></a>');
+					actions.push('<a class="btn btn-danger btn-xs false " href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove">删除</i></a> ');
 				}
 			    if(resetPwdFlag){
-					actions.push('&nbsp;<a class="btn btn-info  btn-xs true " href="#" onclick="resetPwd(\'' + row.id + '\')"><i class="fa fa-key">重置</i></a> ');
+					actions.push('<a class="btn btn-info  btn-xs true " href="#" onclick="resetPwd(\'' + row.id + '\')"><i class="fa fa-key">重置</i></a> ');
 				}
 	            return actions.join('');
 	       }

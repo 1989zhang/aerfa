@@ -43,7 +43,7 @@ public class RoleController extends BaseController{
 	/****
 	 * 获取展示角色信息列表
 	 * @param request 请求对象
-	 * @param AefsysRoleDto 分页和查询对象
+	 * @param roleDto 分页和查询对象
 	 * @return 获取到的角色对象集合JSON
 	 ****/
 	@RequestMapping(value="/list",method = RequestMethod.POST)
@@ -87,7 +87,18 @@ public class RoleController extends BaseController{
 			return toHandlerResultStr(roleService.insertRole(role));
 		}
 	}
-	
+
+	/****
+	 * 验证角色编码标识是否唯一
+	 * @param request 请求对象
+	 * @param role 要检查的资源包括：标识和id,id为了排除自己
+	 ***/
+	@RequestMapping(value = "/check_role_unique",method = RequestMethod.POST)
+	@ResponseBody
+	public String checkRoleUnique(HttpServletRequest request,@RequestBody AefsysRole role) {
+		return toUniqueResultStr(roleService.checkRoleUnique(role).size());
+	}
+
 	/****
 	 *删除角色对象，可以删除多个.
 	 *@param request 请求对象

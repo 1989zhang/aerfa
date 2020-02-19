@@ -1,6 +1,9 @@
 package com.zhangysh.accumulate.ui.sys.controller;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -37,6 +40,7 @@ public class RoleController {
 	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的角色页面
 	 ****/
+	@RequiresPermissions("sys:role:view")
 	@RequestMapping(value="/to_role")
 	public String toSysRole(HttpServletRequest request, ModelMap modelMap) {
 		modelMap.addAttribute("prefix",prefix);
@@ -49,6 +53,7 @@ public class RoleController {
 	 *@param modelMap spring的mvc返回对象
 	 *@return Bootstrap的table对象
 	 ****/
+	@RequiresPermissions("sys:role:list")
 	@RequestMapping(value="/list")
     @ResponseBody
 	public String getList(HttpServletRequest request, ModelMap modelMap,BsTablePageInfo pageInfo,AefsysRole role) {
@@ -64,6 +69,7 @@ public class RoleController {
 	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的单位新增页面
 	 ****/
+	@RequiresPermissions("sys:role:add")
 	@RequestMapping(value="/to_add")
 	public String toAdd(HttpServletRequest request, ModelMap modelMap) {
 		modelMap.addAttribute("prefix",prefix);
@@ -76,12 +82,28 @@ public class RoleController {
 	 *@param modelMap spring的mvc返回对象 
 	 *@param role 保存的对象
 	 ******/
+	@RequiresPermissions(value={"sys:role:add","sys:role:edit"},logical= Logical.OR)
 	@RequestMapping(value="/save_add")
     @ResponseBody
     public String saveAdd(HttpServletRequest request, ModelMap modelMap,AefsysRole role) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		return roleService.saveAdd(aerfatoken, role);
 	}
+
+	/**
+	 * 检查角色编码的唯一性
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param role 要检查的角色对象，包含roleCode标识属性
+	 ****/
+	@RequestMapping(value="/check_role_unique")
+	@ResponseBody
+	public String checkRoleUnique(HttpServletRequest request, ModelMap modelMap,AefsysRole role){
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return roleService.checkRoleUnique(aerfatoken,role);
+	}
+
+
 	
 	/****
 	 *修改角色，先获取角色信息
@@ -89,6 +111,7 @@ public class RoleController {
 	 *@param modelMap spring的mvc返回对象 
 	 *@return templates下的页面
 	 ****/
+	@RequiresPermissions("sys:role:edit")
 	@RequestMapping(value="/to_edit/{id}")
 	public String toEdit(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
@@ -105,6 +128,7 @@ public class RoleController {
 	 *@param modelMap spring的mvc返回对象 
 	 *@param ids 要删除的ids集合，是路径获取参数
 	 ***/
+	@RequiresPermissions("sys:role:remove")
 	@RequestMapping(value="/remove/{ids}")
     @ResponseBody
     public String remove(HttpServletRequest request, ModelMap modelMap,@PathVariable("ids") String ids){   

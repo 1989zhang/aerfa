@@ -76,7 +76,7 @@
 			<if test="identify != null  and identify != ''  ">identify,</if>
 			<if test="url != null  and url != ''  ">url,</if>
 			<if test="icon != null  and icon != ''  ">icon,</if>
-			<if test="orderNo != null  ">orderNo,</if>
+			<if test="orderNo != null  ">order_no,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
 			<if test="createBy != null  and createBy != ''  ">create_by,</if>
 			<if test="createTime != null  ">create_time,</if>

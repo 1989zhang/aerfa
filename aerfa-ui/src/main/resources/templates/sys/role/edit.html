@@ -48,15 +48,7 @@
 
 	</div>
     <div th:include="sys/include :: footer"></div>
-    
-    <script th:inline="javascript">
-		$("#form-role-add").validate({
-			rules:{
-			},
-			submitHandler: function(form) {
-				$.operate.save(prefix + "/save_add", $('#form-role-add').serialize());
-			}
-		});
-	</script>
+	<script th:src="@{/aerfa/myresource/js/sys/role/add.js}" type="text/javascript"></script>
+
 </body>
 </html>

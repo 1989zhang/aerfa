@@ -38,10 +38,18 @@ public interface IRoleService {
 	/****
 	 *保存新增的角色信息 
 	 *@param aerfatoken token对象
-	 *@param Role 要保存的角色对象
+	 *@param role 要保存的角色对象
 	 ***/
 	@RequestMapping(value = "/sys/role/save",method = RequestMethod.POST)
 	public String saveAdd(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefsysRole role);
+
+	/****
+	 * 验证角色编码标识是否唯一
+	 * @param aerfatoken token对象
+	 * @param role 要检查的角色包括：标识和id,id为了排除自己
+	 ***/
+	@RequestMapping(value = "/sys/role/check_role_unique",method = RequestMethod.POST)
+	public String checkRoleUnique(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefsysRole role);
 
 	/****
 	 *删除角色对象，可以删除多个，中间英文,隔开

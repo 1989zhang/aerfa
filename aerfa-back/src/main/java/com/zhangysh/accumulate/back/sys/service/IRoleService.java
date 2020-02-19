@@ -1,8 +1,10 @@
 package com.zhangysh.accumulate.back.sys.service;
 import java.util.List;
+
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysRole;
 import com.zhangysh.accumulate.common.pojo.BsTableDataInfo;
 import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysResourceVo;
 
 /**
  * 角色相关服务层接口
@@ -35,7 +37,13 @@ public interface IRoleService {
      * @return 角色条件下结果集合
      */
 	 List<AefsysRole> listRole(AefsysRole role);
-	 
+
+	/****
+	 * 唯一性角色编码标记检测，查询出资源list集合，未分页排序等
+	 * @param role 查询条件
+	 ****/
+	List<AefsysRole> checkRoleUnique(AefsysRole role);
+
 	/**
      * 新增角色
      * 

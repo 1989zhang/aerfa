@@ -42,7 +42,7 @@ public class ResourceController {
 	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的单位页面
 	 ****/
-	@RequiresPermissions("system:resource:view")
+	@RequiresPermissions("sys:resource:view")
 	@RequestMapping(value="/to_resource")
 	public String toSysResource(HttpServletRequest request, ModelMap modelMap) {
 		modelMap.addAttribute("prefix",prefix);
@@ -56,7 +56,7 @@ public class ResourceController {
 	 * @param resource 资源查询对象
 	 * @return 所有资源集合
 	 ***/
-	@RequiresPermissions("system:resource:list")
+	@RequiresPermissions("sys:resource:list")
 	@RequestMapping(value="/list")
     @ResponseBody
 	public String getList(HttpServletRequest request, ModelMap modelMap,AefsysResource resource) {
@@ -73,7 +73,7 @@ public class ResourceController {
 	 * @param parentId 资源父级ID
 	 * @return templates下的单位新增页面
 	 ****/
-	@RequiresPermissions("system:resource:add")
+	@RequiresPermissions("sys:resource:add")
 	@RequestMapping(value="/to_add/{parentId}")
 	public String toAdd(HttpServletRequest request, ModelMap modelMap,@PathVariable("parentId") Long parentId) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
@@ -115,7 +115,7 @@ public class ResourceController {
 	 *@param modelMap spring的mvc返回对象 
 	 *@param resource 保存的对象
 	 ******/
-	@RequiresPermissions(value={"system:resource:add","sys:resource:edit"},logical= Logical.OR)
+	@RequiresPermissions(value={"sys:resource:add","sys:resource:edit"},logical= Logical.OR)
 	@RequestMapping(value="/save_add")
     @ResponseBody
     public String saveAdd(HttpServletRequest request, ModelMap modelMap,AefsysResource resource) {
@@ -129,7 +129,7 @@ public class ResourceController {
 	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的单位页面
 	 ****/
-	@RequiresPermissions("system:resource:edit")
+	@RequiresPermissions("sys:resource:edit")
 	@RequestMapping(value="/to_edit/{id}")
 	public String toEdit(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
@@ -146,7 +146,7 @@ public class ResourceController {
 	 *@param modelMap spring的mvc返回对象 
 	 *@param id 要删除的资源id
 	 ***/
-	@RequiresPermissions("system:resource:remove")
+	@RequiresPermissions("sys:resource:remove")
 	@RequestMapping(value="/remove/{id}")
     @ResponseBody
 	public String remove(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
