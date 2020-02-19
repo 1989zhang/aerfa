@@ -2,6 +2,8 @@ package com.zhangysh.accumulate.pojo.sys.viewobj;
 
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysResource;
 
+import java.util.List;
+
 /*****
  * 展示修改资源的模型对象，因为多了个父级资源名称，所以拓展此VO
  * @author zhangysh
@@ -12,6 +14,7 @@ public class AefsysResourceVo extends AefsysResource{
 	private static final long serialVersionUID = 1L;
 	
 	private String parentName;//父级资源名称
+	private List<AefsysResourceVo> children;//首页面要判断后展示子菜单所以拓展此属性
 
 	public String getParentName() {
 		return parentName;
@@ -20,5 +23,10 @@ public class AefsysResourceVo extends AefsysResource{
 		this.parentName = parentName;
 	}
 
-	
+	public List<AefsysResourceVo> getChildren() {
+		return children;
+	}
+	public void setChildren(List<AefsysResourceVo> children) {
+		this.children = children;
+	}
 }
