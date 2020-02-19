@@ -27,7 +27,7 @@ $(function() {
 	      id:'id',//id字段
 	      sortOrder:'desc',//默认排序规则设置
 	      columns: [{
-	      	checkbox: true
+	      	 checkbox: true
 	      },{
 	      	title: '人员名称',
 	        field: 'personName',
@@ -48,15 +48,10 @@ $(function() {
             title: '人员状态',
             width: '10%',
             align: "center",
-            formatter: function(value,row,index) {
-            	if(row.status==1){
-            		return "正常";
-            	}else if(row.status==0){
-            		return "注销";
-            	}else if(row.status==2){
-            		return "锁定";
-            	}
-            }
+			formatter: function(value, row, index) {
+          		return $.table.formatDicLabel(statusDatas, value);
+			}
+
           },{
 	      	field: 'createTime',
 	        title: '创建时间',
@@ -68,10 +63,16 @@ $(function() {
 	       width: '30%',
 	       align: "center",
 	       formatter: function(value,row,index) {
-	            var actions = [];
-	            actions.push('<a class="btn btn-success btn-xs true " href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit">编辑</i></a> ');
-	            actions.push('<a class="btn btn-danger btn-xs false " href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove">删除</i></a>');
-	            actions.push('<a class="btn btn-info  btn-xs true " href="#" onclick="resetPwd(\'' + row.id + '\')"><i class="fa fa-key">重置</i></a> ');
+				var actions = [];
+			    if(editFlag){
+					actions.push('<a class="btn btn-success btn-xs true " href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit">编辑</i></a> ');
+				}
+			    if(removeFlag){
+					actions.push('<a class="btn btn-danger btn-xs false " href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove">删除</i></a>');
+				}
+			    if(resetPwdFlag){
+					actions.push('&nbsp;<a class="btn btn-info  btn-xs true " href="#" onclick="resetPwd(\'' + row.id + '\')"><i class="fa fa-key">重置</i></a> ');
+				}
 	            return actions.join('');
 	       }
 	    }]

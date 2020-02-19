@@ -3,6 +3,9 @@ package com.zhangysh.accumulate.ui.sys.controller;
 import java.io.IOException;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import com.zhangysh.accumulate.common.constant.MarkConstant;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -60,6 +63,7 @@ public class PersonController {
 	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的单位页面
 	 ****/
+	@RequiresPermissions("sys:person:view")
 	@RequestMapping(value="/to_person")
 	public String toSysPerson(HttpServletRequest request, ModelMap modelMap) {
 		modelMap.addAttribute("prefix",prefix);
@@ -72,6 +76,7 @@ public class PersonController {
 	 *@param modelMap spring的mvc返回对象
 	 *@return Bootstrap的table对象
 	 ****/
+	@RequiresPermissions("sys:person:list")
 	@RequestMapping(value="/list")
     @ResponseBody
 	public String getList(HttpServletRequest request, ModelMap modelMap,BsTablePageInfo pageInfo,AefsysPerson person) {
@@ -87,6 +92,7 @@ public class PersonController {
 	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的单位新增页面
 	 ****/
+	@RequiresPermissions("sys:person:add")
 	@RequestMapping(value="/to_add/{orgId}")
 	public String toAdd(HttpServletRequest request, ModelMap modelMap,@PathVariable("orgId") Long orgId) {
 		modelMap.put("prefix", prefix);
@@ -134,6 +140,7 @@ public class PersonController {
 	 *@param modelMap spring的mvc返回对象 
 	 *@return templates下的重置密码页面
 	 ****/
+	@RequiresPermissions("sys:person:edit")
 	@RequestMapping(value="/to_edit/{id}")
 	public String toEdit(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
@@ -150,6 +157,7 @@ public class PersonController {
 	 *@param modelMap spring的mvc返回对象 
 	 *@param ids 要删除的个人ids集合，是路径获取参数
 	 ***/
+	@RequiresPermissions("sys:person:remove")
 	@RequestMapping(value="/remove/{ids}")
     @ResponseBody
     public String remove(HttpServletRequest request, ModelMap modelMap,@PathVariable("ids") String ids){   
@@ -158,11 +166,12 @@ public class PersonController {
     }
 	
 	/****
-	 *重置个人密码方法，获取个人基本信息 ，最主要是个人的id
-	 *@param request 请求对象
-	 *@param modelMap spring的mvc返回对象 
-	 *@return templates下的重置密码页面
+	 * 人员列表删除后面 重置个人密码，最主要是个人的id
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @return templates下的重置密码页面
 	 ****/
+	@RequiresPermissions("sys:person:resetPwd")
 	@RequestMapping(value="/to_reset_pwd/{id}")
 	public String toResetPwd(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
@@ -174,10 +183,10 @@ public class PersonController {
 	}
 	
 	/***
-	 *保存重置的个人对象信息,重置个人密码，重置本人密码，重置本人信息等
-	 *@param request 请求对象
-	 *@param modelMap spring的mvc返回对象 
-	 *@param org 保存的对象
+	 * 保存人员列表重置的个人密码，后面加上了保存自己修改密码所以保存就不做权限控制
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param person 保存的对象
 	 ******/
 	@RequestMapping(value="/save_reset_info")
     @ResponseBody
@@ -219,7 +228,7 @@ public class PersonController {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		String checkResultStr=personService.checkOldPassword(aerfatoken,oldPassword);
 		JSONObject jsonObject=JSON.parseObject(checkResultStr);
-		if(jsonObject.getLong("code").equals(0L)) {
+		if(MarkConstant.MARK_RESULT_VO_SUCESS.equals(jsonObject.getInteger(MarkConstant.MARK_RESULT_VO_CODE))) {
 			return "true";
 		}
 		return "false";
@@ -264,8 +273,8 @@ public class PersonController {
 	/***
 	 *保存修改的个人头像信息
 	 *@param request 请求对象
-	 *@param modelMap spring的mvc返回对象 
-	 *@param person 保存的对象
+	 *@param id 人员ID
+	 *@param file 保存的图片对象
 	 ******/
 	@RequestMapping(value="/update_avatar")
     @ResponseBody
@@ -279,8 +288,8 @@ public class PersonController {
 				uploadFileDto.setCreateBy("userid"+id);
 				String ufsRetStr=uploadFileService.uploadFile(uploadFileDto);
 				JSONObject ufsJson =JSON.parseObject(ufsRetStr);
-				Integer code=ufsJson.getInteger("code");
-				if( code >0 ) { return ufsRetStr; }
+				Integer code=ufsJson.getInteger(MarkConstant.MARK_RESULT_VO_CODE);
+				if( code > MarkConstant.MARK_RESULT_VO_SUCESS ) { return ufsRetStr; }
 				AefufsUploadFile uploadFile=JSON.parseObject(ufsJson.getString("data"), AefufsUploadFile.class);
 				AefsysPerson person=new AefsysPerson();
 				person.setId(id);

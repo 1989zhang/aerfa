@@ -1,5 +1,7 @@
 package com.zhangysh.accumulate.common.pojo;
 
+import com.zhangysh.accumulate.common.constant.MarkConstant;
+
 /*****
  * controller返回给调用方对象
  * 只要code不为0都是错误，和CodeMsg配合使用
@@ -17,7 +19,7 @@ public class ResultVo<T> {
 	 * @param data 成功信息对象
 	 * */
 	public static  <T> ResultVo<T> success(T data){
-		return new ResultVo<T>(0,data);//默认成功是0
+		return new ResultVo<T>(MarkConstant.MARK_RESULT_VO_SUCESS,data);//默认成功是0
 	}
 	/**
 	 * 提示信息时候的调用,code为1
