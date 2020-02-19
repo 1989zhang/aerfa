@@ -35,7 +35,7 @@ public class PersonAddressServiceImpl implements IPersonAddressService {
 	public AefsysPersonAddress getPersonAddressByPersonId(Long personId){
     	AefsysPersonAddress searchPersonAddress=new AefsysPersonAddress();
     	searchPersonAddress.setPersonId(personId);
-    	searchPersonAddress.setIsDefault(SysDefineConstant.DB_DEFAULT_STATUS_DEFAULT);
+    	searchPersonAddress.setIsDefault(SysDefineConstant.DIC_COMMON_STATUS_YES);
     	List<AefsysPersonAddress> dbPersonAddressList=listPersonAddress(searchPersonAddress);
     	if(dbPersonAddressList!=null&&dbPersonAddressList.size()>0) {
     		return dbPersonAddressList.get(SysDefineConstant.DB_DEFAULT_FIRST_ARR);
@@ -83,19 +83,19 @@ public class PersonAddressServiceImpl implements IPersonAddressService {
 	public boolean setDefault(Long id) {
 		AefsysPersonAddress currentAddress=getPersonAddressById(id);
 		//不为默认才执行以下操作
-		if(!SysDefineConstant.DB_DEFAULT_STATUS_DEFAULT.equals(currentAddress.getIsDefault())) {
+		if(!SysDefineConstant.DIC_COMMON_STATUS_YES.equals(currentAddress.getIsDefault())) {
 			//找出原来的默认对象设置为非默认
 			AefsysPersonAddress searchPersonAddress=new AefsysPersonAddress();
-			searchPersonAddress.setIsDefault(SysDefineConstant.DB_DEFAULT_STATUS_DEFAULT);
+			searchPersonAddress.setIsDefault(SysDefineConstant.DIC_COMMON_STATUS_YES);
 			List<AefsysPersonAddress> defaultPersonAddressList=listPersonAddress(searchPersonAddress);
 			if(defaultPersonAddressList!=null && defaultPersonAddressList.size()>0) {
 				for(AefsysPersonAddress dbPersonAddress:defaultPersonAddressList) {
-					dbPersonAddress.setIsDefault(SysDefineConstant.DB_DEFAULT_STATUS_NOT_DEFAULT);
+					dbPersonAddress.setIsDefault(SysDefineConstant.DIC_COMMON_STATUS_NO);
 					updatePersonAddress(dbPersonAddress);
 				}
 			}
 			//修改当前为默认
-			currentAddress.setIsDefault(SysDefineConstant.DB_DEFAULT_STATUS_DEFAULT);
+			currentAddress.setIsDefault(SysDefineConstant.DIC_COMMON_STATUS_YES);
 			updatePersonAddress(currentAddress);
 		}
 		return true;
