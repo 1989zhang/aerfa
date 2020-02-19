@@ -144,9 +144,9 @@ public class JobScheduleUtil {
      */
     public static CronScheduleBuilder handleCronScheduleMisfirePolicy(AefsysJob sysJob, CronScheduleBuilder cb) {
         switch (sysJob.getExecutePolicy()+"") {
-            case SysDefineConstant.JOB_EXECUTE_POLICY_WAITING:
+            case SysDefineConstant.DIC_EXECUTE_POLICY_WAITING:
                 return cb.withMisfireHandlingInstructionDoNothing();
-            case SysDefineConstant.JOB_EXECUTE_POLICY_IMMEDIATELY:
+            case SysDefineConstant.DIC_EXECUTE_POLICY_IMMEDIATELY:
                 return cb.withMisfireHandlingInstructionFireAndProceed();
             default:
                 return cb.withMisfireHandlingInstructionDoNothing();
