@@ -75,7 +75,7 @@ public class UserRealm extends AuthorizingRealm {
         // 权限加入AuthorizationInfo认证对象
         Set<String> stringPermissions=new HashSet<String>();
         for(AefsysResourceVo resourceVo:resourceList){
-            if(SysDefineConstant.DB_USEABLE_STATUS_VALID.equals(resourceVo.getStatus())&& StringUtil.isNotEmpty(resourceVo.getIdentify())){
+            if(SysDefineConstant.DB_USEABLE_STATUS_VALID.equals(resourceVo.getStatus())&&StringUtil.isNotEmpty(resourceVo.getIdentify())){
                 stringPermissions.add(resourceVo.getIdentify());
             }
         }
