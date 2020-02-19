@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -49,6 +51,7 @@ public class OrgController {
 	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的单位页面
 	 ****/
+	@RequiresPermissions("sys:org:view")
 	@RequestMapping(value="/to_org")
 	public String toSysOrg(HttpServletRequest request, ModelMap modelMap) {
 		modelMap.addAttribute("prefix",prefix);
@@ -61,6 +64,7 @@ public class OrgController {
 	 *@param modelMap spring的mvc返回对象
 	 *@param org 查询对象
 	 ***/
+	@RequiresPermissions("sys:org:list")
 	@RequestMapping(value="/list")
     @ResponseBody
 	public String getList(HttpServletRequest request, ModelMap modelMap,AefsysOrg org) {
@@ -76,6 +80,7 @@ public class OrgController {
 	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的单位新增页面
 	 ****/
+	@RequiresPermissions("sys:org:add")
 	@RequestMapping(value="/to_add/{parentId}")
 	public String toAdd(HttpServletRequest request, ModelMap modelMap,@PathVariable("parentId") Long parentId) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
@@ -118,6 +123,7 @@ public class OrgController {
 	 *@param org 保存的对象
 	 ******/
 	@RequestMapping(value="/save_add")
+	@RequiresPermissions(value={"sys:org:add","sys:org:edit"},logical= Logical.OR)
     @ResponseBody
     public String saveAdd(HttpServletRequest request, ModelMap modelMap,AefsysOrg org) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
@@ -130,6 +136,7 @@ public class OrgController {
 	 *@param modelMap spring的mvc返回对象 
 	 *@param id 要删除的单位id,单位只能一个个删除，因为是路径获取参数所以不分id和ids
 	 ***/
+	@RequiresPermissions("sys:org:remove")
 	@RequestMapping(value="/remove/{id}")
     @ResponseBody
 	public String remove(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
@@ -155,6 +162,7 @@ public class OrgController {
 	 *@param modelMap spring的mvc返回对象
 	 *@return templates下的单位页面
 	 ****/
+	@RequiresPermissions("sys:org:edit")
 	@RequestMapping(value="/to_edit/{id}")
 	public String toEdit(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
