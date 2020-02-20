@@ -45,6 +45,12 @@ insert into aefsys_resource values (42, 41, '任务查询', 'button', 1, 'sys:jo
 insert into aefsys_resource values (43, 41, '任务新增', 'button', 1, 'sys:job:add', '#', null, 2, null, null, null, null, null);
 insert into aefsys_resource values (44, 41, '任务修改', 'button', 1, 'sys:job:edit', '#', null, 3, null, null, null, null, null);
 insert into aefsys_resource values (45, 41, '任务删除', 'button', 1, 'sys:job:remove', '#', null, 4, null, null, null, null, null);
+insert into aefsys_resource values (46, 30, '行政区划', 'menu', 1, 'comm:division:view', '/comm/division/to_division', null, 4, null, null, null, null, null);
+insert into aefsys_resource values (47, 30, '工作日期', 'menu', 1, 'comm:workDay:view', '/comm/work_day/to_work_day', null, 5, null, null, null, null, null);
+insert into aefsys_resource values (50, 1, '系统工具', 'module', 1, null, '#', 'fa fa-cutlery', 3, null, null, null, null, null);
+insert into aefsys_resource values (51, 50, '代码生成', 'menu', 1, 'comm:code:view', '/support/code/to_generate_code', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (52, 50, '模板定义', 'menu', 1, 'comm:template:view', '/tdm/template/to_template', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (53, 50, '信息发布', 'menu', 1, 'comm:infoPublish:view', '/comm/info_publish/to_info_publish', null, 3, null, null, null, null, null);
 
 
 /*==========初始化角色信息aefsys_role数据==========*/

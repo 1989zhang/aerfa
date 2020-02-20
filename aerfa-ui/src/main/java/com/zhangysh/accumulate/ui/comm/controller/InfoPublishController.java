@@ -1,12 +1,12 @@
 package com.zhangysh.accumulate.ui.comm.controller;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +17,11 @@ import com.zhangysh.accumulate.pojo.comm.dataobj.AefcommInfoPublish;
 import com.zhangysh.accumulate.pojo.comm.viewobj.AefcommInfoPublishVo;
 import com.zhangysh.accumulate.pojo.comm.transobj.AefcommInfoPublishDto;
 import com.zhangysh.accumulate.ui.comm.service.IInfoPublishService;
+import org.springframework.web.context.request.WebRequest;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 发布调用相关方法
@@ -32,14 +37,22 @@ public class InfoPublishController {
 
 	@Autowired
 	private IInfoPublishService infoPublishService;
-	
+
+	//发布日期前台传过来转换一下
+	@InitBinder
+	public void initBinder(WebDataBinder binder, WebRequest request) {
+		//转换日期注意这里的转化要和传进来的字符串的格式一致
+		DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//CustomDateEditor为自定义日期编辑器
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+	}
+
 	/**
 	 * 跳转到sys发布页面
 	 * @param request 请求对象
 	 * @param modelMap spring的mvc返回对象
 	 * @return templates下的发布页面
 	 ****/
-	@RequiresPermissions("comm:infoPublish:view")
 	@RequestMapping(value="/to_info_publish")
 	public String toSysInfoPublish(HttpServletRequest request, ModelMap modelMap) {
 		modelMap.addAttribute("prefix",prefix);
@@ -52,7 +65,6 @@ public class InfoPublishController {
 	 * @param modelMap spring的mvc返回对象
 	 * @return Bootstrap的table对象
 	 ****/
-	@RequiresPermissions("comm:infoPublish:list")
 	@RequestMapping(value="/list")
     @ResponseBody
 	public String getList(HttpServletRequest request, ModelMap modelMap,BsTablePageInfo pageInfo,AefcommInfoPublish infoPublish) {
@@ -68,7 +80,6 @@ public class InfoPublishController {
 	 * @param modelMap spring的mvc返回对象
 	 * @return templates下的单位新增页面
 	 ****/
-	@RequiresPermissions("comm:infoPublish:add")
 	@RequestMapping(value="/to_add")
 	public String toAdd(HttpServletRequest request, ModelMap modelMap) {
 		modelMap.addAttribute("prefix",prefix);
@@ -81,7 +92,6 @@ public class InfoPublishController {
 	 * @param modelMap spring的mvc返回对象 
 	 * @param infoPublish 保存的对象
 	 ******/
-	@RequiresPermissions(value={"comm:infoPublish:add","comm:infoPublish:edit"},logical= Logical.OR)
 	@RequestMapping(value="/save_add")
     @ResponseBody
     public String saveAdd(HttpServletRequest request, ModelMap modelMap,AefcommInfoPublish infoPublish) {
@@ -95,7 +105,6 @@ public class InfoPublishController {
 	 * @param modelMap spring的mvc返回对象 
 	 * @return templates下的页面
 	 ****/
-	@RequiresPermissions("comm:infoPublish:edit")
 	@RequestMapping(value="/to_edit/{id}")
 	public String toEdit(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
@@ -112,7 +121,6 @@ public class InfoPublishController {
 	 * @param modelMap spring的mvc返回对象 
 	 * @param ids 要删除的ids集合，是路径获取参数
 	 ***/
-	@RequiresPermissions("comm:infoPublish:remove")
 	@RequestMapping(value="/remove/{ids}")
     @ResponseBody
     public String remove(HttpServletRequest request, ModelMap modelMap,@PathVariable("ids") String ids){   

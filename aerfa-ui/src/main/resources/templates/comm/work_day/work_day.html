@@ -136,6 +136,7 @@ function initPageCaladar(year) {
 		success : function(data) {
 			var dateJsonList=data.data;
 			for(var i=0,l=dateJsonList.length;i<l;i++){
+				$('#month'+dateJsonList[i].month).empty();//清空原有的日期，不然重复
 				laydate.render({
 					elem: '#month'+dateJsonList[i].month,position: 'static',
 					showBottom: false,

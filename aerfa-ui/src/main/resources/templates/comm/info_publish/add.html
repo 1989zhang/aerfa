@@ -42,6 +42,11 @@
     <div th:include="sys/include :: footer"></div>
 
     <script th:inline="javascript">
+		//初始化日期
+		layui.use(['laydate'], function(){
+			var laydate = layui.laydate;
+			laydate.render({elem: '#pubDate',type:'datetime'});//日期控件指定元素
+		});
 		$("#form-infoPublish-add").validate({
 			rules:{
 			},

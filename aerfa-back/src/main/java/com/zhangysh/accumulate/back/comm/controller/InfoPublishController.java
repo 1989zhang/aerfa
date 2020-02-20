@@ -55,7 +55,7 @@ public class InfoPublishController extends BaseController{
 		
 		logger.info("getList分页信息:当前{}页，每页{}条",infoPublishDto.getPageInfo().getPageNum(),infoPublishDto.getPageInfo().getPageSize());
 		BsTableDataInfo tableInfo=infoPublishService.listPageInfoPublish(infoPublishDto.getPageInfo(),infoPublishDto.getInfoPublish());
-		return JSON.toJSONStringWithDateFormat(tableInfo,UtilConstant.NORMAL_MIDDLE_DATE);
+		return JSON.toJSONStringWithDateFormat(tableInfo,UtilConstant.MOST_MIDDLE_DATE);
 	}
 	
 	/****
