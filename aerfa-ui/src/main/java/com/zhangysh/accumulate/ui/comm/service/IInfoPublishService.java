@@ -24,7 +24,7 @@ public interface IInfoPublishService {
 	 * @param aerfatoken token对象
 	 * @param InfoPublishDto 查询条件
 	 ***/
-	@RequestMapping(value = "/sys/info_publish/list",method = RequestMethod.POST)
+	@RequestMapping(value = "/comm/info_publish/list",method = RequestMethod.POST)
 	public String getList(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken, @RequestBody AefcommInfoPublishDto InfoPublishDto);
 
 	/****
@@ -32,7 +32,7 @@ public interface IInfoPublishService {
 	 * @param aerfatoken token对象
 	 * @param id 发布的id
 	 ***/
-	@RequestMapping(value = "/sys/info_publish/single",method = RequestMethod.POST)
+	@RequestMapping(value = "/comm/info_publish/single",method = RequestMethod.POST)
 	public String getSingle(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken, @RequestBody Long id);
 
 	/****
@@ -40,7 +40,7 @@ public interface IInfoPublishService {
 	 * @param aerfatoken token对象
 	 * @param infoPublish 要保存的发布对象
 	 ***/
-	@RequestMapping(value = "/sys/info_publish/save",method = RequestMethod.POST)
+	@RequestMapping(value = "/comm/info_publish/save",method = RequestMethod.POST)
 	public String saveAdd(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken, @RequestBody AefcommInfoPublish infoPublish);
 
 	/****
@@ -48,7 +48,7 @@ public interface IInfoPublishService {
 	 * @param aerfatoken token对象
 	 * @param ids 要删除的发布ids集合，是路径获取参数
 	 ***/
-	@RequestMapping(value = "/sys/info_publish/delete",method = RequestMethod.POST)
+	@RequestMapping(value = "/comm/info_publish/delete",method = RequestMethod.POST)
 	public String deleteInfoPublishByIds(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken, @RequestBody String ids);
 
 }

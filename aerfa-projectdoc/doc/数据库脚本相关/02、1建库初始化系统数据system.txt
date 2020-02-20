@@ -48,9 +48,18 @@ insert into aefsys_resource values (45, 41, '任务删除', 'button', 1, 'sys:jo
 insert into aefsys_resource values (46, 30, '行政区划', 'menu', 1, 'comm:division:view', '/comm/division/to_division', null, 4, null, null, null, null, null);
 insert into aefsys_resource values (47, 30, '工作日期', 'menu', 1, 'comm:workDay:view', '/comm/work_day/to_work_day', null, 5, null, null, null, null, null);
 insert into aefsys_resource values (50, 1, '系统工具', 'module', 1, null, '#', 'fa fa-cutlery', 3, null, null, null, null, null);
-insert into aefsys_resource values (51, 50, '代码生成', 'menu', 1, 'comm:code:view', '/support/code/to_generate_code', null, 1, null, null, null, null, null);
-insert into aefsys_resource values (52, 50, '模板定义', 'menu', 1, 'comm:template:view', '/tdm/template/to_template', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (51, 50, '代码生成', 'menu', 1, 'support:code:view', '/support/code/to_generate_code', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (52, 50, '模板定义', 'menu', 1, 'tdm:template:view', '/tdm/template/to_template', null, 2, null, null, null, null, null);
 insert into aefsys_resource values (53, 50, '信息发布', 'menu', 1, 'comm:infoPublish:view', '/comm/info_publish/to_info_publish', null, 3, null, null, null, null, null);
+insert into aefsys_resource values (60, 1, '系统监控', 'module', 1, null, '#', 'fa fa-video-camera', 4, null, null, null, null, null);
+insert into aefsys_resource values (61, 60, '日志信息', 'module', 1, null, '#', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (62, 61, '操作日志', 'menu', 1, 'sys:operLog:view', '/sys/log/to_oper_log', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (63, 61, '登录日志', 'menu', 1, 'sys:loginLog:view', '/sys/log/to_login_info', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (64, 61, '任务日志', 'menu', 1, 'sys:jobLog:view', '/sys/log/to_job_log', null, 3, null, null, null, null, null);
+insert into aefsys_resource values (66, 60, '缓存信息', 'module', 1, null, '#', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (67, 66, '缓存管理', 'menu', 1, 'support:redisStorage:view', '/support/redis/to_storage', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (68, 66, '运行状态', 'menu', 1, 'support:redisStatus:view', '/support/redis/to_status', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (69, 66, '缓存配置', 'menu', 1, 'support:redisConfig:view', '/support/redis/to_config', null, 3, null, null, null, null, null);
 
 
 /*==========初始化角色信息aefsys_role数据==========*/

@@ -32,7 +32,7 @@ import com.zhangysh.accumulate.back.comm.service.IInfoPublishService;
  * @date 2020年02月16日
  */
 @Controller
-@RequestMapping("/sys/info_publish")
+@RequestMapping("/comm/info_publish")
 public class InfoPublishController extends BaseController{
 
     private static final Logger logger=LoggerFactory.getLogger(InfoPublishController.class);
