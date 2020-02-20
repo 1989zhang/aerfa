@@ -6,18 +6,11 @@ insert into aefsys_data_dic values (3, 'common_status', '通用状态', '0', '�
 insert into aefsys_data_dic values (4, 'useable_status', '可用状态', null, null, null, 1, 1, null, 1, '可用状态数据字典', null, null, null, null);
 insert into aefsys_data_dic values (5, 'useable_status', '可用状态', '1', '正常', null, 1, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (6, 'useable_status', '可用状态', '0', '停用', null, 2, 0, null, 1, null, null, null, null, null);
-insert into aefsys_data_dic values (7, 'whether_status', '是否状态', null, null, null, 1, 1, null, 1, '是否状态数据字典', null, null, null, null);
-insert into aefsys_data_dic values (8, 'whether_status', '是否状态', '1', '是', null, 1, 0, null, 1, null, null, null, null, null);
-insert into aefsys_data_dic values (9, 'whether_status', '是否状态', '0', '否', null, 2, 0, null, 1, null, null, null, null, null);
-insert into aefsys_data_dic values (10, 'currency_status', '通用状态', null, null, null, 1, 1, null, 1, '通用状态数据字典', null, null, null, null);
-insert into aefsys_data_dic values (11, 'currency_status', '通用状态', '1', '是', null, 1, 0, null, 1, null, null, null, null, null);
-insert into aefsys_data_dic values (12, 'currency_status', '通用状态', '0', '否', null, 2, 0, null, 1, null, null, null, null, null);
-insert into aefsys_data_dic values (13, 'result_status', '结果状态', null, null, null, 1, 1, null, 1, '结果状态数据字典', null, null, null, null);
-insert into aefsys_data_dic values (14, 'result_status', '结果状态', '1', '成功', null, 1, 0, null, 1, null, null, null, null, null);
-insert into aefsys_data_dic values (15, 'result_status', '结果状态', '0', '失败', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (7, 'result_status', '结果状态', null, null, null, 1, 1, null, 1, '结果状态数据字典', null, null, null, null);
+insert into aefsys_data_dic values (8, 'result_status', '结果状态', '1', '成功', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (9, 'result_status', '结果状态', '0', '失败', null, 2, 0, null, 1, null, null, null, null, null);
 
-
-/*非通用数据字典*/
+/*非通用系统相关数据字典*/
 insert into aefsys_data_dic values (101, 'org_status', '部门状态', null, null, null, 2, 1, null, 1, '部门状态数据字典', null, null, null, null);
 insert into aefsys_data_dic values (102, 'org_status', '部门状态', '1', '正常', null, 1, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (103, 'org_status', '部门状态', '0', '停用', null, 2, 0, null, 1, null, null, null, null, null);
@@ -33,7 +26,6 @@ insert into aefsys_data_dic values (112, 'resource_type', '资源类型', 'butto
 insert into aefsys_data_dic values (113, 'resource_status', '资源状态', null, null, null, 1, 1, null, 1, '资源状态数据字典', null, null, null, null);
 insert into aefsys_data_dic values (114, 'resource_status', '资源状态', '1', '正常', null, 1, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (115, 'resource_status', '资源状态', '0', '停用', null, 2, 0, null, 1, null, null, null, null, null);
-
 insert into aefsys_data_dic values (116, 'role_status', '角色状态', null, null, null, 1, 1, null, 1, '角色状态数据字典', null, null, null, null);
 insert into aefsys_data_dic values (117, 'role_status', '角色状态', '1', '正常', null, 1, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (118, 'role_status', '角色状态', '0', '停用', null, 2, 0, null, 1, null, null, null, null, null);
@@ -55,7 +47,6 @@ insert into aefsys_data_dic values (133, 'division_mark', '区划标示', null, 
 insert into aefsys_data_dic values (134, 'division_mark', '区划标示', '1', '首都', null, 1, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (135, 'division_mark', '区划标示', '2', '省会', null, 2, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (136, 'division_mark', '区划标示', '3', '市直管区', null, 3, 0, null, 1, null, null, null, null, null);
-
 /*报表和展示相关数据字典*/
 insert into aefsys_data_dic values (137, 'data_show_type', '数据显示类型', null, null, null, 1, 1, null, 1, '数据界面显示类型字典', null, null, null, null);
 insert into aefsys_data_dic values (138, 'data_show_type', '数据显示类型', 'string', '字符串', null, 1, 0, null, 1, null, null, null, null, null);
@@ -80,8 +71,7 @@ insert into aefsys_data_dic values (156, 'data_font_size', '数据显示字号',
 insert into aefsys_data_dic values (157, 'data_font_size', '数据显示字号', '26', '26', null, 7, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (158, 'data_font_size', '数据显示字号', '34', '34', null, 8, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (159, 'data_font_size', '数据显示字号', '44', '44', null, 9, 0, null, 1, null, null, null, null, null);
-
-/*后续添加字典*/
+/*即时通讯相关数据字典*/
 insert into aefsys_data_dic values (160, 'person_sex', '人员性别', null, null, null, 1, 1, null, 1, '人员性别数据字典', null, null, null, null);
 insert into aefsys_data_dic values (161, 'person_sex', '人员性别', '1', '男', null, 1, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (162, 'person_sex', '人员性别', '0', '女', null, 2, 0, null, 1, null, null, null, null, null);
@@ -102,6 +92,7 @@ insert into aefsys_data_dic values (176, 'person_job', '人员职业', '7', '娱
 insert into aefsys_data_dic values (177, 'person_job', '人员职业', '8', '教育/培训/学生', null, 8, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (178, 'person_job', '人员职业', '9', '公务员/行政/事业单位 ', null, 9, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (179, 'person_job', '人员职业', '10', '其他职业', null, 10, 0, null, 1, null, null, null, null, null);
+/*系统任务相关数据字典*/
 insert into aefsys_data_dic values (180, 'execute_policy', '执行策略', null, null, null, 1, 1, null, 1, '执行策略数据字典', null, null, null, null);
 insert into aefsys_data_dic values (181, 'execute_policy', '执行策略', '1', '等待触发执行', null, 1, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (182, 'execute_policy', '执行策略', '2', '立即触发执行', null, 2, 0, null, 1, null, null, null, null, null);

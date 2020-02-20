@@ -184,9 +184,9 @@ public class JobServiceImpl implements IJobService {
 		if (rows > 0) {
 			try {
 				//暂停任务
-				if(SysDefineConstant.DB_USEABLE_STATUS_INVALID.equals(status)){
+				if(SysDefineConstant.DIC_USEABLE_STATUS_INVALID.equals(status)){
 					scheduler.pauseJob(JobScheduleUtil.getJobKey(id));
-				}else if(SysDefineConstant.DB_USEABLE_STATUS_VALID.equals(status)){//恢复任务
+				}else if(SysDefineConstant.DIC_USEABLE_STATUS_VALID.equals(status)){//恢复任务
 					scheduler.resumeJob(JobScheduleUtil.getJobKey(id));
 				}
 			} catch (Exception e){
