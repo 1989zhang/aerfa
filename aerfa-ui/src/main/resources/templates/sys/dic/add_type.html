@@ -33,7 +33,7 @@
 		    <div class="form-group">
 				<label class="col-sm-3 control-label">状态：</label>
 				<div class="col-sm-8">
-					<select class="form-control m-b" id="status" name="status" th:with="retDicList=${@dic.getDic('dic_status')}">
+					<select class="form-control m-b" id="status" name="status" th:with="retDicList=${@dic.getDic('useable_status')}">
 	         			<option th:each="dic:${retDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
                     </select>
 				</div>

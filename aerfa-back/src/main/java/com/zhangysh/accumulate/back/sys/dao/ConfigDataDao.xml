@@ -36,7 +36,7 @@
 			<if test="dataCode != null and dataCode != ''"> and data_code like concat('%',#{dataCode},'%')  </if>
 			<if test="dataValue != null and dataValue != ''"> and data_value like concat('%',#{dataValue},'%')  </if>
             <if test="orderNo != null  "> and order_no = #{orderNo}</if>
-			<if test="remark != null and remark != ''"> and remark like concat('%',#{remark},'%')}  </if>
+			<if test="remark != null and remark != ''"> and remark like concat('%',#{remark},'%')  </if>
             <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
             <if test="createTime != null  "> and create_time = #{createTime}</if>
             <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>

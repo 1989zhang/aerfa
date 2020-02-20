@@ -24,13 +24,9 @@ $(function() {
 			field : 'status', 
 			title : '状态',
 			align: 'center',
-			formatter: function(value,row,index) {
-            	if(row.status==1){
-            		return "正常";
-            	}else if(row.status==0){
-            		return "停用";
-            	}
-            }
+			formatter: function(value, row, index) {
+				return $.table.formatDicLabel(statusDatas, value);
+			}
 		},
 		{
 			field : 'remark', 

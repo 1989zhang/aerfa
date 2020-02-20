@@ -6,14 +6,14 @@
         <!--搜索区域开始-->
         <div class="ibox float-e-margins">
             <div class="ibox-content">
-            	<form role="form" class="form-inline" id="form-dataDic-search"> 		
+            	<form role="form" class="form-inline" id="form-dataDic-search">
+                    <div class="form-group">
+                        <label>类型名称：</label>
+                        <input type="text" id="typeName" name="typeName" class="form-control">
+                    </div>
 	                <div class="form-group">
 	                    <label>类型编码：</label>
 	                    <input type="text" id="typeCode" name="typeCode" class="form-control">
-	                </div>
-	                <div class="form-group">
-	                    <label>类型名称：</label>
-	                    <input type="text" id="typeName" name="typeName" class="form-control">
 	                </div>
 	                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search($('form').attr('id'))"><i class="fa fa-search"></i>&nbsp;查询</a>
             	</form>
@@ -36,6 +36,11 @@
         </div>
     </div>
     <div th:include="sys/include :: footer"></div>
+
+    <!-- 带@放到单独的js会不执行，所以外面定义变量里面引用。-->
+    <script th:inline="javascript">
+        var statusDatas = [[${@dic.getDic('useable_status')}]];
+    </script>
     <script th:src="@{/aerfa/myresource/js/sys/dic/dic_type.js}" type="text/javascript"></script>
 
 </body>

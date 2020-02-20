@@ -29,6 +29,18 @@ insert into aefsys_resource values (20, 19, '角色查询', 'button', 1, 'sys:ro
 insert into aefsys_resource values (21, 19, '角色新增', 'button', 1, 'sys:role:add', '#', null, 2, null, null, null, null, null);
 insert into aefsys_resource values (22, 19, '角色修改', 'button', 1, 'sys:role:edit', '#', null, 3, null, null, null, null, null);
 insert into aefsys_resource values (23, 19, '角色删除', 'button', 1, 'sys:role:remove', '#', null, 4, null, null, null, null, null);
+insert into aefsys_resource values (30, 1, '系统配置', 'module', 1, null, '#', 'fa fa-wrench', 2, null, null, null, null, null);
+insert into aefsys_resource values (31, 30, '参数配置', 'menu', 1, 'sys:configData:view', '/sys/config_data/to_config_data', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (32, 31, '参数查询', 'button', 1, 'sys:configData:list', '#', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (33, 31, '参数新增', 'button', 1, 'sys:configData:add', '#', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (34, 31, '参数修改', 'button', 1, 'sys:configData:edit', '#', null, 3, null, null, null, null, null);
+insert into aefsys_resource values (35, 31, '参数删除', 'button', 1, 'sys:configData:remove', '#', null, 4, null, null, null, null, null);
+insert into aefsys_resource values (36, 30, '字典维护', 'menu', 1, 'sys:dic:view', '/sys/dic/to_dic_type', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (37, 36, '字典查询', 'button', 1, 'sys:dic:list', '#', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (38, 36, '字典新增', 'button', 1, 'sys:dic:add', '#', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (39, 36, '字典修改', 'button', 1, 'sys:dic:edit', '#', null, 3, null, null, null, null, null);
+insert into aefsys_resource values (40, 36, '字典删除', 'button', 1, 'sys:dic:remove', '#', null, 4, null, null, null, null, null);
+
 
 /*==========初始化角色信息aefsys_role数据==========*/
 insert into aefsys_role values ('1', '超级管理员', 'superAdmin', 1, 1, '超级管理员角色', '超级管理员', '2019-05-16 00:00:00', null, null);

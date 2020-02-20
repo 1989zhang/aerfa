@@ -39,8 +39,8 @@
         <include refid="selectDataDic"/>
         <where>  
             <if test="id != null  "> and id = #{id}</if>
-            <if test="typeCode != null  and typeCode != ''  "> and type_code = #{typeCode}</if>
-            <if test="typeName != null  and typeName != ''  "> and type_name = #{typeName}</if>
+            <if test="typeCode != null  and typeCode != ''  "> and type_code like concat('%',#{typeCode},'%') </if>
+            <if test="typeName != null  and typeName != ''  "> and type_name like concat('%',#{typeName},'%') </if>
             <if test="code != null  and code != ''  "> and code = #{code}</if>
             <if test="fullName != null  and fullName != ''  "> and full_name = #{fullName}</if>
             <if test="shortName != null  and shortName != ''  "> and short_name = #{shortName}</if>

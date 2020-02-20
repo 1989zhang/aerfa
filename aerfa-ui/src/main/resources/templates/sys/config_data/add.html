@@ -38,41 +38,7 @@
 		</form>
     </div>
     <div th:include="sys/include :: footer"></div>
-
-    <script th:inline="javascript">
-		$("#form-configData-add").validate({
-			rules:{
-				dataCode:{
-					required:true,
-					remote: {
-                		url: prefix + "/check_data_code_unique",
-                		type: "post",
-                		dataType: "json",
-                		data: {
-                			"id" : function() {
-                        		return $("input[name='id']").val();
-                    		},
-                			"dataCode" : function() {
-                        		return $("input[name='dataCode']").val();
-                    		}
-                		},
-                		dataFilter: function(data, type) {
-                			if ($.common.parseJson(data).code == 0) return true;
-                    		else return false;
-                		}
-            		}
-				},
-			},
-			messages: {
-				"dataCode": {
-           		 	remote: "参数编码已经存在"
-        		}
-    		},
-			submitHandler: function(form) {
-				$.operate.save(prefix + "/save_add", $('#form-configData-add').serialize());
-			}
-		});
-	</script>
+	<script th:src="@{/aerfa/myresource/js/sys/config_data/add.js}" type="text/javascript"></script>
 	
 </body>
 </html>

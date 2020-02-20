@@ -26,26 +26,16 @@ $(function() {
 		{
 			field : 'status', 
 			title : '状态',
-			width: '5%',
-			align: 'center',
-			formatter: function(value,row,index) {
-            	if(row.status==1){
-            		return "正常";
-            	}else if(row.status==0){
-            		return "停用";
-            	}
-            }
-		},
-		{
-			field : 'isDefault', 
-			title : '是否默认',
 			width: '10%',
-			align: 'center'
+			align: 'center',
+			formatter: function(value, row, index) {
+				return $.table.formatDicLabel(statusDatas, value);
+			}
 		},
 		{
 			field : 'orderNo', 
 			title : '排序号',
-			width: '5%',
+			width: '10%',
 			align: 'center'
 		},
 		{
