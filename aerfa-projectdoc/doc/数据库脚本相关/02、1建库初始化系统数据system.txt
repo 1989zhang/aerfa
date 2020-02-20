@@ -3,7 +3,7 @@ insert into aefsys_org values (1, null, '部门根节点', '部门根节点', 1,
 
 /*==========初始化人员aefsys_person数据==========*/
 insert into aefsys_person values (1, 1, 'sysmaster', 'sysmaster', null, null, '', null, '超级管理员', '1', '超级管理员', null, null, null, null, 1, '系统超级管理员', null, null, null, null);
-insert into aefsys_person values (10, 1, 'webimaixf', 'webimaixf', null, null, '', null, '智能小法', '1', '智能小法', null, null, null, null, 1, 'webim智能机器人小法', null, null, null, null);
+insert into aefsys_person values (10, 1, 'webaixf', 'webaixf', null, null, '', null, '智能小法', '1', '智能小法', null, null, null, null, 1, 'web智能机器人小法', null, null, null, null);
 
 /*==========初始化资源菜单按钮aefsys_resource数据==========*/
 insert into aefsys_resource values (1, null, '阿尔法后台管理系统', 'system', 1, null, '#', null, 1, null, null, null, null, null);
@@ -40,6 +40,11 @@ insert into aefsys_resource values (37, 36, '字典查询', 'button', 1, 'sys:di
 insert into aefsys_resource values (38, 36, '字典新增', 'button', 1, 'sys:dic:add', '#', null, 2, null, null, null, null, null);
 insert into aefsys_resource values (39, 36, '字典修改', 'button', 1, 'sys:dic:edit', '#', null, 3, null, null, null, null, null);
 insert into aefsys_resource values (40, 36, '字典删除', 'button', 1, 'sys:dic:remove', '#', null, 4, null, null, null, null, null);
+insert into aefsys_resource values (41, 30, '定时任务', 'menu', 1, 'sys:job:view', '/sys/job/to_job', null, 3, null, null, null, null, null);
+insert into aefsys_resource values (42, 41, '任务查询', 'button', 1, 'sys:job:list', '#', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (43, 41, '任务新增', 'button', 1, 'sys:job:add', '#', null, 2, null, null, null, null, null);
+insert into aefsys_resource values (44, 41, '任务修改', 'button', 1, 'sys:job:edit', '#', null, 3, null, null, null, null, null);
+insert into aefsys_resource values (45, 41, '任务删除', 'button', 1, 'sys:job:remove', '#', null, 4, null, null, null, null, null);
 
 
 /*==========初始化角色信息aefsys_role数据==========*/
@@ -51,7 +56,3 @@ insert into aefsys_config_data values ('2', 'shortSystemName', '阿尔法', '2',
 insert into aefsys_config_data values ('3', 'divisionCode', '000000', '3', '系统使用者所在行政区划代码', '超级管理员', '2019-05-24 00:00:00', null, null);
 insert into aefsys_config_data values ('4', 'picIpAddress', 'http://127.0.0.1/', '4', '头像图片的nginx访问地址', '超级管理员', '2019-05-24 00:00:00', null, null);
 insert into aefsys_config_data values ('5', 'templateFolderPath', 'd://testaerfa//template//', '5', 'template报表模板相关存储路径配置参数要带结尾符', '超级管理员', '2019-06-20 00:00:00', null, null);
-
-/*==========初始化数据权限aefsys_data_permission数据==========*/
-/* 初始化测试的信息发布aefcomm_info_publish数据权限，为防忘记必须*/
-insert into aefsys_data_permission values ('1', 'aefcomm_info_publish', '4', null, 1, null, '超级管理员', '2020-02-16 00:00:00', null, null);

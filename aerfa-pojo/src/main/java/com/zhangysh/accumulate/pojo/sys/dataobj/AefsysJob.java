@@ -67,18 +67,6 @@ public class AefsysJob extends BaseDataObj {
 
 	@Override
 	public String toString() {
-		return "AefsysJob [" +
-				"id=" + id +
-				", jobName='" + jobName + '\'' +
-				", invokeTarget='" + invokeTarget + '\'' +
-				", cronExpression='" + cronExpression + '\'' +
-				", status=" + status +
-				", executePolicy=" + executePolicy +
-				", remark='" + remark + '\'' +
-				", createBy='" + createBy + '\'' +
-				", createTime=" + createTime +
-				", updateBy='" + updateBy + '\'' +
-				", updateTime=" + updateTime +
-				']';
+		return "AefsysJob [id=" + id + ",jobName=" + jobName + ",invokeTarget=" + invokeTarget + ",cronExpression=" + cronExpression + ",status=" + status + ",executePolicy=" + executePolicy + ",remark=" + remark + ",createBy=" + createBy + ",createTime=" + createTime + ",updateBy=" + updateBy + ",updateTime=" + updateTime + ",]";
 	}
 }

@@ -1,3 +1,16 @@
+/*====================比较重要的测试数据，建议不要删除====================*/
+/*==========初始化系统定时任务aefsys_job测试数据==========*/
+/* 为防忘记：初始化系统定时任务aefsys_job测试数据 */
+insert into aefsys_job (id, job_name, invoke_target, cron_expression, status, execute_policy, remark, create_by, create_time, update_by, update_time) values ('1', '系统测试无参任务', 'thisIsTestJob.testNoParam()', '*/5 * * * * ?', '0', null, '系统测试无参任务', '超级管理员', '2020-02-13 11:58:49', null, null);
+insert into aefsys_job (id, job_name, invoke_target, cron_expression, status, execute_policy, remark, create_by, create_time, update_by, update_time) values ('2', '系统测试有参数任务', 'com.zhangysh.accumulate.back.comm.service.impl.SysTestParamJob.testParam(\'zh\',true,2020021300001L,109,78.1256D)', '*/2 * * * * ?', '0', null, '系统测试有参数任务', '超级管理员', '2020-02-13 12:04:24', null, null);
+
+/*==========初始化数据权限aefsys_data_permission测试数据==========*/
+/* 为防忘记：初始化测试的信息发布aefcomm_info_publish数据权限 */
+insert into aefsys_data_permission values ('1', 'aefcomm_info_publish', '4', null, 1, null, '超级管理员', '2020-02-16 00:00:00', null, null);
+
+
+
+/*====================不重要的测试数据，可以不要删除====================*/
 /*==========初始化部门aefsys_org测试数据==========*/
 insert into aefsys_org values (2, 1, '阿尔法集团四川分中心', '阿尔法四川', 1, null, null, null, null, 1, null, null, '2018-10-31 12:20:59', null, null);
 insert into aefsys_org values (3, 1, '阿尔法集团北京分中心', '阿尔法北京', 2, null, null, null, null, 1, null, null, '2018-11-1 12:21:11', null, null);

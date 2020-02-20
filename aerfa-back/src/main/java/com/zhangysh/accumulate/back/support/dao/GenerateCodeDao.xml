@@ -35,7 +35,7 @@
 		<if test="tableComment != null and tableComment != ''">
 			AND table_comment like concat('%', #{tableComment}, '%')
 		</if>
-		<if test="params != null params.startTime != null and params.startTime != ''"><!-- 开始时间检索 -->
+		<if test="params != null and params.startTime != null and params.startTime != ''"><!-- 开始时间检索 -->
 			and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.startTime},'%y%m%d')
 		</if>
 		<if test="params != null and params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->

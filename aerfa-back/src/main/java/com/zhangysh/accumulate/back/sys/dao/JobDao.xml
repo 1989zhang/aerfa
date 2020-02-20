@@ -78,7 +78,7 @@
 			<if test="invokeTarget != null  and invokeTarget != ''  ">#{invokeTarget},</if>
 			<if test="cronExpression != null  and cronExpression != ''  ">#{cronExpression},</if>
 			<if test="status != null  ">#{status},</if>
-            <if test="executePolicy != null  ">#{execute_policy},</if>
+            <if test="executePolicy != null  ">#{executePolicy},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
 			<if test="createTime != null  ">#{createTime},</if>

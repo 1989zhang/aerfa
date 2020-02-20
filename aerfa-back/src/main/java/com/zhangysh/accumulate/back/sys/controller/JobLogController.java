@@ -52,7 +52,7 @@ public class JobLogController extends BaseController{
 	public String getList(HttpServletRequest request,@RequestBody AefsysJobLogDto jobLogDto) {
 		logger.info("getList分页信息:当前{}页，每页{}条",jobLogDto.getPageInfo().getPageNum(),jobLogDto.getPageInfo().getPageSize());
 		BsTableDataInfo tableInfo=jobLogService.listPageJobLog(jobLogDto.getPageInfo(),jobLogDto.getJobLog());
-		return JSON.toJSONStringWithDateFormat(tableInfo,UtilConstant.NORMAL_MIDDLE_DATE);
+		return JSON.toJSONStringWithDateFormat(tableInfo,UtilConstant.MOST_MIDDLE_DATE);
 	}
 	
 	/****
