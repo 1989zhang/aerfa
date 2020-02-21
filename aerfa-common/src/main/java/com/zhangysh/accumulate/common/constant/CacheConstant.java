@@ -37,6 +37,8 @@ public class CacheConstant {
 	public static final String TOKENMODEL_SESSION_KEY_ROLE="roleinfo";
 	/**TokenModel对象里session存储的资源信息*/
 	public static final String TOKENMODEL_SESSION_KEY_RESOURCE="resourceinfo";
+	/**TokenModel对象里session存储的快捷访问资源信息*/
+	public static final String TOKENMODEL_SESSION_KEY_QUICK="quickinfo";
 	
 	/**redis存储的数据类型****/
 	/**redis数据类型string：默认存储json的固定数据类型******/

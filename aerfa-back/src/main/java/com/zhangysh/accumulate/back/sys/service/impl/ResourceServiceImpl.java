@@ -112,39 +112,10 @@ public class ResourceServiceImpl implements IResourceService{
 
 	@Override
 	public List<AefsysResourceVo> getPersonStructResourcesByPersonId(Long personId) {
-
-		List<AefsysResource> directResources=new ArrayList<AefsysResource>();
-		//超级管理员添加所有资源
-		if(SysDefineConstant.PERSON_ID_SUPERMASTER.equals(personId)){
-			List<AefsysRole> roleList=roleService.getPersonRolesByPersonId(personId);
-			boolean isSuperAdmin=false;//是否超级管理员判断
-			for(AefsysRole role:roleList){
-				if(SysDefineConstant.ROLE_ID_SUPERADMIN.equals(role.getId())){
-					isSuperAdmin=true;
-				}
-			}
-			if(isSuperAdmin){
-				//可以直接查询所有资源，但是资源固定到菜单和按钮貌似好一些
-				AefsysResource searchMenuResource=new AefsysResource();
-				searchMenuResource.setResourceType(SysDefineConstant.DIC_RESOURCE_TYPE_MENU);
-				List<AefsysResource> ListMenuResource=listSearchResource(searchMenuResource);
-				AefsysResource searchButtonResource=new AefsysResource();
-				searchButtonResource.setResourceType(SysDefineConstant.DIC_RESOURCE_TYPE_BUTTON);
-				List<AefsysResource> ListButtonResource=listSearchResource(searchButtonResource);
-				directResources.addAll(ListMenuResource);//添加资源
-				directResources.addAll(ListButtonResource);//添加资源
-			}
-		//普通权限人员
-		}else{
-			List<AefsysResource> personRoleResource = resourceDao.getPersonResourcesByPersonId(personId);
-			List<AefsysResource> noAuthorityResource=getNoAuthorityResource();//无权限控制的菜单
-			directResources.addAll(personRoleResource);//所有可展示的资源
-			directResources.addAll(noAuthorityResource);//所有可展示的资源
-		}
-
+		List<AefsysResource> directResourceList=getDirectResourcesByPersonId(personId);
 		List<AefsysResource> allRepeatPersonResource = new ArrayList<AefsysResource>();
 		//首先倒序查询出按钮菜单模块所有的资源集合
-		for (AefsysResource resource : directResources) {
+		for (AefsysResource resource : directResourceList) {
 			allRepeatPersonResource.add(resource);
 			allRepeatPersonResource.addAll(listParentResourceWithDirectStructureByChirdId(resource.getId()));
 		}
@@ -176,6 +147,39 @@ public class ResourceServiceImpl implements IResourceService{
 			retResourceVoList.add(topResourceVo);
 		}
 		return retResourceVoList;
+	}
+
+	@Override
+	public List<AefsysResource> getDirectResourcesByPersonId(Long personId){
+		List<AefsysResource> directResources=new ArrayList<AefsysResource>();
+		//超级管理员添加所有资源
+		if(SysDefineConstant.PERSON_ID_SUPERMASTER.equals(personId)){
+			List<AefsysRole> roleList=roleService.getPersonRolesByPersonId(personId);
+			boolean isSuperAdmin=false;//是否超级管理员判断
+			for(AefsysRole role:roleList){
+				if(SysDefineConstant.ROLE_ID_SUPERADMIN.equals(role.getId())){
+					isSuperAdmin=true;
+				}
+			}
+			if(isSuperAdmin){
+				//可以直接查询所有资源，但是资源固定到菜单和按钮貌似好一些
+				AefsysResource searchMenuResource=new AefsysResource();
+				searchMenuResource.setResourceType(SysDefineConstant.DIC_RESOURCE_TYPE_MENU);
+				List<AefsysResource> ListMenuResource=listSearchResource(searchMenuResource);
+				AefsysResource searchButtonResource=new AefsysResource();
+				searchButtonResource.setResourceType(SysDefineConstant.DIC_RESOURCE_TYPE_BUTTON);
+				List<AefsysResource> ListButtonResource=listSearchResource(searchButtonResource);
+				directResources.addAll(ListMenuResource);//添加资源
+				directResources.addAll(ListButtonResource);//添加资源
+			}
+			//普通权限人员
+		}else{
+			List<AefsysResource> personRoleResource = resourceDao.getPersonResourcesByPersonId(personId);
+			List<AefsysResource> noAuthorityResource=getNoAuthorityResource();//无权限控制的菜单
+			directResources.addAll(personRoleResource);//所有可展示的资源
+			directResources.addAll(noAuthorityResource);//所有可展示的资源
+		}
+		return directResources;
 	}
 
 

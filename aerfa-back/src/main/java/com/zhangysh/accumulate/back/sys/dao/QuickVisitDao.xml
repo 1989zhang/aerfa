@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.QuickVisitDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="quickVisitResult" type="AefsysQuickVisit" >
+        <result property="id"    column="id"    />
+        <result property="personId"    column="person_id"    />
+        <result property="resourceId"    column="resource_id"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+	<!--查询对象语句拼装-->
+	<sql id="selectQuickVisit">
+        select id, person_id, resource_id, order_no, create_by, create_time, update_by, update_time from aefsys_quick_visit
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getQuickVisitById" parameterType="Long" resultMap="quickVisitResult">
+        <include refid="selectQuickVisit"/>
+        where id = #{id}
+    </select>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listQuickVisit" parameterType="AefsysQuickVisit" resultMap="quickVisitResult">
+        <include refid="selectQuickVisit"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="personId != null  "> and person_id = #{personId}</if>
+            <if test="resourceId != null  "> and resource_id = #{resourceId}</if>
+            <if test="orderNo != null  "> and order_no = #{orderNo}</if>
+            <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
+            <if test="createTime != null  "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null  "> and update_time = #{updateTime}</if>
+        </where>
+        order by order_no asc
+    </select>
+
+    <!--根据主键查询多个对象-->
+	<select id="listBypksQuickVisit" parameterType="String" resultMap="quickVisitResult">
+        <include refid="selectQuickVisit"/>
+        where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertQuickVisit" parameterType="AefsysQuickVisit" useGeneratedKeys="true" keyProperty="id">
+        insert into aefsys_quick_visit
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="personId != null  ">person_id,</if>
+			<if test="resourceId != null  ">resource_id,</if>
+			<if test="orderNo != null  ">order_no,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="personId != null  ">#{personId},</if>
+			<if test="resourceId != null  ">#{resourceId},</if>
+			<if test="orderNo != null  ">#{orderNo},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateQuickVisit" parameterType="AefsysQuickVisit">
+        update aefsys_quick_visit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="personId != null  ">person_id = #{personId},</if>
+            <if test="resourceId != null  ">resource_id = #{resourceId},</if>
+            <if test="orderNo != null  ">order_no = #{orderNo},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteQuickVisitById" parameterType="Long">
+        delete from aefsys_quick_visit where id = #{id}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deleteQuickVisitByIds" parameterType="String">
+        delete from aefsys_quick_visit where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.zhangysh.accumulate.back.sys.service.*;
 import com.zhangysh.accumulate.common.util.GeneralUtil;
 import com.zhangysh.accumulate.pojo.sys.dataobj.*;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysQuickVisitVo;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysResourceVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,6 +61,8 @@ public class LoginServiceImpl implements ILoginService{
 	private IResourceService resourceService;
 	@Autowired
 	private IRoleService roleService;
+	@Autowired
+	private IQuickVisitService quickVisitService;
 
 	@Override
 	public String checkLoginInfo(AefsysLoginDto loginDto) {
@@ -135,11 +138,12 @@ public class LoginServiceImpl implements ILoginService{
 		//查询出人员的角色权限和角色对应的资源
 		List<AefsysRole> roleList=roleService.getPersonRolesByPersonId(sysPerson.getId());
 		List<AefsysResourceVo> resourceList=resourceService.getPersonStructResourcesByPersonId(sysPerson.getId());
-
+		List<AefsysQuickVisitVo> visitVoList=quickVisitService.listQuickVisitByPersonId(sysPerson.getId());
 		session.put(CacheConstant.TOKENMODEL_SESSION_KEY_PERSON, sysPersonVo);
 		session.put(CacheConstant.TOKENMODEL_SESSION_KEY_ORG, sysOrg);
 		session.put(CacheConstant.TOKENMODEL_SESSION_KEY_ROLE,roleList);
 		session.put(CacheConstant.TOKENMODEL_SESSION_KEY_RESOURCE,resourceList);
+		session.put(CacheConstant.TOKENMODEL_SESSION_KEY_QUICK,visitVoList);
 
 		//设置属性到对象里面
 		tokenModel.setPersonId(sysPerson.getId());

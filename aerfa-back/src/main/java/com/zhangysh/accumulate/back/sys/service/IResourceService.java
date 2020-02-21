@@ -85,4 +85,10 @@ public interface IResourceService {
 	 */
 	List<AefsysResourceVo> getPersonStructResourcesByPersonId(Long personId);
 
+	/***
+	 * 根据人员ID获取他拥有的直接资源，平行显示
+	 * @param personId 人员ID
+	 **/
+	List<AefsysResource> getDirectResourcesByPersonId(Long personId);
+
 }

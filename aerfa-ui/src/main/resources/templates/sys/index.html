@@ -42,16 +42,9 @@
                             <span class="fa arrow"></span>
                         </a>
                         <ul class="nav nav-second-level">
-                            <li><a class="J_menuItem" href="http://www.baidu.com">百度连接</a></li>
-                            <li><a class="J_menuItem" href="http://www.baidu.com">百度连接</a></li>
-                            <li><a class="J_menuItem" href="http://www.baidu.com">百度连接</a></li>
-                            <li><a class="J_menuItem" href="http://www.baidu.com">百度连接</a></li>
-                            <li><a class="J_menuItem" href="http://www.baidu.com">百度连接</a></li>
-                            <li><a class="J_menuItem" href="http://www.baidu.com">百度连接</a></li>
-                            <li><a class="J_menuItem" href="http://www.baidu.com">百度连接</a></li>
-                            <li><a class="J_menuItem" href="http://www.baidu.com">百度连接</a></li>
-                            <li><a class="J_menuItem" href="http://www.baidu.com">百度连接</a></li>
-                            <li><a class="J_menuItem" href="http://www.baidu.com">百度连接</a></li>
+                            <li th:each="quickVo : ${quick}">
+                                <a class="J_menuItem" th:text="${quickVo.resourceName}" th:href="@{${quickVo.url}}"></a>
+                            </li>
                         </ul>
                     </li>
                     <!-- 最多支持五级菜单 -->

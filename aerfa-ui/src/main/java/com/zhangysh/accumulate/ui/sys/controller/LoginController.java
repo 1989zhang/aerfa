@@ -152,12 +152,16 @@ public class LoginController {
 			AefsysResourceVo topResourceVo=JSONObject.toJavaObject(topResourceJson,AefsysResourceVo.class);
 			resourceList.addAll(dealWithNoNeedResource(topResourceVo));
 		}
+        //快捷访问对象资源转换
+		String quickListJsonStr =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_QUICK)+"";
+		List<JSONObject> quickVisitVoList=JSON.parseObject(quickListJsonStr, List.class);
 
-		modelMap.put("person", personVo);
-		modelMap.put("org", orgVo);
-		modelMap.put("resources", resourceList);
+		modelMap.addAttribute("person", personVo);
+		modelMap.addAttribute("org", orgVo);
+		modelMap.addAttribute("resources", resourceList);
+		modelMap.addAttribute("quick",quickVisitVoList);
 		//特殊的token值便于websocket连接使用
-		modelMap.put(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_WEBIM, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_WEBIM);
+		modelMap.addAttribute(WebimDefineConstant.WEBSOCKET_TOKEN_NAME_WEBIM, WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_WEBIM);
 
 		return "sys/index";
 	}
