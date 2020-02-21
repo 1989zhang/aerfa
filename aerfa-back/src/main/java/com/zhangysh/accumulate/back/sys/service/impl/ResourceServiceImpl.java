@@ -3,8 +3,10 @@ package com.zhangysh.accumulate.back.sys.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zhangysh.accumulate.back.sys.service.IRoleService;
 import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import com.zhangysh.accumulate.common.util.StringUtil;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
@@ -22,6 +24,8 @@ import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysResourceVo;
 @Service
 public class ResourceServiceImpl implements IResourceService{
 
+	@Autowired
+	private IRoleService roleService;
 	@Autowired
 	private ResourceDao resourceDao;
 	
@@ -56,7 +60,7 @@ public class ResourceServiceImpl implements IResourceService{
 	@Override
     public List<AefsysResourceVo> listResource(AefsysResource resource){
 		List<AefsysResourceVo> retResourceList=new ArrayList<AefsysResourceVo>();
-		List<AefsysResource> dbListResource=resourceDao.listResource(resource);
+		List<AefsysResource> dbListResource=listSearchResource(resource);
 		if(dbListResource!=null && dbListResource.size()>0) {
 			for(AefsysResource resourceDo:dbListResource) {
 				AefsysResourceVo resourceVo=JSON.parseObject(JSON.toJSONString(resourceDo),AefsysResourceVo.class);
@@ -108,9 +112,37 @@ public class ResourceServiceImpl implements IResourceService{
 
 	@Override
 	public List<AefsysResourceVo> getPersonStructResourcesByPersonId(Long personId) {
-		List<AefsysResource> directResources = resourceDao.getPersonResourcesByPersonId(personId);
-		List<AefsysResource> allRepeatPersonResource = new ArrayList<AefsysResource>();
 
+		List<AefsysResource> directResources=new ArrayList<AefsysResource>();
+		//超级管理员添加所有资源
+		if(SysDefineConstant.PERSON_ID_SUPERMASTER.equals(personId)){
+			List<AefsysRole> roleList=roleService.getPersonRolesByPersonId(personId);
+			boolean isSuperAdmin=false;//是否超级管理员判断
+			for(AefsysRole role:roleList){
+				if(SysDefineConstant.ROLE_ID_SUPERADMIN.equals(role.getId())){
+					isSuperAdmin=true;
+				}
+			}
+			if(isSuperAdmin){
+				//可以直接查询所有资源，但是资源固定到菜单和按钮貌似好一些
+				AefsysResource searchMenuResource=new AefsysResource();
+				searchMenuResource.setResourceType(SysDefineConstant.DIC_RESOURCE_TYPE_MENU);
+				List<AefsysResource> ListMenuResource=listSearchResource(searchMenuResource);
+				AefsysResource searchButtonResource=new AefsysResource();
+				searchButtonResource.setResourceType(SysDefineConstant.DIC_RESOURCE_TYPE_BUTTON);
+				List<AefsysResource> ListButtonResource=listSearchResource(searchButtonResource);
+				directResources.addAll(ListMenuResource);//添加资源
+				directResources.addAll(ListButtonResource);//添加资源
+			}
+		//普通权限人员
+		}else{
+			List<AefsysResource> personRoleResource = resourceDao.getPersonResourcesByPersonId(personId);
+			List<AefsysResource> noAuthorityResource=getNoAuthorityResource();//无权限控制的菜单
+			directResources.addAll(personRoleResource);//所有可展示的资源
+			directResources.addAll(noAuthorityResource);//所有可展示的资源
+		}
+
+		List<AefsysResource> allRepeatPersonResource = new ArrayList<AefsysResource>();
 		//首先倒序查询出按钮菜单模块所有的资源集合
 		for (AefsysResource resource : directResources) {
 			allRepeatPersonResource.add(resource);
@@ -145,6 +177,8 @@ public class ResourceServiceImpl implements IResourceService{
 		}
 		return retResourceVoList;
 	}
+
+
 
 	/**
 	 *根据父资源ID，迭代获取子资源树形列表-树
@@ -217,4 +251,24 @@ public class ResourceServiceImpl implements IResourceService{
 		}
     	return childResourceList;
 	}
+
+	/**
+	 * 获取无权限控制的直接资源，不管有效状态
+	 * 只获取到menu类型的，不管子button类型才符合逻辑
+	 ***/
+	private List<AefsysResource> getNoAuthorityResource(){
+		AefsysResource searchResource=new AefsysResource();
+		searchResource.setResourceType(SysDefineConstant.DIC_RESOURCE_TYPE_MENU);
+		searchResource.setAuthority(SysDefineConstant.DIC_COMMON_STATUS_NO);
+		return listSearchResource(searchResource);
+	}
+
+	/****
+	 * 根据条件查询出资源集合不分页显示
+	 * @param resource 查询条件
+	 ****/
+	private List<AefsysResource> listSearchResource(AefsysResource resource){
+		return resourceDao.listResource(resource);
+	}
+
 }

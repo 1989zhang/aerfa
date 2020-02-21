@@ -10,15 +10,26 @@ import com.zhangysh.accumulate.pojo.base.BaseDataObj;
 public class AefsysResource extends BaseDataObj{
 
 	private static final long serialVersionUID = 1L;
-	
-	private String resourceName;
+
+	/** 父级id **/
 	private Long parentId;
+	/** 资源名称 **/
+	private String resourceName;
+	/** 资源类型scmb **/
 	private String resourceType;
+	/** 可见状态1显示0隐藏 **/
 	private Long status;
+	/** 权限控制1是0否 **/
+	private Long authority;
+	/** 资源权限标示例system:user:add **/
 	private String identify;
+	/** 访问路径默认# **/
 	private String url;
+	/** 资源图标 **/
 	private String icon;
+	/** 排序号 **/
 	private Long orderNo;
+	/** 备注描述 **/
 	private String remark;
 
 
@@ -45,6 +56,12 @@ public class AefsysResource extends BaseDataObj{
 	}
 	public void setStatus(Long status) {
 		this.status = status;
+	}
+	public Long getAuthority() {
+		return authority;
+	}
+	public void setAuthority(Long authority) {
+		this.authority = authority;
 	}
 	public String getIdentify() {
 		return identify;
@@ -76,13 +93,9 @@ public class AefsysResource extends BaseDataObj{
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "AefsysResource [id=" + id + ", resourceName=" + resourceName + ", parentId=" + parentId
-				+ ", resourceType=" + resourceType + ", status=" + status + ", identify=" + identify
-				+ ", url=" + url + ", icon=" + icon + ", orderNo=" + orderNo + ", remark=" + remark + ", createBy="
-				+ createBy + ", createTime=" + createTime + ", updateBy=" + updateBy + ", updateTime=" + updateTime
-				+ "]";
+		return "AefsysResource [id=" + id + ",parentId=" + parentId + ",resourceName=" + resourceName + ",resourceType=" + resourceType + ",status=" + status + ",authority=" + authority + ",identify=" + identify + ",url=" + url + ",icon=" + icon + ",orderNo=" + orderNo + ",remark=" + remark + ",createBy=" + createBy + ",createTime=" + createTime + ",updateBy=" + updateBy + ",updateTime=" + updateTime + ",]";
 	}
 }

@@ -10,7 +10,8 @@
 		<result property="resourceName"   column="resource_name"/>
 		<result property="resourceType"   column="resource_type"/>
 		<result property="status"         column="status"/>
-		<result property="identify"     column="identify"/>
+		<result property="authority"      column="authority"/>
+		<result property="identify"       column="identify"/>
 		<result property="url"  		  column="url"/>
 		<result property="icon"           column="icon"/>
 		<result property="orderNo"        column="order_no"/>
@@ -22,7 +23,7 @@
 	</resultMap>
 	
 	<sql id="selectResource">
-       select id,resource_name,parent_id,resource_type,status,identify,url,icon,order_no,remark,
+       select id,resource_name,parent_id,resource_type,status,authority,identify,url,icon,order_no,remark,
        create_by,create_time,update_by,update_time 
        from aefsys_resource 
     </sql>
@@ -46,6 +47,7 @@
 			<if test="resourceName != null and resourceName != ''"> and resource_name like concat('%',#{resourceName},'%')</if>
 		    <if test="resourceType != null and resourceType != ''"> and resource_type like concat('%',#{resourceType},'%')</if>
 		    <if test="status != null "> and status = #{status}</if>
+			<if test="authority != null  "> and authority = #{authority}</if>
 		    <if test="identify != null and identify != ''"> and identify like concat('%',#{identify},'%')</if>
 
 		    <if test="params != null and params.startTime !=null and params.startTime != ''"><!-- 开始时间检索 -->
@@ -73,6 +75,7 @@
 			<if test="resourceName != null  and resourceName != ''  ">resource_name,</if>
 			<if test="resourceType != null  and resourceType != ''  ">resource_type,</if>
 			<if test="status != null  ">status,</if>
+			<if test="authority != null  ">authority,</if>
 			<if test="identify != null  and identify != ''  ">identify,</if>
 			<if test="url != null  and url != ''  ">url,</if>
 			<if test="icon != null  and icon != ''  ">icon,</if>
@@ -88,6 +91,7 @@
 			<if test="resourceName != null  and resourceName != ''  ">#{resourceName},</if>
 			<if test="resourceType != null  and resourceType != ''  ">#{resourceType},</if>
 			<if test="status != null  ">#{status},</if>
+			<if test="authority != null  ">#{authority},</if>
 			<if test="identify != null  and identify != ''  ">#{identify},</if>
 			<if test="url != null  and url != ''  ">#{url},</if>
 			<if test="icon != null  and icon != ''  ">#{icon},</if>
@@ -108,6 +112,7 @@
             <if test="resourceName != null  and resourceName != ''  ">resource_name = #{resourceName},</if>
             <if test="resourceType != null  and resourceType != ''  ">resource_type = #{resourceType},</if>
             <if test="status != null  ">status = #{status},</if>
+			<if test="authority != null  ">authority = #{authority},</if>
             <if test="identify != null  and identify != ''  ">identify = #{identify},</if>
             <if test="url != null  and url != ''  ">url = #{url},</if> 
             <if test="icon != null  and icon != ''  ">icon = #{icon},</if>
@@ -129,7 +134,7 @@
 	<!--根据人员的ID获取他拥有的资源集合-->
 	<select id="getPersonResourcesByPersonId" parameterType="Long" resultMap="resourceResult">
 		select aefsys_resource.id,aefsys_resource.resource_name,aefsys_resource.parent_id,aefsys_resource.resource_type,
-		aefsys_resource.status,aefsys_resource.identify,aefsys_resource.url,aefsys_resource.icon,aefsys_resource.order_no,
+		aefsys_resource.status,aefsys_resource.authority,aefsys_resource.identify,aefsys_resource.url,aefsys_resource.icon,aefsys_resource.order_no,
 		aefsys_resource.remark,aefsys_resource.create_by,aefsys_resource.create_time,aefsys_resource.update_by,aefsys_resource.update_time
         from aefsys_resource,aefsys_role_resource,aefsys_person_role
 		where aefsys_resource.id=aefsys_role_resource.resource_id and aefsys_role_resource.role_id=aefsys_person_role.role_id and aefsys_person_role.person_id=#{personId}

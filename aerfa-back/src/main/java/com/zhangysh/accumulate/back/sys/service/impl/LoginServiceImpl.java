@@ -213,13 +213,13 @@ public class LoginServiceImpl implements ILoginService{
 		//添加默认系统好友,智能小法webimAIxf
 		AefwebimFriend searchFriend =new AefwebimFriend();
 		searchFriend.setPersonId(personId);
-		searchFriend.setFriendId(WebimDefineConstant.WEBIM_AIXF_PERSON_ID);
+		searchFriend.setFriendId(SysDefineConstant.PERSON_ID_WEBAIXF);
 		List<AefwebimFriend> friendList=friendService.listFriend(searchFriend);//查找好友是否添加了智能小法webimaixf
-		if(friendList.size()==0&&!WebimDefineConstant.WEBIM_AIXF_PERSON_ID.equals(personId)) {//没有添加智能小法,且不是智能小法自己才添加
+		if(friendList.size()==0 && !SysDefineConstant.PERSON_ID_WEBAIXF.equals(personId)) {//没有添加智能小法,且不是智能小法自己才添加
 			AefwebimFriend webimAixfFriend =new AefwebimFriend();
 			webimAixfFriend.setPersonId(personId);
 			webimAixfFriend.setGroupId(defaultGroupId);
-			webimAixfFriend.setFriendId(WebimDefineConstant.WEBIM_AIXF_PERSON_ID);
+			webimAixfFriend.setFriendId(SysDefineConstant.PERSON_ID_WEBAIXF);
 			friendService.insertFriend(webimAixfFriend);//添加智能小法
 		}
 	}

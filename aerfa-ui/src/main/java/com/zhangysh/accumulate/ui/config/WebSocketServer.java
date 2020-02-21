@@ -13,6 +13,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 import com.zhangysh.accumulate.common.constant.MarkConstant;
+import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
 import com.zhangysh.accumulate.ui.iqa.service.IqaReplyService;
 import org.slf4j.Logger;
@@ -134,7 +135,7 @@ public class WebSocketServer {
 	   switch (type) {
 	       case WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_FRIEND://webim的单聊
 	    	    //后期接入智能小法,自动回复
-	    	    if(WebimDefineConstant.WEBIM_AIXF_PERSON_ID.equals(toJson.getLong("id"))) {
+	    	    if(SysDefineConstant.PERSON_ID_WEBAIXF.equals(toJson.getLong("id"))) {
 					fromJson.put(WebimDefineConstant.WEBIM_JSON_LABEL_ID,WebimDefineConstant.WEBSOCKET_TOKEN_VALUE_WEBIM+fromJson.getString(WebimDefineConstant.WEBIM_JSON_LABEL_ID));
 	    	    	sendMessageAutomatic(fromJson,type);
 	    	    }else{
@@ -208,14 +209,14 @@ public class WebSocketServer {
 			}
 		}
 		AefwebimMessageDto autoMessage=new AefwebimMessageDto();
-    	autoMessage.setId(WebimDefineConstant.WEBIM_AIXF_PERSON_ID+"");
+    	autoMessage.setId(SysDefineConstant.PERSON_ID_WEBAIXF+"");
     	autoMessage.setUsername("智能小法");
     	autoMessage.setAvatar(fromJson.getString("avatar"));
     	autoMessage.setType(type);
     	autoMessage.setContent(replyContent);
     	autoMessage.setCid(0L);
     	autoMessage.setMine(false);
-    	autoMessage.setFromid(WebimDefineConstant.WEBIM_AIXF_PERSON_ID+"");
+    	autoMessage.setFromid(SysDefineConstant.PERSON_ID_WEBAIXF+"");
     	autoMessage.setTimestamp(System.currentTimeMillis());  
     	sendMessageText(fromJson.getString(WebimDefineConstant.WEBIM_JSON_LABEL_ID),JSON.toJSONString(autoMessage));
 	}
@@ -279,7 +280,7 @@ public class WebSocketServer {
 				fromMap.put("username",personVo.getNickName());
 			}else{
 				fromMap.put("content","客服人员不在线，请稍后再试。");
-				fromMap.put("id",WebimDefineConstant.WEBIM_AIXF_PERSON_ID+"");
+				fromMap.put("id",SysDefineConstant.PERSON_ID_WEBAIXF+"");
 				fromMap.put("username","");
 			}
 			Map<String,Object> toMap=new HashMap<String,Object>();

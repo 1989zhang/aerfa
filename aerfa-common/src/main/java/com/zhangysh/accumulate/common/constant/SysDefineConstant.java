@@ -46,6 +46,15 @@ public class SysDefineConstant {
 	/**数据库工作日上班状态不上班标记0**/
 	public static final Long DB_WORK_DAY_STATUS_RUSH=0L;
 
+	/** 超级管理员人员ID **/
+	public static final Long PERSON_ID_SUPERMASTER=1L;
+	/** 智能小法人员ID **/
+	public static final Long PERSON_ID_WEBAIXF=10L;
+	/** 超级管理员角色ID **/
+	public static final Long ROLE_ID_SUPERADMIN=1L;
+
+
+
 
 	/**********系统数据字典参数配置常量**********/
 	/** 数据字典通过状态是1 **/

@@ -39,7 +39,7 @@ public interface IResourceService {
 	 *@param resource 查询条件 
 	 ****/
 	List<AefsysResourceVo> listResource(AefsysResource resource);
-	
+
 	/**
 	 *一次查询出所有资源信息且含父子结构
 	 *@return 带父子结构的list集合 
@@ -77,10 +77,12 @@ public interface IResourceService {
 	 int deleteResourceById(Long id);
 
 	/**
-	 * 根据人员的ID获取他拥有的资源带父级结构集合：
-	 * 查询逻辑为按钮到菜单到模块到系统，显示逻辑为系统到模块到菜单到按钮
+	 * 根据人员的ID获取他拥有的资源带父级结构集合，不管有效状态；
+	 * 查询逻辑为按钮到菜单到模块到系统，显示逻辑为系统到模块到菜单到按钮；
+	 * 超级管理员显示所有资源
 	 * @param personId 人员ID
 	 * @return 人员拥有资源带父子结构集合
 	 */
 	List<AefsysResourceVo> getPersonStructResourcesByPersonId(Long personId);
+
 }

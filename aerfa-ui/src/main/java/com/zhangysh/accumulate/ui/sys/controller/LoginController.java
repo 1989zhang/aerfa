@@ -182,7 +182,7 @@ public class LoginController {
 		if(SysDefineConstant.DIC_RESOURCE_TYPE_SYSTEM.equals(topResourceVo.getResourceType())){
 			List<AefsysResourceVo> usefulResourceList=topResourceVo.getChildren();
 			for(AefsysResourceVo usefulResource:usefulResourceList){
-				usefulResource.setChildren(dealWithBottomResource(usefulResource));
+				usefulResource.setChildren(dealWithBottomDisabledResource(usefulResource));
 				retList.add(usefulResource);
 			}
 		}
@@ -190,14 +190,15 @@ public class LoginController {
 	}
 
 	/**
-	 * 去除按钮资源，不能供展示
+	 * 去除按钮资源和不可用资源，不能供展示
 	 * **/
-	private List<AefsysResourceVo> dealWithBottomResource(AefsysResourceVo resourceVo){
+	private List<AefsysResourceVo> dealWithBottomDisabledResource(AefsysResourceVo resourceVo){
 		List<AefsysResourceVo> childrenList=resourceVo.getChildren();
 		List<AefsysResourceVo> setCildrenList=new ArrayList<AefsysResourceVo>();
 		for(AefsysResourceVo children:childrenList){
-           if(!SysDefineConstant.DIC_RESOURCE_TYPE_BUTTON.equals(children.getResourceType())){
-			   children.setChildren(dealWithBottomResource(children));
+           if(!SysDefineConstant.DIC_RESOURCE_TYPE_BUTTON.equals(children.getResourceType())
+		       && SysDefineConstant.DIC_USEABLE_STATUS_VALID.equals(children.getStatus())){
+			   children.setChildren(dealWithBottomDisabledResource(children));
 			   setCildrenList.add(children);
 		   }
 		}

@@ -100,6 +100,7 @@ create table aefsys_resource (
   resource_name   varchar(128)                          comment '资源名称',
   resource_type   varchar(16)                           comment '资源类型scmb',
   status          int(11)                               comment '可见状态1显示0隐藏',
+  authority       int(11)                               comment '权限控制1是0否',
   identify        varchar(64)                           comment '资源权限标示例system:user:add',
   url             varchar(256)                          comment '访问路径默认#',
   icon            varchar(256)                          comment '资源图标',
