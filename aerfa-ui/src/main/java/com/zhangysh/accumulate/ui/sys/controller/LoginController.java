@@ -137,11 +137,13 @@ public class LoginController {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		String sessionInfoStr=loginService.getSessionByToken(aerfatoken);
 		TokenModel tokenModel=JSON.parseObject(sessionInfoStr,TokenModel.class);
+
+		//单位个人对象转化
 		String personObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_PERSON)+"";
 		AefsysPersonVo personVo=JSON.parseObject(personObjectJson,AefsysPersonVo.class);
 		String orgObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_ORG)+"";
 		AefsysOrg orgVo=JSON.parseObject(orgObjectJson,AefsysOrg.class);
-
+        //资源对象转化
 		String topResourceListJsonStr =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_RESOURCE)+"";
 		List<JSONObject> topResourceListJson=JSON.parseObject(topResourceListJsonStr, List.class);
 		//资源带父子结构要重新组装成父子结构对象的，直接转子是JsonArray对象
@@ -150,6 +152,7 @@ public class LoginController {
 			AefsysResourceVo topResourceVo=JSONObject.toJavaObject(topResourceJson,AefsysResourceVo.class);
 			resourceList.addAll(dealWithNoNeedResource(topResourceVo));
 		}
+
 		modelMap.put("person", personVo);
 		modelMap.put("org", orgVo);
 		modelMap.put("resources", resourceList);
