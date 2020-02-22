@@ -46,5 +46,12 @@ public interface IQuickVisitService {
      */
 	 int deleteQuickVisitById(Long id);
 
+	/**
+	 * 删除常用功能快速访问信息
+	 *
+	 * @param ids 需要删除的数据ID以,拼装
+	 * @return 删除结果条数
+	 */
+	int deleteQuickVisitByIds(String ids);
 	
 }

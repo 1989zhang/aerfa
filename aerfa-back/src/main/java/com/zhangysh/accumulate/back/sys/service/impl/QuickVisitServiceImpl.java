@@ -48,8 +48,7 @@ public class QuickVisitServiceImpl implements IQuickVisitService {
 					canAddToRet=true;
 					//在权限里面直接添加
 					AefsysQuickVisitVo quickVisitVo=JSON.parseObject(JSON.toJSONString(quickVisit),AefsysQuickVisitVo.class);
-					quickVisitVo.setResourceName(resource.getResourceName());
-					quickVisitVo.setUrl(resource.getUrl());
+					quickVisitVo.setResource(resource);
 					retVisitVoList.add(quickVisitVo);
 					break;
 				}
@@ -77,5 +76,8 @@ public class QuickVisitServiceImpl implements IQuickVisitService {
 		return quickVisitDao.deleteQuickVisitById(id);
 	}
 
-	
+	@Override
+	public int deleteQuickVisitByIds(String ids){
+		return quickVisitDao.deleteQuickVisitByIds(ConvertUtil.toStrArray(ids));
+	}
 }

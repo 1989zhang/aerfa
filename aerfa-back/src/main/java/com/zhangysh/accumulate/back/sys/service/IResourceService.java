@@ -34,18 +34,18 @@ public interface IResourceService {
 	 *******/
 	List<BsTreeNode> listAllResourceWithTreeStructure();
 
+	/**
+	 *一次查询出所有资源信息且含父资源
+	 *@return 带父子资源的list集合
+	 *****/
+	List<AefsysResourceVo> listAllResourceWithParentResource();
+
 	/****
 	 *普通模糊查询条件下的资源list集合，未分页排序等 
 	 *@param resource 查询条件 
 	 ****/
 	List<AefsysResourceVo> listResource(AefsysResource resource);
 
-	/**
-	 *一次查询出所有资源信息且含父子结构
-	 *@return 带父子结构的list集合 
-	 *****/
-	List<AefsysResourceVo> listAllResourceWithParentStructure();
-	
 	/****
 	 *唯一性资源标记检测，查询出资源list集合，未分页排序等 
 	 *@param resource 查询条件 

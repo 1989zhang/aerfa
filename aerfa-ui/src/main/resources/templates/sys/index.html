@@ -43,7 +43,7 @@
                         </a>
                         <ul class="nav nav-second-level">
                             <li th:each="quickVo : ${quick}">
-                                <a class="J_menuItem" th:text="${quickVo.resourceName}" th:href="@{${quickVo.url}}"></a>
+                                <a class="J_menuItem" th:text="${quickVo.resource.resourceName}" th:href="@{${quickVo.resource.url}}"></a>
                             </li>
                         </ul>
                     </li>

@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zhangysh.accumulate.common.constant.CacheConstant;
+import com.zhangysh.accumulate.common.constant.MarkConstant;
 import com.zhangysh.accumulate.common.pojo.TokenModel;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysQuickVisitVo;
 import com.zhangysh.accumulate.ui.sys.service.ILoginService;
@@ -59,6 +60,18 @@ public class QuickVisitController {
 		return prefix+"/quick_visit";
 	}
 
+	/**
+	 * 跳转到添加快捷资源选择界面,如果是修改就带quickVisit的ID
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param id quickVisit的ID
+	 */
+	@RequestMapping(value="/to_quick_resource/{id}")
+	public String toSysQuickResource(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
+		modelMap.addAttribute("quickVisitId",id);
+		return prefix+"/quick_resource";
+	}
+
 	/****
 	 * 修改常用功能快速访问，先获取常用功能快速访问信息
 	 * @param request 请求对象
@@ -95,6 +108,29 @@ public class QuickVisitController {
     @ResponseBody
     public String remove(HttpServletRequest request, ModelMap modelMap,@PathVariable("ids") String ids){   
 		String aerfatoken=HttpStorageUtil.getToken(request);
-		return quickVisitService.deleteQuickVisitByIds(aerfatoken, ids);
+		String retOutStr=quickVisitService.deleteQuickVisitByIds(aerfatoken, ids);
+		JSONObject retJson=JSON.parseObject(retOutStr);
+		if(MarkConstant.MARK_RESULT_VO_SUCESS.equals(retJson.getInteger(MarkConstant.MARK_RESULT_VO_CODE))){
+			loginService.refreshSessionByToken(aerfatoken);
+		}
+		return retOutStr;
     }
+
+    /**
+	 * 显示有权限资源列表，供添加快速访问用
+	 ***/
+	@RequestMapping(value="/list_resource")
+	@ResponseBody
+	public String getList(HttpServletRequest request, ModelMap modelMap){
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		String sessionInfoStr=loginService.getSessionByToken(aerfatoken);
+		TokenModel tokenModel=JSON.parseObject(sessionInfoStr,TokenModel.class);
+		//资源对象转化
+		String topResourceListJsonStr =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_RESOURCE)+"";
+		return topResourceListJsonStr;
+	}
+
+
+
+
 }

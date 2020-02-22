@@ -19,10 +19,10 @@
                                 <i class="fa fa-desktop"></i>
                             </div>
                             <div class="file-name">
-                                [[${quickVo.resourceName}]]
+                                [[${quickVo.resource.resourceName}]]
                                 </br>
                                 <a class="btn btn-success btn-xs" href="#" th:onclick="'javascript:editQuickVisit(\''+${quickVo.id}+'\')'"><i class="fa fa-edit"></i>编辑</a>
-                                <a class="btn btn-danger btn-xs" href="#" th:onclick="'javascript:delQuickVisit(\''+${quickVo.id}+'\',\''+${quickVo.resourceName}+'\')'"><i class="fa fa-remove"></i>删除</a>
+                                <a class="btn btn-danger btn-xs" href="#" th:onclick="'javascript:delQuickVisit(\''+${quickVo.id}+'\',\''+${quickVo.resource.resourceName}+'\')'"><i class="fa fa-remove"></i>删除</a>
                             </div>
                       </div>
                 </div>
@@ -51,8 +51,11 @@
         $(function() {
 
         });
+
         function editQuickVisit(id){
-            alert(id);
+            var url = prefix+"/to_quick_resource/{id}";
+            url=url.replace("{id}", id);
+            $.modal.open("添加常用功能", url);
         }
         function delQuickVisit(id,name){
             var url = prefix+"/remove/{id}";

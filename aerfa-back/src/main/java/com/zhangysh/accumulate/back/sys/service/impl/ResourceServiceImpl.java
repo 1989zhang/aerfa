@@ -71,13 +71,13 @@ public class ResourceServiceImpl implements IResourceService{
 	}
 	
 	@Override
-    public List<AefsysResourceVo> listAllResourceWithParentStructure(){
+    public List<AefsysResourceVo> listAllResourceWithParentResource(){
 		List<AefsysResourceVo> retResourceList=new ArrayList<AefsysResourceVo>();	
 		List<AefsysResource> topResourceList=resourceDao.listTopResource();
 		for(AefsysResource resourceDo:topResourceList) {
 			AefsysResourceVo resourceVo=JSON.parseObject(JSON.toJSONString(resourceDo),AefsysResourceVo.class);
 			retResourceList.add(resourceVo);
-			retResourceList.addAll(listChildResourceWithParentStructureByParentId(resourceVo.getId()));
+			retResourceList.addAll(listChildResourceWithParentResourceByParentId(resourceVo.getId()));
 		}
 		return  retResourceList;
 	}
@@ -211,7 +211,7 @@ public class ResourceServiceImpl implements IResourceService{
 	 *@param parentId 父资源ID
 	 *@return 子资源列表
 	 *******/
-	private List<AefsysResourceVo> listChildResourceWithParentStructureByParentId(Long parentId){
+	private List<AefsysResourceVo> listChildResourceWithParentResourceByParentId(Long parentId){
 		List<AefsysResourceVo> retChildListResource=new ArrayList<AefsysResourceVo>();
 		AefsysResource resource =new AefsysResource();
 		resource.setParentId(parentId);
@@ -220,7 +220,7 @@ public class ResourceServiceImpl implements IResourceService{
 			for(AefsysResource resourceDo:dbListResource) {
 				AefsysResourceVo resourceVo=JSON.parseObject(JSON.toJSONString(resourceDo),AefsysResourceVo.class);
 				retChildListResource.add(resourceVo);
-				retChildListResource.addAll(listChildResourceWithParentStructureByParentId(resourceVo.getId()));
+				retChildListResource.addAll(listChildResourceWithParentResourceByParentId(resourceVo.getId()));
 			}
 		}
 		return retChildListResource;

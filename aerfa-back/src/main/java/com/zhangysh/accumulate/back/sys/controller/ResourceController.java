@@ -61,7 +61,7 @@ public class ResourceController extends BaseController{
 		if( StringUtil.isNotEmpty(sysResourceParam.getResourceName()) || StringUtil.isNotEmpty(sysResourceParam.getIdentify()) || StringUtil.isNotEmpty(sysResourceParam.getResourceType()) )  {
 			return JSON.toJSONStringWithDateFormat(resourceService.listResource(sysResourceParam),UtilConstant.NORMAL_MIDDLE_DATE);
 		}else {//第一次全加载父子结构的部门列表
-			return JSON.toJSONStringWithDateFormat(resourceService.listAllResourceWithParentStructure(),UtilConstant.NORMAL_MIDDLE_DATE);
+			return JSON.toJSONStringWithDateFormat(resourceService.listAllResourceWithParentResource(),UtilConstant.NORMAL_MIDDLE_DATE);
 		}
 	}
 	
