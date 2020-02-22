@@ -6,9 +6,14 @@ import javax.servlet.http.HttpServletRequest;
 import com.alibaba.fastjson.JSONObject;
 import com.zhangysh.accumulate.common.constant.CacheConstant;
 import com.zhangysh.accumulate.common.constant.MarkConstant;
+import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import com.zhangysh.accumulate.common.pojo.TokenModel;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysResource;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysQuickVisitVo;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysResourceVo;
 import com.zhangysh.accumulate.ui.sys.service.ILoginService;
+import com.zhangysh.accumulate.ui.sys.util.TransformUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -61,7 +66,17 @@ public class QuickVisitController {
 	}
 
 	/**
-	 * 跳转到添加快捷资源选择界面,如果是修改就带quickVisit的ID
+	 * 跳转到添加快捷资源选择界面,不带ID
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 */
+	@RequestMapping(value="/to_quick_resource")
+	public String toSysQuickResource(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("prefix",prefix);
+		return prefix+"/quick_resource";
+	}
+	/**
+	 * 跳转到添加快捷资源选择界面,是修改就带quickVisit的ID
 	 * @param request 请求对象
 	 * @param modelMap spring的mvc返回对象
 	 * @param id quickVisit的ID
@@ -69,20 +84,8 @@ public class QuickVisitController {
 	@RequestMapping(value="/to_quick_resource/{id}")
 	public String toSysQuickResource(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
 		modelMap.addAttribute("quickVisitId",id);
+		modelMap.addAttribute("prefix",prefix);
 		return prefix+"/quick_resource";
-	}
-
-	/****
-	 * 修改常用功能快速访问，先获取常用功能快速访问信息
-	 * @param request 请求对象
-	 * @param modelMap spring的mvc返回对象
-	 * @return templates下的页面
-	 ****/
-	@RequestMapping(value="/to_edit/{id}")
-	public String toEdit(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
-		String aerfatoken=HttpStorageUtil.getToken(request);
-		modelMap.put("prefix", prefix);
-		return prefix+"/edit";
 	}
 
     /***
@@ -95,7 +98,27 @@ public class QuickVisitController {
     @ResponseBody
     public String saveAdd(HttpServletRequest request, ModelMap modelMap,AefsysQuickVisit quickVisit) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
-		return quickVisitService.saveAdd(aerfatoken, quickVisit);
+		String sessionInfoStr=loginService.getSessionByToken(aerfatoken);
+		TokenModel tokenModel=JSON.parseObject(sessionInfoStr,TokenModel.class);
+		//个人对象转化,补充个人对象
+		String personObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_PERSON)+"";
+		AefsysPersonVo personVo=JSON.parseObject(personObjectJson,AefsysPersonVo.class);
+		//快捷访问对象资源转换
+		String quickListJsonStr =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_QUICK)+"";
+		List<JSONObject> quickVisitVoList=JSON.parseObject(quickListJsonStr, List.class);
+		//当为新增的时候补充personId和orderNo属性
+		Long orderNo=Long.parseLong((quickVisitVoList.size()+1)+"");
+		if(quickVisit.getId()==null){
+			quickVisit.setPersonId(personVo.getId());
+			quickVisit.setOrderNo(orderNo);
+		}
+
+		String retOutStr = quickVisitService.saveAdd(aerfatoken, quickVisit);
+		JSONObject retJson=JSON.parseObject(retOutStr);
+		if(MarkConstant.MARK_RESULT_VO_SUCESS.equals(retJson.getInteger(MarkConstant.MARK_RESULT_VO_CODE))){
+			loginService.refreshSessionByToken(aerfatoken);
+		}
+		return retOutStr;
 	}
 
 	/***
@@ -127,10 +150,16 @@ public class QuickVisitController {
 		TokenModel tokenModel=JSON.parseObject(sessionInfoStr,TokenModel.class);
 		//资源对象转化
 		String topResourceListJsonStr =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_RESOURCE)+"";
-		return topResourceListJsonStr;
+		//资源带父子结构所以重新组装成平行的
+		List<AefsysResourceVo> resourceVoList= TransformUtil.TransformResourceStructToList(topResourceListJsonStr);
+		//AefsysResourceVo因为带子对象所以要转为AefsysResource；且为展示好看不多选择方便，不要按钮级别
+		List<AefsysResource> resourceList=new ArrayList<AefsysResource>();
+		for(AefsysResourceVo resourceVo:resourceVoList){
+			AefsysResource addResource=JSON.parseObject(JSON.toJSONString(resourceVo),AefsysResource.class);
+			if(!SysDefineConstant.DIC_RESOURCE_TYPE_BUTTON.equals(addResource.getResourceType())){
+				resourceList.add(addResource);
+			}
+		}
+		return JSON.toJSONString(resourceList);
 	}
-
-
-
-
 }

@@ -14,6 +14,7 @@ import com.zhangysh.accumulate.pojo.sys.transobj.AefsysLoginDto;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysResourceVo;
 import com.zhangysh.accumulate.ui.sys.util.ServletUtil;
 import com.zhangysh.accumulate.ui.sys.service.ILoginService;
+import com.zhangysh.accumulate.ui.sys.util.TransformUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -51,12 +52,10 @@ public class UserRealm extends AuthorizingRealm {
         String backToken=ShiroUtils.getToken();
         String sessionInfoStr=loginService.getSessionByToken(backToken);
         TokenModel tokenModel=JSON.parseObject(sessionInfoStr,TokenModel.class);
-        String roleListObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_ROLE)+"";
-        List<JSONObject> roleList=JSON.parseObject(roleListObjectJson, List.class);
-        String topResourceListJsonStr =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_RESOURCE)+"";
-        List<JSONObject> topResourceListJson=JSON.parseObject(topResourceListJsonStr, List.class);
 
         // 角色加入AuthorizationInfo认证对象
+        String roleListObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_ROLE)+"";
+        List<JSONObject> roleList=JSON.parseObject(roleListObjectJson, List.class);
         Set<String> roleCode=new HashSet<String>();
         for (JSONObject roleJson:roleList){
             AefsysRole role=JSONObject.toJavaObject(roleJson,AefsysRole.class);
@@ -67,11 +66,9 @@ public class UserRealm extends AuthorizingRealm {
         info.setRoles(roleCode);
 
         //资源带父子结构所以重新组装成平行的
-        List<AefsysResourceVo> resourceList=new ArrayList<AefsysResourceVo>();
-        for(JSONObject topResourceJsonObject:topResourceListJson){
-            AefsysResourceVo resourceVo=JSONObject.toJavaObject(topResourceJsonObject,AefsysResourceVo.class);
-            resourceList.addAll(dealWithStructureResourceLine(resourceVo));
-        }
+        String topResourceListJsonStr =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_RESOURCE)+"";
+        List<AefsysResourceVo> resourceList= TransformUtil.TransformResourceStructToList(topResourceListJsonStr);
+
         // 权限加入AuthorizationInfo认证对象
         Set<String> stringPermissions=new HashSet<String>();
         for(AefsysResourceVo resourceVo:resourceList){
@@ -115,18 +112,5 @@ public class UserRealm extends AuthorizingRealm {
         return info;
     }
 
-    /**
-     * 处理结构化父子资源到list集合，平行处理
-     */
-    private List<AefsysResourceVo> dealWithStructureResourceLine(AefsysResourceVo resourceVo){
-        List<AefsysResourceVo> retResourceVoList=new ArrayList<AefsysResourceVo>();
-        List<AefsysResourceVo> childrenResourceVo=resourceVo.getChildren();
-        retResourceVoList.add(resourceVo);//添加当前这个
-        if(childrenResourceVo.size()>0){//添加子
-            for(int i=0 ; i<childrenResourceVo.size(); i++){
-                retResourceVoList.addAll(dealWithStructureResourceLine(childrenResourceVo.get(i)));
-            }
-        }
-        return retResourceVoList;
-    }
+
 }

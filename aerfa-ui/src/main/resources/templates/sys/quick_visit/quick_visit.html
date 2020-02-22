@@ -21,14 +21,14 @@
                             <div class="file-name">
                                 [[${quickVo.resource.resourceName}]]
                                 </br>
-                                <a class="btn btn-success btn-xs" href="#" th:onclick="'javascript:editQuickVisit(\''+${quickVo.id}+'\')'"><i class="fa fa-edit"></i>编辑</a>
+                                <a class="btn btn-success btn-xs" href="#" th:onclick="'javascript:addEditQuickVisit(\''+${quickVo.id}+'\')'"><i class="fa fa-edit"></i>编辑</a>
                                 <a class="btn btn-danger btn-xs" href="#" th:onclick="'javascript:delQuickVisit(\''+${quickVo.id}+'\',\''+${quickVo.resource.resourceName}+'\')'"><i class="fa fa-remove"></i>删除</a>
                             </div>
                       </div>
                 </div>
                 <div class="file-box">
                     <div class="file">
-                        <a href="#">
+                        <a href="#" onclick="addEditQuickVisit()">
                             <span class="corner"></span>
                             <div class="icon">
                                 <i class="fa fa-plus"></i>
@@ -36,7 +36,7 @@
                             <div class="file-name">
                                 常用功能
                                 </br>
-                                <a class="btn btn-info btn-xs" href="#" onclick=""><i class="fa fa-edit"></i>点击添加</a>
+                                <a class="btn btn-info btn-xs" href="#" onclick="addEditQuickVisit()"><i class="fa fa-edit"></i>点击添加</a>
                             </div>
                         </a>
                     </div>
@@ -47,14 +47,14 @@
     <div th:include="sys/include :: footer"></div>
 
     <script th:inline="javascript">
-        //初始化参数和数据
-        $(function() {
-
-        });
-
-        function editQuickVisit(id){
-            var url = prefix+"/to_quick_resource/{id}";
-            url=url.replace("{id}", id);
+        function addEditQuickVisit(id){
+            var url;
+            if (id == undefined){
+                url = prefix+"/to_quick_resource";
+            }else{
+                url = prefix+"/to_quick_resource/{id}";
+                url=url.replace("{id}", id);
+            }
             $.modal.open("添加常用功能", url);
         }
         function delQuickVisit(id,name){
