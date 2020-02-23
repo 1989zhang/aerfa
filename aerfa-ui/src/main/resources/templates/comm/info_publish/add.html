@@ -1,36 +1,74 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:include="sys/include :: header"></head>
+
+<head >
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title> 阿尔法管理系统 </title>
+	<meta name="keywords" content="aerfa系统,后台bootstrap框架,响应式后台">
+	<meta name="description" content="aerfa是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+	<!--ico图标引入在static下-->
+	<link th:href="@{favicon.ico}" rel="shortcut icon">
+
+	<!--基础css引入:包括bootstrap的css等-->
+	<!--<link th:href="@{/aerfa/css/bootstrap.min.css?v=3.3.6}" rel="stylesheet">-->
+	<!-- 引入修改后的bootstrap，原来的有问题,所以修改删除.modal-backdrop相关后重新引入，删除了如下内容 -->
+	<!--.modal-backdrop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:1040;background-color:#000}.modal-backdrop.fade{filter:alpha(opacity=0);opacity:0}.modal-backdrop.in{filter:alpha(opacity=50);opacity:.5}-->
+	<link th:href="@{/aerfa/myplugins/summernote/bootstrap.summernote.min.css?v=3.3.6}" rel="stylesheet">
+
+	<link th:href="@{/aerfa/css/font-awesome.css?v=4.4.0}" rel="stylesheet">
+	<link th:href="@{/aerfa/css/animate.css}" rel="stylesheet">
+	<link th:href="@{/aerfa/css/style.css?v=4.1.0}" rel="stylesheet">
+
+	<!--  自己引入的 Bootstrap table css-->
+	<link th:href="@{/aerfa/myplugins/bootstrap-table/bootstrap-table.min.css}" rel="stylesheet">
+
+	<!-- layui layer的css-->
+	<link th:href="@{/aerfa/myplugins/layer-master/css/layui.css}" rel="stylesheet">
+
+	<!-- iCheck checkbox框css-->
+	<link th:href="@{/aerfa/css/plugins/iCheck/custom.css}" rel="stylesheet">
+
+	<!--我的拓展覆盖css-->
+	<link th:href="@{/aerfa/myresource/css/sys/extend.css}" rel="stylesheet">
+
+</head>
+
+<th:block th:include="sys/include :: summernote-css"/>
+
 <body class="white-bg">
 	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
 		<form class="form-horizontal m" id="form-infoPublish-add">
 			<input id="id" name="id" type="hidden"><!--判断唯一要用到id，避免出现undefine-->
 		    <div class="form-group">
-				<label class="col-sm-3 control-label">标题：</label>
-				<div class="col-sm-8">
+				<label class="col-sm-2 control-label">文章标题：</label>
+				<div class="col-sm-4">
 					<input class="form-control" type="text" id="title" name="title">
 				</div>
-			</div>
-		    <div class="form-group">
-				<label class="col-sm-3 control-label">信息分类：</label>
-				<div class="col-sm-8">
-					<input class="form-control" type="text" id="infoType" name="infoType">
-				</div>
-			</div>
-		    <div class="form-group">
-				<label class="col-sm-3 control-label">发布日期：</label>
-				<div class="col-sm-8">
+				<label class="col-sm-2 control-label">发布日期：</label>
+				<div class="col-sm-4">
 					<input class="form-control" type="text" id="pubDate" name="pubDate">
 				</div>
 			</div>
-		    <div class="form-group">
-				<label class="col-sm-3 control-label">状态：</label>
-				<div class="col-sm-8">
-					<select class="form-control" id="status" name="status" th:with="statusDicList=${@dic.getDic('useable_status')}">
-		         		<option th:each="dic:${statusDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
-	                </select> 
+			<div class="form-group">
+				<label class="col-sm-2 control-label">信息分类：</label>
+				<div class="col-sm-4">
+					<select class="form-control" id="infoType" name="infoType" th:with="statusDicList=${@dic.getDic('publish_info_type')}">
+						<option th:each="dic:${statusDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+					</select>
+				</div>
+				<label class="col-sm-2 control-label">是否发布：</label>
+				<div class="col-sm-4">
+					<select class="form-control" id="status" name="status" th:with="statusDicList=${@dic.getDic('common_status')}">
+						<option th:each="dic:${statusDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+					</select>
 				</div>
 			</div>
+			<div class="form-group">
+				<div id="summernote"></div>
+			</div>
+
 			<div class="form-group">
 				<div class="form-control-static col-sm-offset-9">
 					<button type="submit" class="btn btn-primary">保存</button>
@@ -40,13 +78,23 @@
 		</form>
     </div>
     <div th:include="sys/include :: footer"></div>
+	<th:block th:include="sys/include :: summernote-js"/>
 
     <script th:inline="javascript">
-		//初始化日期
-		layui.use(['laydate'], function(){
-			var laydate = layui.laydate;
-			laydate.render({elem: '#pubDate',type:'datetime'});//日期控件指定元素
+		$(function() {
+			//初始化富文本编辑器
+			$('#summernote').summernote({
+				height: 350,
+				lang: 'zh-CN'
+			});
+
+			//初始化日期
+			layui.use(['laydate'], function(){
+				var laydate = layui.laydate;
+				laydate.render({elem: '#pubDate',type:'datetime'});//日期控件指定元素
+			});
 		});
+
 		$("#form-infoPublish-add").validate({
 			rules:{
 			},
