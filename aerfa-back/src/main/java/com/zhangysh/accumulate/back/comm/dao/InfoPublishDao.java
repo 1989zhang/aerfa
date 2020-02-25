@@ -67,5 +67,11 @@ public interface InfoPublishDao {
      * @return 删除结果条数
      */
 	 int deleteInfoPublishByIds(String[] ids);
+
+	 /**
+	  * 获取信息发布满足条件共有数据条数
+	  * @return aefcomm_info_publish表总数据条数
+	  **/
+	 long getAllRowCountByParam(AefcommInfoPublish infoPublish);
 	
 }

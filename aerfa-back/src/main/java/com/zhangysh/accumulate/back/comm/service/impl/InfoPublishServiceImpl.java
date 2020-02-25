@@ -88,6 +88,7 @@ public class InfoPublishServiceImpl implements IInfoPublishService {
 	public int insertInfoPublish(AefcommInfoPublishVo infoPublishVo){
 		AefcommInfoPublish infoPublish=new AefcommInfoPublish();
 		BeanUtils.copyProperties(infoPublishVo,infoPublish);
+		infoPublish.setOrderNo(infoPublishDao.getAllRowCountByParam(null)+1L);
 		int insertRows=infoPublishDao.insertInfoPublish(infoPublish);
 		//插入信息发布内容
 		AefcommInfoContent infoContent=new AefcommInfoContent();

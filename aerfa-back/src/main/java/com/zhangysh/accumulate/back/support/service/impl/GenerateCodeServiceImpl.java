@@ -3,6 +3,7 @@ package com.zhangysh.accumulate.back.support.service.impl;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.zhangysh.accumulate.common.constant.UtilConstant;
+import com.zhangysh.accumulate.pojo.comm.viewobj.AefcommInfoPublishVo;
 import org.apache.commons.io.IOUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -79,7 +82,24 @@ public class GenerateCodeServiceImpl implements IGenerateCodeService{
         IOUtils.closeQuietly(zip);
         return outputStream.toByteArray();
 	}
-	
+
+    @Override
+    public byte[] generatorInfoPublishHtml(AefcommInfoPublishVo infoPublishVo) throws UnsupportedEncodingException {
+        initVelocity();
+        //设置模板对象参数
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("title", infoPublishVo.getTitle());
+        velocityContext.put("pubDateStr", DateOperate.UtilDatetoString(infoPublishVo.getPubDate(), UtilConstant.MOST_MIDDLE_DATE));
+        velocityContext.put("content", infoPublishVo.getContent());
+        // 获取模板列表
+        String template = "templates/publish/article.html.vm";
+        // 渲染模板
+        StringWriter sw = new StringWriter();
+        Template tpl = Velocity.getTemplate(template, "UTF-8");
+        tpl.merge(velocityContext, sw);
+        return sw.toString().getBytes("UTF-8");
+    }
+
 	/***
 	 *开始生成代码
 	 *@param table 表信息对象

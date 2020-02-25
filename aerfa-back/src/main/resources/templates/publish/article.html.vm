@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+		<title>${title}</title>
+
+		<style type="text/css">
+
+		body {
+			background: #f1f4f4;
+			color: #333;
+			font-size: 13px;
+			font-family: "\5FAE\8F6F\96C5\9ED1", "\5B8B\4F53"
+		}
+		.pagemst {
+			width: 95%;
+			margin: 0 auto;
+			overflow: hidden;
+			max-width: 1200px
+		}
+
+		.navigation {
+			margin-bottom: 12px;
+			margin-left: 3px;
+			height: 20px;
+			color: #a5a5a5;
+			font-size: 14px;
+			line-height: 20px
+		}
+		.newsinfo {
+
+			margin-right: 0px;
+			float: left;
+			overflow: hidden;
+			padding: 10px 20px 20px 20px;
+			background: #FFF;
+		}
+
+		.news_top {
+			position: relative;
+			margin: 0 auto;
+			padding-bottom: 20px;
+			border-bottom: 1px solid #f0f0f0;
+		}
+		.news_top h1 {
+			color: #2b2b2b;
+			text-align: center;
+			font-weight: bold;
+			font-size: 20px;
+			line-height: 64px;
+		}
+		.news_top p {
+			height: 24px;
+			color: #8c8c8c;
+			text-align: center;
+			line-height: 24px;
+		}
+		.art_info {
+			padding: 20px 2% 0;
+			color: #4c4c4c;
+			font-size: 16px;
+			line-height: 30px;
+		}
+		.art_info p {
+			margin-bottom: 15px;
+			text-indent: 2em;
+			word-break: break-all;
+		}
+		.art_info a {
+			color: #72ace3;
+			text-decoration: underline;
+		}
+		.art_info h3 {
+			color: #FF5E52;
+			padding-bottom: 10px;
+			border-bottom: 1px dashed #dadada;
+			margin-bottom: 20px;
+			font-weight: 700;
+			margin-top: 22px;
+		}
+		.art_info img {
+			max-width: 100%;
+		}
+		.art_info p img {
+			margin-left: -2em;
+			clear: both;
+			margin: auto;
+			display: block;
+		}
+
+		@media (max-width: 920px) {
+			.newsinfo {
+				float: none;
+				margin-right: 0;
+			}
+			.art_info p {
+				text-indent: 0
+			}
+			.art_info img {
+				max-width: 100%
+			}
+			.news_top h1 {
+				text-align: left;
+				line-height: 38px;
+			}
+			.news_top p, {
+				text-align: left;
+			}
+			.news_top span {
+				padding: 0 20px 0 0;
+			}
+		}
+		</style>
+	</head>
+	<body>
+		<div class="pagemst">
+			<div class="navigation"></div>
+			<div class="newsinfo">
+				<div class="news_top">
+					<h1>${title}</h1>
+					<p>
+						<span class="s1"><i class="fa fa-clock-o"></i>发布时间：${pubDateStr}</span>
+					</p>
+				</div>
+				<div class="art_info">
+					<p>
+						${content}
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,8 +1,10 @@
 package com.zhangysh.accumulate.back.support.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import com.zhangysh.accumulate.common.pojo.BsTableDataInfo;
 import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
+import com.zhangysh.accumulate.pojo.comm.viewobj.AefcommInfoPublishVo;
 import com.zhangysh.accumulate.pojo.support.dataobj.ColumnInfo;
 import com.zhangysh.accumulate.pojo.support.dataobj.TableInfo;
 import com.zhangysh.accumulate.pojo.support.transobj.GenerateCodeParamDto;
@@ -42,5 +44,10 @@ public interface IGenerateCodeService
      * @return 数据
      */
     byte[] generatorCode(GenerateCodeParamDto codeParamDto);
-     
+
+    /**
+     * 根据文档展示模板生成信息发布静态html文档
+     * @return 生成的html字节文件
+     ***/
+    byte[] generatorInfoPublishHtml(AefcommInfoPublishVo infoPublishVo) throws UnsupportedEncodingException;
 }

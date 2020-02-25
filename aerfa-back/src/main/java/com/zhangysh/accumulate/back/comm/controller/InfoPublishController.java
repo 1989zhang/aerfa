@@ -1,6 +1,8 @@
 package com.zhangysh.accumulate.back.comm.controller;
 
+import com.zhangysh.accumulate.back.support.service.IGenerateCodeService;
 import com.zhangysh.accumulate.back.sys.base.aspect.annotation.DataPermission;
+import com.zhangysh.accumulate.common.util.FileUtil;
 import com.zhangysh.accumulate.pojo.comm.viewobj.AefcommInfoPublishVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,8 @@ import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPerson;
 import com.zhangysh.accumulate.pojo.comm.transobj.AefcommInfoPublishDto;
 import com.zhangysh.accumulate.back.comm.service.IInfoPublishService;
 
+import java.io.IOException;
+
 /**
  * 发布调用相关方法
  * 
@@ -42,7 +46,8 @@ public class InfoPublishController extends BaseController{
 	private IInfoPublishService infoPublishService;
 	@Autowired
     private IRedisRelatedService redisRelatedService;
-    
+	@Autowired
+	private IGenerateCodeService generateCodeService;
 	/****
 	 * 获取展示发布信息列表
 	 * @param request 请求对象
@@ -88,7 +93,15 @@ public class InfoPublishController extends BaseController{
 		} else {//新增方法
 			infoPublishVo.setCreateTime(DateOperate.getCurrentUtilDate());
 			infoPublishVo.setCreateBy(operPerson.getPersonName());
-			return toHandlerResultStr(infoPublishService.insertInfoPublish(infoPublishVo));
+			int insertRows=infoPublishService.insertInfoPublish(infoPublishVo);
+			//生成html文件
+			try {
+				byte[] retByte=generateCodeService.generatorInfoPublishHtml(infoPublishVo);
+				FileUtil.byteToFile(retByte,"D://testaerfa//","11.html");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return toHandlerResultStr(insertRows);
 		}
 	}
 	

@@ -140,5 +140,31 @@
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete> 
+    </delete>
+
+    <!-- 查询满足条件的数据总数 -->
+    <select id="getAllRowCountByParam" parameterType="AefcommInfoPublish" resultType="long">
+        select count(1) from aefcomm_info_publish
+        <where>
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="title != null and title != ''"> and title like concat('%',#{title},'%')  </if>
+            <if test="infoType != null and infoType != ''"> and info_type like concat('%',#{infoType},'%')  </if>
+            <if test="pubDate != null  "> and pub_date = #{pubDate}</if>
+            <if test="status != null  "> and status = #{status}</if>
+            <if test="top != null  "> and top = #{top}</if>
+            <if test="viewUrl != null  and viewUrl != ''  "> and view_url = #{viewUrl}</if>
+            <if test="orderNo != null  "> and order_no = #{orderNo}</if>
+            <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
+            <if test="createTime != null  "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null  "> and update_time = #{updateTime}</if>
+            <if test="createUserId != null  "> and create_user_id = #{createUserId}</if>
+            <if test="createOrgId != null  "> and create_org_id = #{createOrgId}</if>
+
+            <if test="params != null and params.dataPermission != ''">
+                and ${params.dataPermission}
+            </if>
+
+        </where>
+    </select>
 </mapper>
