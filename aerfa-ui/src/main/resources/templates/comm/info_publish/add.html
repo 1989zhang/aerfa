@@ -39,7 +39,7 @@
 
 <body class="white-bg">
 	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
-		<form class="form-horizontal m" id="form-infoPublish-add">
+		<form class="form-horizontal m" id="form-infoPublish-add" enctype="multipart/form-data">
 			<input id="id" name="id" type="hidden"><!--判断唯一要用到id，避免出现undefine-->
 		    <div class="form-group">
 				<label class="col-sm-2 control-label">文章标题：</label>
@@ -52,21 +52,33 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<label class="col-sm-2 control-label">显示排序：</label>
+				<div class="col-sm-4">
+					<input class="form-control" type="text" id="orderNo" name="orderNo">
+				</div>
 				<label class="col-sm-2 control-label">信息分类：</label>
 				<div class="col-sm-4">
 					<select class="form-control" id="infoType" name="infoType" th:with="statusDicList=${@dic.getDic('publish_info_type')}">
 						<option th:each="dic:${statusDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
 					</select>
 				</div>
+			</div>
+			<div class="form-group">
 				<label class="col-sm-2 control-label">是否发布：</label>
 				<div class="col-sm-4">
 					<select class="form-control" id="status" name="status" th:with="statusDicList=${@dic.getDic('common_status')}">
 						<option th:each="dic:${statusDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
 					</select>
 				</div>
+				<label class="col-sm-2 control-label">是否置顶：</label>
+				<div class="col-sm-4">
+					<select class="form-control" id="top" name="top" th:with="statusDicList=${@dic.getDic('common_status')}">
+						<option th:each="dic:${statusDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+					</select>
+				</div>
 			</div>
 			<div class="form-group">
-				<div id="summernote"></div>
+				<textarea type="text" id="content" name="content"></textarea>
 			</div>
 
 			<div class="form-group">
@@ -83,7 +95,7 @@
     <script th:inline="javascript">
 		$(function() {
 			//初始化富文本编辑器
-			$('#summernote').summernote({
+			$('#content').summernote({
 				height: 350,
 				lang: 'zh-CN'
 			});
@@ -91,12 +103,19 @@
 			//初始化日期
 			layui.use(['laydate'], function(){
 				var laydate = layui.laydate;
-				laydate.render({elem: '#pubDate',type:'datetime'});//日期控件指定元素
+				laydate.render({elem: '#pubDate',type:'datetime',value: new Date()});//日期控件指定元素
 			});
+
+			//设置默认不置顶
+			$("#top").val("0");
+
 		});
 
 		$("#form-infoPublish-add").validate({
 			rules:{
+				title:{
+					required:true
+				}
 			},
 			messages: {
     		},

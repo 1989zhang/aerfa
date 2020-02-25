@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.comm.dao.InfoContentDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="infoContentResult" type="AefcommInfoContent" >
+        <result property="id"    column="id"    />
+        <result property="publishId"    column="publish_id"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectInfoContent">
+        select id, publish_id, content from aefcomm_info_content
+    </sql>
+
+    <!--根据ID查询单个对象-->
+    <select id="getInfoContentById" parameterType="Long" resultMap="infoContentResult">
+        <include refid="selectInfoContent"/>
+        where id = #{id}
+    </select>
+
+    <!--根据发布信息ID查询单个发布内容信息-->
+    <select id="getInfoContentByPublishId" parameterType="Long" resultMap="infoContentResult">
+        <include refid="selectInfoContent"/>
+        where publish_id = #{publishId}
+    </select>
+
+    <!--根据条件查询多个对象-->	
+    <select id="listInfoContent" parameterType="AefcommInfoContent" resultMap="infoContentResult">
+        <include refid="selectInfoContent"/>
+        <where>  
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="publishId != null  "> and publish_id = #{publishId}</if>
+            <if test="content != null  and content != ''  "> and content = #{content}</if>
+        </where>
+    </select>
+
+    <!--根据主键查询多个对象-->
+	<select id="listBypksInfoContent" parameterType="String" resultMap="infoContentResult">
+        <include refid="selectInfoContent"/>
+        where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertInfoContent" parameterType="AefcommInfoContent" useGeneratedKeys="true" keyProperty="id">
+        insert into aefcomm_info_content
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="publishId != null  ">publish_id,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="publishId != null  ">#{publishId},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+         </trim>
+    </insert>
+	
+	<!--根据对象和对象包含的id属性，修改对象-->
+    <update id="updateInfoContent" parameterType="AefcommInfoContent">
+        update aefcomm_info_content
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="publishId != null  ">publish_id = #{publishId},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--根据ID删除单个对象-->	
+	<delete id="deleteInfoContentById" parameterType="Long">
+        delete from aefcomm_info_content where id = #{id}
+    </delete>
+
+    <!--根据发布信息ID删除单个发布内容信息-->
+    <delete id="deleteInfoContentByPublishId" parameterType="Long">
+        delete from aefcomm_info_content where publish_id = #{publishId}
+    </delete>
+	
+	<!--根据ID以,拼接的字符串删除多个对象-->
+    <delete id="deleteInfoContentByIds" parameterType="String">
+        delete from aefcomm_info_content where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete> 
+</mapper>

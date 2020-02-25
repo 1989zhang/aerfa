@@ -10,16 +10,25 @@ import java.io.Serializable;
 public class AefcommInfoContent implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
-	private Long id;//id标识同AefcommInfoPublish的id
-	private String content;//信息内容
-	
-	
+
+	/** id标识 **/
+	private Long id;
+	/** publish的id **/
+	private Long publishId;
+	/** 信息内容 **/
+	private String content;
+
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public Long getPublishId() {
+		return publishId;
+	}
+	public void setPublishId(Long publishId) {
+		this.publishId = publishId;
 	}
 	public String getContent() {
 		return content;
@@ -27,6 +36,10 @@ public class AefcommInfoContent implements Serializable{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "AefcommInfoContent [id=" + id + ",publishId=" + publishId + ",content=" + content + ",]";
+	}
 	
 }

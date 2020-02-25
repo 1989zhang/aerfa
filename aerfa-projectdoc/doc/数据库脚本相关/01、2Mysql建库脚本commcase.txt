@@ -7,6 +7,7 @@ create table aefcomm_info_publish (
   info_type    varchar(32)                             comment '信息分类',
   pub_date     timestamp                               comment '发布日期',
   status       int(11)                                 comment '状态1有效0无效',
+  top          int(11)                                 comment '是否置顶1是0否',
   view_url     varchar(128)                            comment '查看内容访问地址',
   order_no       int(11)                               comment '排序号',
   create_by      varchar(64)                           comment '创建人员名称',
@@ -22,8 +23,10 @@ create table aefcomm_info_publish (
 /* table: aefcomm_info_content  信息发布内容表                         */
 /*====================================================================*/
 create table aefcomm_info_content (
-  id            int(11)     not null                    comment 'id标识同publish的id',
-  content       mediumtext                              comment '信息内容'
+  id            int(11)     not null  auto_increment    comment 'id标识',
+  publish_id    int(11)                                 comment 'publish的id',
+  content       mediumtext                              comment '信息内容',
+  primary key (id)
 ) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='信息发布内容表';
 
 /*====================================================================*/

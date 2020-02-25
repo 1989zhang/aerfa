@@ -21,6 +21,8 @@ public class AefcommInfoPublish extends BaseDataObj {
 	private Date pubDate;
 	/** 状态1有效0无效 **/
 	private Long status;
+	/** 是否置顶1是0否 **/
+	private Long top;
 	/** 查看内容访问地址 **/
 	private String viewUrl;
 	/** 排序号 **/
@@ -29,6 +31,7 @@ public class AefcommInfoPublish extends BaseDataObj {
 	private Long createUserId;
 	/** 创建人员单位ID **/
 	private Long createOrgId;
+
 
 	public String getTitle() {
 		return title;
@@ -53,6 +56,12 @@ public class AefcommInfoPublish extends BaseDataObj {
 	}
 	public void setStatus(Long status) {
 		this.status = status;
+	}
+	public Long getTop() {
+		return top;
+	}
+	public void setTop(Long top) {
+		this.top = top;
 	}
 	public String getViewUrl() {
 		return viewUrl;
@@ -81,6 +90,6 @@ public class AefcommInfoPublish extends BaseDataObj {
 
 	@Override
 	public String toString() {
-		return "AefcommInfoPublish [id=" + id + ",title=" + title + ",infoType=" + infoType + ",pubDate=" + pubDate + ",status=" + status + ",viewUrl=" + viewUrl + ",orderNo=" + orderNo + ",createBy=" + createBy + ",createTime=" + createTime + ",updateBy=" + updateBy + ",updateTime=" + updateTime + ",createUserId=" + createUserId + ",createOrgId=" + createOrgId + ",]";
-    }
+		return "AefcommInfoPublish [id=" + id + ",title=" + title + ",infoType=" + infoType + ",pubDate=" + pubDate + ",status=" + status + ",top=" + top + ",viewUrl=" + viewUrl + ",orderNo=" + orderNo + ",createBy=" + createBy + ",createTime=" + createTime + ",updateBy=" + updateBy + ",updateTime=" + updateTime + ",createUserId=" + createUserId + ",createOrgId=" + createOrgId + ",]";
+	}
 }

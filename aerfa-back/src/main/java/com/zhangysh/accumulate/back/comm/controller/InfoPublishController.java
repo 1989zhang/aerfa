@@ -1,9 +1,12 @@
 package com.zhangysh.accumulate.back.comm.controller;
 
 import com.zhangysh.accumulate.back.sys.base.aspect.annotation.DataPermission;
+import com.zhangysh.accumulate.pojo.comm.viewobj.AefcommInfoPublishVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,8 +23,6 @@ import com.zhangysh.accumulate.back.sys.base.BaseController;
 import com.zhangysh.accumulate.common.util.DateOperate;
 import com.zhangysh.accumulate.common.util.HttpStorageUtil;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPerson;
-
-import com.zhangysh.accumulate.pojo.comm.dataobj.AefcommInfoPublish;
 import com.zhangysh.accumulate.pojo.comm.transobj.AefcommInfoPublishDto;
 import com.zhangysh.accumulate.back.comm.service.IInfoPublishService;
 
@@ -52,7 +53,6 @@ public class InfoPublishController extends BaseController{
 	@RequestMapping(value="/list",method = RequestMethod.POST)
 	@ResponseBody
 	public String getList(HttpServletRequest request,@RequestBody AefcommInfoPublishDto infoPublishDto) {
-		
 		logger.info("getList分页信息:当前{}页，每页{}条",infoPublishDto.getPageInfo().getPageNum(),infoPublishDto.getPageInfo().getPageSize());
 		BsTableDataInfo tableInfo=infoPublishService.listPageInfoPublish(infoPublishDto.getPageInfo(),infoPublishDto.getInfoPublish());
 		return JSON.toJSONStringWithDateFormat(tableInfo,UtilConstant.MOST_MIDDLE_DATE);
@@ -68,27 +68,27 @@ public class InfoPublishController extends BaseController{
     @ResponseBody
 	public String getSingle(HttpServletRequest request,@RequestBody Long id) {
 		logger.info("getSingle发布主键信息:{}",id);
-		return JSON.toJSONStringWithDateFormat(infoPublishService.getInfoPublishById(id),UtilConstant.NORMAL_MIDDLE_DATE);
+		return JSON.toJSONStringWithDateFormat(infoPublishService.getInfoPublishById(id),UtilConstant.MOST_MIDDLE_DATE);
 	}
 
 	/****
 	 * 保存新增和修改的发布信息 
 	 * @param request 请求对象
-	 * @param infoPublish 保存的对象
+	 * @param infoPublishVo 保存的对象包含文件内容
 	 ****/
 	@RequestMapping(value="/save",method = RequestMethod.POST)
     @ResponseBody
-	public String saveInfoPublish(HttpServletRequest request,@RequestBody AefcommInfoPublish infoPublish) {
+	public String saveInfoPublish(HttpServletRequest request,@RequestBody AefcommInfoPublishVo infoPublishVo) {
 		String aerfatoken=HttpStorageUtil.getToken(request); 
 		AefsysPerson operPerson=redisRelatedService.getRedisSessionPersonByToken(aerfatoken);
-		if ( infoPublish.getId()!=null ) {//修改方法
-		    infoPublish.setUpdateTime(DateOperate.getCurrentUtilDate());
-			infoPublish.setUpdateBy(operPerson.getPersonName());
-			return toHandlerResultStr(infoPublishService.updateInfoPublish(infoPublish));
+		if ( infoPublishVo.getId()!=null ) {//修改方法
+			infoPublishVo.setUpdateTime(DateOperate.getCurrentUtilDate());
+			infoPublishVo.setUpdateBy(operPerson.getPersonName());
+			return toHandlerResultStr(infoPublishService.updateInfoPublish(infoPublishVo));
 		} else {//新增方法
-			infoPublish.setCreateTime(DateOperate.getCurrentUtilDate());
-			infoPublish.setCreateBy(operPerson.getPersonName());
-			return toHandlerResultStr(infoPublishService.insertInfoPublish(infoPublish));
+			infoPublishVo.setCreateTime(DateOperate.getCurrentUtilDate());
+			infoPublishVo.setCreateBy(operPerson.getPersonName());
+			return toHandlerResultStr(infoPublishService.insertInfoPublish(infoPublishVo));
 		}
 	}
 	
@@ -97,7 +97,7 @@ public class InfoPublishController extends BaseController{
 	 * @param request 请求对象
 	 * @param ids 要删除的发布ids,中间英文,隔开
 	 ***/
-	@Log(system="后台管理系统",module="管理",menu="管理",button="删除",saveParam=true)
+	@Log(system="后台管理系统",module="系统工具",menu="信息发布",button="删除",saveParam=true)
 	@RequestMapping(value = "/delete",method = RequestMethod.POST)
 	@ResponseBody
 	public String deleteInfoPublishByIds(HttpServletRequest request,@RequestBody String ids) {

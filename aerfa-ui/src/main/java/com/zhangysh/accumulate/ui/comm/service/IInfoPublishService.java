@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.zhangysh.accumulate.common.constant.CacheConstant;
 import com.zhangysh.accumulate.pojo.comm.dataobj.AefcommInfoPublish;
+import com.zhangysh.accumulate.pojo.comm.viewobj.AefcommInfoPublishVo;
 import com.zhangysh.accumulate.pojo.comm.transobj.AefcommInfoPublishDto;
 
 
@@ -38,10 +39,10 @@ public interface IInfoPublishService {
 	/****
 	 * 保存新增的发布信息 
 	 * @param aerfatoken token对象
-	 * @param infoPublish 要保存的发布对象
+	 * @param infoPublishVo 要保存的发布对象
 	 ***/
 	@RequestMapping(value = "/comm/info_publish/save",method = RequestMethod.POST)
-	public String saveAdd(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken, @RequestBody AefcommInfoPublish infoPublish);
+	public String saveAdd(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken, @RequestBody AefcommInfoPublishVo infoPublishVo);
 
 	/****
 	 * 删除发布对象，可以删除多个，中间英文,隔开

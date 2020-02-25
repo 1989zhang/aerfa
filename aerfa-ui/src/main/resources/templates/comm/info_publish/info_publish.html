@@ -46,6 +46,7 @@
 
     <script th:inline="javascript">
     	var statusDatas = [[${@dic.getDic('useable_status')}]];
+		var publishInfoTypeDatas = [[${@dic.getDic('publish_info_type')}]];
         //初始化参数和数据
         $(function() {
             var options = {
@@ -61,25 +62,28 @@
 				{
 					field : 'title', 
 					title : '标题',
-					width: '20.0%',
+					width: '40.0%',
 					align: 'center',
 				},
 				{
 					field : 'infoType', 
 					title : '信息分类',
-					width: '20.0%',
+					width: '10.0%',
 					align: 'center',
+					formatter: function(value, row, index) {
+						return $.table.formatDicLabel(publishInfoTypeDatas, value);
+					}
 				},
 				{
-					field : 'pubDate', 
-					title : '发布日期',
-					width: '20.0%',
+					field : 'pubDate',
+					title : '发布时间',
+					width: '10.0%',
 					align: 'center',
 				},
 				{
 					field : 'status', 
 					title : '状态',
-					width: '20.0%',
+					width: '10.0%',
 					align: 'center',
 					formatter: function(value, row, index) {
 		            	return $.table.formatDicLabel(statusDatas, value);
@@ -88,17 +92,23 @@
 		        {
 		            title: '操作',
 		            align: 'center',
-		            width: '10%',
+		            width: '30%',
 		            formatter: function(value, row, index) {
 		            	var actions = [];
 						actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-						actions.push('<a class="btn btn-danger btn-xs" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						actions.push('<a class="btn btn-danger btn-xs" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a> ');
+						actions.push('<a class="btn btn-info btn-xs" href="#" onclick="previewPublish(\'' + row.id + '\')"><i class="fa fa-internet-explorer"></i>预览</a> ');
 						return actions.join('');
 		            }
 		        }]
             };
             $.table.init(options);
         });
+
+        function previewPublish(id){
+			var viewUrl = prefix + "/to_view_publish/"+id;
+			$.modal.openFull("页面展示预览", viewUrl);
+		}
     </script>
 </body>
 </html>

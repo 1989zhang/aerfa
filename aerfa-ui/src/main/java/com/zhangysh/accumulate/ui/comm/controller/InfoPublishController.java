@@ -1,6 +1,9 @@
 package com.zhangysh.accumulate.ui.comm.controller;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.zhangysh.accumulate.common.constant.UtilConstant;
+import com.zhangysh.accumulate.common.util.DateOperate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -90,13 +93,13 @@ public class InfoPublishController {
 	 * 保存填写的发布对象
 	 * @param request 请求对象
 	 * @param modelMap spring的mvc返回对象 
-	 * @param infoPublish 保存的对象
+	 * @param infoPublishVo 保存的对象
 	 ******/
 	@RequestMapping(value="/save_add")
     @ResponseBody
-    public String saveAdd(HttpServletRequest request, ModelMap modelMap,AefcommInfoPublish infoPublish) {
+    public String saveAdd(HttpServletRequest request, ModelMap modelMap,AefcommInfoPublishVo infoPublishVo) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
-		return infoPublishService.saveAdd(aerfatoken, infoPublish);
+		return infoPublishService.saveAdd(aerfatoken, infoPublishVo);
 	}
 	
 	/****
@@ -110,6 +113,7 @@ public class InfoPublishController {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		String retInfoPublishStr=infoPublishService.getSingle(aerfatoken, id);
 		AefcommInfoPublishVo infoPublishVo=JSON.parseObject(retInfoPublishStr,AefcommInfoPublishVo.class);
+		infoPublishVo.setPubDateStr(DateOperate.UtilDatetoString(infoPublishVo.getPubDate(),UtilConstant.MOST_MIDDLE_DATE));
 		modelMap.put("prefix", prefix);
 		modelMap.put("infoPublish", infoPublishVo);
 		return prefix+"/edit";
@@ -127,4 +131,23 @@ public class InfoPublishController {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		return infoPublishService.deleteInfoPublishByIds(aerfatoken, ids);
     }
+
+	/****
+	 * 预览信息发布，即发布展现的html格式
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @return templates下的预览页面
+	 ****/
+	@RequestMapping(value="/to_view_publish/{id}")
+	public String toViewPublish(HttpServletRequest request, ModelMap modelMap,@PathVariable("id") Long id) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		String retInfoPublishStr=infoPublishService.getSingle(aerfatoken, id);
+		AefcommInfoPublishVo infoPublishVo=JSON.parseObject(retInfoPublishStr,AefcommInfoPublishVo.class);
+		infoPublishVo.setPubDateStr(DateOperate.UtilDatetoString(infoPublishVo.getPubDate(),UtilConstant.MOST_MIDDLE_DATE));
+		modelMap.put("prefix", prefix);
+		modelMap.put("infoPublish", infoPublishVo);
+		return prefix+"/view_publish";
+	}
+
+
 }
