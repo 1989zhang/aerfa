@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zhangysh.accumulate.back.comm.service.IInfoContentService;
+import com.zhangysh.accumulate.common.constant.MarkConstant;
+import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.comm.dataobj.AefcommInfoContent;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Transient;
@@ -60,7 +62,14 @@ public class InfoPublishServiceImpl implements IInfoPublishService {
 	@Override
 	public BsTableDataInfo listPageInfoPublish(BsTablePageInfo pageInfo,AefcommInfoPublish infoPublish){
 	    //pagehelper方法调用
-		Page<AefcommInfoPublish> page =PageHelper.startPage(pageInfo.getPageNum(),pageInfo.getPageSize(),pageInfo.getOrderBy());
+		Page<AefcommInfoPublish> page;
+		//当没排序条件就执行默认排序
+		if(StringUtil.isNotEmpty(pageInfo.getOrderBy())){
+			page =PageHelper.startPage(pageInfo.getPageNum(),pageInfo.getPageSize(),pageInfo.getOrderBy());
+		}else{
+			page =PageHelper.startPage(pageInfo.getPageNum(),pageInfo.getPageSize());
+			infoPublish.getParams().put(MarkConstant.SORT_CONDITION,"top desc,order_no desc,pub_date desc");
+		}
 		infoPublishDao.listInfoPublish(infoPublish);
 		BsTableDataInfo tableInfo=new BsTableDataInfo();
 		tableInfo.setTotal(page.getTotal());
@@ -70,6 +79,7 @@ public class InfoPublishServiceImpl implements IInfoPublishService {
 
 	@Override
 	public List<AefcommInfoPublish> listInfoPublish(AefcommInfoPublish infoPublish){
+		infoPublish.getParams().put(MarkConstant.SORT_CONDITION,"top desc,order_no desc,pub_date desc");
 		return infoPublishDao.listInfoPublish(infoPublish);
 	}
 

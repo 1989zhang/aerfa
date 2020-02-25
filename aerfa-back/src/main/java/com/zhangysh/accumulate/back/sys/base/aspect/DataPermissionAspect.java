@@ -5,6 +5,7 @@ import com.zhangysh.accumulate.back.support.service.IRedisRelatedService;
 import com.zhangysh.accumulate.back.sys.base.aspect.annotation.DataPermission;
 import com.zhangysh.accumulate.back.sys.service.IDataPermissionService;
 import com.zhangysh.accumulate.common.constant.CacheConstant;
+import com.zhangysh.accumulate.common.constant.MarkConstant;
 import com.zhangysh.accumulate.common.util.HttpStorageUtil;
 import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.base.BaseDataObj;
@@ -44,10 +45,7 @@ public class DataPermissionAspect {
     private IRedisRelatedService redisRelatedService;
     @Autowired
     private IDataPermissionService dataPermissionService;
-    /**
-     * 数据权限过滤关键字
-     */
-    public static final String DATA_SCOPE = "dataPermission";
+
     //过滤反射对象属性serialVersionUID
     public static final String SERIAL_VERSION_UID = "serialVersionUID";
     //过滤反射对象属性pageInfo
@@ -127,7 +125,7 @@ public class DataPermissionAspect {
                                 paramsMap=new HashMap<String, Object>();
                                 baseDataObj.setParams(paramsMap);
                             }
-                            baseDataObj.getParams().put(DATA_SCOPE,dataPermissionSql);
+                            baseDataObj.getParams().put(MarkConstant.DATA_PERMISSION,dataPermissionSql);
                         }
                     }
                 }

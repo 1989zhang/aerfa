@@ -6,7 +6,13 @@ package com.zhangysh.accumulate.common.constant;
  * @date 2019年4月1日
  *****/
 public class MarkConstant {
-	
+
+	/** 数据权限过滤关键字：即params加入数据权限拼装sql的参数，不要and开头 */
+	public static final String DATA_PERMISSION = "dataPermission";
+	/** 排序字段关键字,即params加入排序的排序字段参数，不要order by 开头 */
+	public static final String SORT_CONDITION = "sortCondition";
+
+
 	/**********判断标记常量**********/
 	//ResultVo的三个属性对象常量
 	public static final String MARK_RESULT_VO_CODE="code";

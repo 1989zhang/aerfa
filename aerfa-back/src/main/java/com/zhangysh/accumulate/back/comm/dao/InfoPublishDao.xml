@@ -56,6 +56,10 @@
                 and ${params.dataPermission}
             </if>
 
+            <if test="params != null and params.sortCondition != ''">
+                order by ${params.sortCondition}
+            </if>
+
         </where>
     </select>
 
