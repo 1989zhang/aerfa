@@ -9,6 +9,8 @@ create table aefufs_upload_file (
   file_link      varchar(128)                         comment '证件连接本地/ftp存储路径',
   impl_name      varchar(64)                          comment '保存接口实现名称',
   create_by      varchar(128)                         comment '创建者',
+  create_user_id int(11)                               comment '创建人员ID',
+  create_org_id  int(11)                               comment '创建人员单位ID',
   create_time    timestamp                            comment '创建时间',
   primary key (id)
 ) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='文件上传表';
@@ -23,6 +25,8 @@ create table aefufs_upload_file_blob (
   file_blob      mediumblob                           comment '文件二进制内容',
   impl_name      varchar(64)                          comment '保存接口实现名称',
   create_by      varchar(128)                         comment '创建者',
+  create_user_id int(11)                               comment '创建人员ID',
+  create_org_id  int(11)                               comment '创建人员单位ID',
   create_time    timestamp                            comment '创建时间',
   primary key (id)
 ) engine=innodb default charset=utf8mb4 collate=utf8mb4_general_ci comment='二进制内容文件上传表';

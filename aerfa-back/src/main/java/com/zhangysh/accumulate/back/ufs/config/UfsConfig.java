@@ -27,7 +27,7 @@ public class UfsConfig {
 	@Value("${ufs.ftp.ip}")
 	private String ufsFtpIp;
 	@Value("${ufs.ftp.port}")
-	private String ufsFtpPort;
+	private Integer ufsFtpPort;
 	@Value("${ufs.ftp.user}")
 	private String ufsFtpUser;
 	@Value("${ufs.ftp.password}")
@@ -64,10 +64,10 @@ public class UfsConfig {
 	public void setUfsFtpIp(String ufsFtpIp) {
 		this.ufsFtpIp = ufsFtpIp;
 	}
-	public String getUfsFtpPort() {
+	public Integer getUfsFtpPort() {
 		return ufsFtpPort;
 	}
-	public void setUfsFtpPort(String ufsFtpPort) {
+	public void setUfsFtpPort(Integer ufsFtpPort) {
 		this.ufsFtpPort = ufsFtpPort;
 	}
 	public String getUfsFtpUser() {

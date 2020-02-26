@@ -17,8 +17,12 @@ public class AefufsUploadFileBlob implements Serializable{
 	private String fileType;//文件类型jpg doc 等
 	private byte[] fileBlob;//二进制文件内容
 	private String implName;//保存接口实现名称
-	private String createBy;//创建者标记如账号等，为以后验证上传下载权限，次数等
-	private Date createTime;
+	private String createBy;//创建者名称，也可做：创建者UUID或账号标记使用
+	private Date createTime;//创建时间
+	/** 创建人员ID标记，为以后验证上传下载权限，次数等 **/
+	private Long createUserId;
+	/** 创建人员单位ID **/
+	private Long createOrgId;
 	
 	public Long getId() {
 		return id;
@@ -56,17 +60,28 @@ public class AefufsUploadFileBlob implements Serializable{
 	public void setCreateBy(String createBy) {
 		this.createBy = createBy;
 	}
+	public Long getCreateUserId() {
+		return createUserId;
+	}
+	public void setCreateUserId(Long createUserId) {
+		this.createUserId = createUserId;
+	}
+	public Long getCreateOrgId() {
+		return createOrgId;
+	}
+	public void setCreateOrgId(Long createOrgId) {
+		this.createOrgId = createOrgId;
+	}
 	public Date getCreateTime() {
 		return createTime;
 	}
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "AefufsUploadFile [id=" + id + ", fileName=" + fileName + ", fileType="
-				+ fileType + ", implName=" + implName + ", createTime=" + createTime + "]";
+		return "AefufsUploadFileBlob [id=" + id + ",fileName=" + fileName + ",fileType=" + fileType + ",fileBlob=" + fileBlob + ",implName=" + implName + ",createBy=" + createBy + ",createUserId=" + createUserId + ",createOrgId=" + createOrgId + ",createTime=" + createTime + ",]";
 	}
 	
 }

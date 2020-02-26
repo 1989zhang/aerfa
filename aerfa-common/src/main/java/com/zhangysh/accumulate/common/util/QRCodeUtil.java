@@ -62,7 +62,7 @@ public class QRCodeUtil {
 		}
 		hints.put(EncodeHintType.MARGIN, margin);//边距
 		BitMatrix bitMatrix = new MultiFormatWriter().encode(content,BarcodeFormat.QR_CODE, width, height, hints);// 生成矩阵
-	    MatrixToImageWriter.writeToStream(bitMatrix,UtilConstant.FILE_PIC_TYPE_PNG, bos);// 输出图像
+	    MatrixToImageWriter.writeToStream(bitMatrix,UtilConstant.FILE_TYPE_PIC_PNG, bos);// 输出图像
         return bos.toByteArray();	
 	}
 	
@@ -165,7 +165,7 @@ public class QRCodeUtil {
         }
 
         image.flush();
-        ImageIO.write(image, UtilConstant.FILE_PIC_TYPE_PNG, bos); 
+        ImageIO.write(image, UtilConstant.FILE_TYPE_PIC_PNG, bos);
         return bos.toByteArray();
     }
     

@@ -20,13 +20,10 @@ import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsUploadFileDto;
 public class DirFileServiceImpl implements IUploadFileService{
 
 	@Resource
-	private UfsConfig ufsConfig;
-	
-	@Resource
 	private IUploadFileToDbService uploadFileToDbService;
 	
 	@Override
-    public AefufsUploadFile saveFile(AefufsUploadFileDto uploadFileDto) throws IOException{
+    public AefufsUploadFile saveFile(AefufsUploadFileDto uploadFileDto,UfsConfig ufsConfig) throws IOException{
     	//以日期作为路径拼装
 		String behandPath= DateOperate.getDateYmdFileHolder();
 		String fileDir = ufsConfig.getUfsDirBasedir()+behandPath;

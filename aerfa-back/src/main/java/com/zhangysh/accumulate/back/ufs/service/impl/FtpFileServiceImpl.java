@@ -27,15 +27,12 @@ import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsUploadFileDto;
 public class FtpFileServiceImpl implements IUploadFileService{
 	
 	private static final Logger logger=LoggerFactory.getLogger(FtpFileServiceImpl.class);
-	
-	@Resource
-	private UfsConfig ufsConfig;
-	
+
 	@Resource
 	private IUploadFileToDbService uploadFileToDbService;
 	
 	@Override
-    public AefufsUploadFile saveFile(AefufsUploadFileDto uploadFileDto) throws IOException{
+    public AefufsUploadFile saveFile(AefufsUploadFileDto uploadFileDto,UfsConfig ufsConfig) throws IOException{
     	//以日期作为路径拼装
 		String behandPath= DateOperate.getDateYmdFileHolder();
 		String fileDir = ufsConfig.getUfsFtpBasedir()+behandPath;
@@ -48,7 +45,8 @@ public class FtpFileServiceImpl implements IUploadFileService{
 		String saveName=uuid+"."+suffix;
 		
 		//保存到Ftp
-		saveFiletToFtp(uploadFileDto.getFileBase64Data(),fileDir,saveName);
+		saveFiletToFtp(uploadFileDto.getFileBase64Data(),fileDir,saveName,
+				ufsConfig.getUfsFtpIp(),ufsConfig.getUfsFtpPort(),ufsConfig.getUfsFtpUser(),ufsConfig.getUfsFtpPassword());
 		//保存数据库对象
 		AefufsUploadFile uploadFile=new AefufsUploadFile();
 		uploadFile.setFileName(fileName);
@@ -68,7 +66,8 @@ public class FtpFileServiceImpl implements IUploadFileService{
 	 *@param fileDir 保存目录
 	 *@param filename 保存的文件名
 	 ***/
-	private boolean saveFiletToFtp(String fileBase64Str,String fileDir,String filename){
+	private boolean saveFiletToFtp(String fileBase64Str,String fileDir,String filename,
+								   String ftpIp,Integer ftpPort,String ftpUer,String ftpPassword){
 		// 初始表示上传失败
 		boolean success = false;
 		// 创建FTPClient对象
@@ -76,10 +75,10 @@ public class FtpFileServiceImpl implements IUploadFileService{
 		try {
 			int reply;
 			// 连接FTP服务器
-			ftp.connect(ufsConfig.getUfsFtpIp(), Integer.parseInt(ufsConfig.getUfsFtpPort()));
+			ftp.connect(ftpIp, ftpPort);
 			// 登录ftp
-			logger.info("开始登陆ftp服务器账号:{}密码:{}",ufsConfig.getUfsFtpUser(),ufsConfig.getUfsFtpPassword());
-			ftp.login(ufsConfig.getUfsFtpUser(),ufsConfig.getUfsFtpPassword());
+			logger.info("开始登陆ftp服务器账号:{}密码:{}",ftpUer,ftpPassword);
+			ftp.login(ftpUer,ftpPassword);
 			//打开被动模式，ftp服务器开端口，接收机器端口固定？要验证
 			ftp.enterLocalPassiveMode();
 			//打开本地的主动模式，ftp服务器端口固定，接收机器随机开放端口？要验证

@@ -10,11 +10,21 @@ import java.io.Serializable;
 public class AefufsUploadFileDto implements Serializable{
  
 	private static final long serialVersionUID = 1L;
-	
-	private String fileBase64Data;//文件流进行base64编码的字符串
+
+	/** 文件流进行base64编码的字符串 **/
+	private String fileBase64Data;
+	/** 文件名称 **/
 	private String fileName;
-	private String createBy;//创建者标记如账号等，为以后验证上传下载权限，次数等
-	
+	/** 创建者名称，也可做：创建者UUID或账号标记使用 **/
+	private String createBy;
+	/** 创建人员ID标记，为以后验证上传下载权限，次数等 **/
+	private Long createUserId;
+	/** 创建人员单位ID **/
+	private Long createOrgId;
+	/** 自定义实现方式可传空 **/
+	private AefufsCustomRealizeDto customRealize;
+
+
 	public String getFileBase64Data() {
 		return fileBase64Data;
 	}
@@ -33,5 +43,23 @@ public class AefufsUploadFileDto implements Serializable{
 	public void setCreateBy(String createBy) {
 		this.createBy = createBy;
 	}
-	
+	public Long getCreateUserId() {
+		return createUserId;
+	}
+	public void setCreateUserId(Long createUserId) {
+		this.createUserId = createUserId;
+	}
+	public Long getCreateOrgId() {
+		return createOrgId;
+	}
+	public void setCreateOrgId(Long createOrgId) {
+		this.createOrgId = createOrgId;
+	}
+	public AefufsCustomRealizeDto getCustomRealize() {
+		return customRealize;
+	}
+	public void setCustomRealize(AefufsCustomRealizeDto customRealize) {
+		this.customRealize = customRealize;
+	}
+
 }

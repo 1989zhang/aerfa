@@ -50,7 +50,7 @@ public class BarCodeUtil {
 				hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.Q);//纠错等级  Q
 			}
 			BitMatrix bitMatrix = new Code128Writer().encode(content, BarcodeFormat.CODE_128, width, height, hints);
-			MatrixToImageWriter.writeToStream(bitMatrix,UtilConstant.FILE_PIC_TYPE_PNG, bos);// 输出图像
+			MatrixToImageWriter.writeToStream(bitMatrix,UtilConstant.FILE_TYPE_PIC_PNG, bos);// 输出图像
 		    bts = bos.toByteArray();
 		} catch (WriterException e) {
 			e.printStackTrace();

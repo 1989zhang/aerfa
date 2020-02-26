@@ -1,11 +1,14 @@
 package com.zhangysh.accumulate.back.comm.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zhangysh.accumulate.back.support.service.IGenerateCodeService;
 import com.zhangysh.accumulate.back.sys.base.aspect.annotation.DataPermission;
 import com.zhangysh.accumulate.back.ufs.controller.UploadFileController;
-import com.zhangysh.accumulate.common.util.FileUtil;
-import com.zhangysh.accumulate.common.util.InputStreamUtil;
+import com.zhangysh.accumulate.common.constant.MarkConstant;
+import com.zhangysh.accumulate.common.util.*;
 import com.zhangysh.accumulate.pojo.comm.viewobj.AefcommInfoPublishVo;
+import com.zhangysh.accumulate.pojo.ufs.dataobj.AefufsUploadFile;
+import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsCustomRealizeDto;
 import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsUploadFileDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +28,6 @@ import com.zhangysh.accumulate.common.pojo.BsTableDataInfo;
 import com.zhangysh.accumulate.back.support.service.IRedisRelatedService;
 import com.zhangysh.accumulate.back.sys.base.aspect.annotation.Log;
 import com.zhangysh.accumulate.back.sys.base.BaseController;
-import com.zhangysh.accumulate.common.util.DateOperate;
-import com.zhangysh.accumulate.common.util.HttpStorageUtil;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPerson;
 import com.zhangysh.accumulate.pojo.comm.transobj.AefcommInfoPublishDto;
 import com.zhangysh.accumulate.back.comm.service.IInfoPublishService;
@@ -96,17 +97,32 @@ public class InfoPublishController extends BaseController{
 			infoPublishVo.setUpdateBy(operPerson.getPersonName());
 			return toHandlerResultStr(infoPublishService.updateInfoPublish(infoPublishVo));
 		} else {//新增方法
-			infoPublishVo.setCreateTime(DateOperate.getCurrentUtilDate());
-			infoPublishVo.setCreateBy(operPerson.getPersonName());
-			int insertRows=infoPublishService.insertInfoPublish(infoPublishVo);
-			//生成html文件
+			int insertRows=0;
 			try {
+				//生成html文件
 				byte[] retByte=generateCodeService.generatorInfoPublishHtml(infoPublishVo);
-				FileUtil.byteToFile(retByte,"D://testaerfa//","11.html");
+
+				//上传至ftp可供nginx显示
 				AefufsUploadFileDto uploadFileDto=new AefufsUploadFileDto();
 				uploadFileDto.setFileBase64Data(InputStreamUtil.ByteToBase64(retByte));
-				uploadFileDto.setFileName("11.html");
-				uploadFileController.uploadFile(request,uploadFileDto);
+				uploadFileDto.setFileName(UuidUtil.getUMID()+UtilConstant.FILE_TYPE_HTML_SUFFIX);
+				uploadFileDto.setCreateUserId(operPerson.getId());
+				uploadFileDto.setCreateOrgId(operPerson.getOrgId());
+				String uploadFileRetStr=uploadFileController.uploadFileFtp(request,uploadFileDto);
+				JSONObject retJson=JSON.parseObject(uploadFileRetStr);
+
+				if(MarkConstant.MARK_RESULT_VO_SUCESS.equals(retJson.getInteger(MarkConstant.MARK_RESULT_VO_CODE))){
+					//上传ftp成功后插入数据库
+					AefufsUploadFile retUploadFile=JSON.parseObject(retJson.getString(MarkConstant.MARK_RESULT_VO_DATA), AefufsUploadFile.class);
+					infoPublishVo.setCreateTime(DateOperate.getCurrentUtilDate());
+					infoPublishVo.setCreateBy(operPerson.getPersonName());
+					infoPublishVo.setCreateUserId(operPerson.getId());
+					infoPublishVo.setViewUrl(retUploadFile.getFileLink());
+					infoPublishVo.setCreateOrgId(operPerson.getOrgId());
+					insertRows=infoPublishService.insertInfoPublish(infoPublishVo);
+				}
+
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

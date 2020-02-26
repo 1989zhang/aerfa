@@ -1,6 +1,7 @@
 package com.zhangysh.accumulate.back.ufs.service;
 import java.io.IOException;
 
+import com.zhangysh.accumulate.back.ufs.config.UfsConfig;
 import com.zhangysh.accumulate.pojo.ufs.dataobj.AefufsUploadFile;
 import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsUploadFileDto;
 
@@ -16,5 +17,5 @@ public interface IUploadFileService {
 	 * @param uploadFileDto 保存的对象
 	 * @return 文件存储对象
 	 */
-	AefufsUploadFile saveFile(AefufsUploadFileDto uploadFileDto) throws IOException;
+	AefufsUploadFile saveFile(AefufsUploadFileDto uploadFileDto,UfsConfig ufsConfig) throws IOException;
 }

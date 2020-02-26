@@ -42,10 +42,14 @@ public class UtilConstant {
     public static final String FILE_TYPE_WORD_DOC="doc";
     /** pdf文件类型常量 **/
     public static final String FILE_TYPE_PDF="pdf";
-	/** 图片文件类型png:png是无损压缩***/
-	public static final String FILE_PIC_TYPE_PNG="png";
-	/** 图片文件类型png:通用有损非高清**/
-	public static final String FILE_PIC_TYPE_JPG="jpg";	
+	/** 图片文件类型png:png是无损压缩 **/
+	public static final String FILE_TYPE_PIC_PNG="png";
+	/** 图片文件类型png:通用有损非高清 **/
+	public static final String FILE_TYPE_PIC_JPG="jpg";
+    /** html文件类型常量 **/
+    public static final String FILE_TYPE_HTML="html";
+    /** html文件类型后缀常量 **/
+    public static final String FILE_TYPE_HTML_SUFFIX=".html";
 	
     /**********日期相关常量**********/
 	/** yyyy-MM-dd 格式普通日期字符串 */

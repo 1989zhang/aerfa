@@ -23,15 +23,12 @@ import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsUploadFileDto;
  *****/
 @Service(value = "DbFile")
 public class DbFileServiceImpl implements IUploadFileService{
-
-	@Resource
-	private UfsConfig ufsConfig;
 	
 	@Resource
 	private IUploadFileBlobToDbService uploadFileBlobToDbService;
 	
 	@Override
-	public AefufsUploadFile saveFile(AefufsUploadFileDto uploadFileDto) throws IOException {
+	public AefufsUploadFile saveFile(AefufsUploadFileDto uploadFileDto,UfsConfig ufsConfig) throws IOException {
 		String fileName=uploadFileDto.getFileName();
 		String createBy=uploadFileDto.getCreateBy();
 		String suffix=fileName.substring(fileName.lastIndexOf(".")+1);

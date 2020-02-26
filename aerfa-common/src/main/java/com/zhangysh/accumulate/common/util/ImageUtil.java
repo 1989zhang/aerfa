@@ -105,7 +105,7 @@ public class ImageUtil {
     	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     	BufferedImage result =new BufferedImage(sourceImg.getWidth(),sourceImg.getHeight(),BufferedImage.TYPE_INT_RGB);  
 		result.createGraphics().drawImage(sourceImg,0,0,Color.WHITE, null);  
-		ImageIO.write(result, UtilConstant.FILE_PIC_TYPE_JPG, outputStream);
+		ImageIO.write(result, UtilConstant.FILE_TYPE_PIC_JPG, outputStream);
 		return outputStream.toByteArray();
     }
     
@@ -135,7 +135,7 @@ public class ImageUtil {
 		BufferedImage result =  new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);  
 		result.getGraphics().drawImage(
 				sourceImg.getScaledInstance(width, height,java.awt.Image.SCALE_SMOOTH), 0, 0, null);  
-		ImageIO.write(result, UtilConstant.FILE_PIC_TYPE_JPG, outputStream);
+		ImageIO.write(result, UtilConstant.FILE_TYPE_PIC_JPG, outputStream);
 		return outputStream.toByteArray();
 	} 
     
@@ -161,7 +161,7 @@ public class ImageUtil {
         g2.translate((rect_des.width - src_width)/2,(rect_des.height - src_height)/2);
         g2.rotate(Math.toRadians(angel), src_width / 2, src_height / 2);
         g2.drawImage(sourceImg, null, null);
-        ImageIO.write(retImage, UtilConstant.FILE_PIC_TYPE_JPG, outputStream);
+        ImageIO.write(retImage, UtilConstant.FILE_TYPE_PIC_JPG, outputStream);
         return outputStream.toByteArray();
     }
     
@@ -178,12 +178,12 @@ public class ImageUtil {
     
     /***
      * 直接BufferedImage对象转为byte
-     * @param sourceImg BufferedImage资源
+     * @param bufferedImg BufferedImage资源
      * @throws IOException 
      * **/
     public static byte[] bufferedImage2Byte(BufferedImage bufferedImg) throws IOException {
     	ByteArrayOutputStream outputStream= new ByteArrayOutputStream();
-    	ImageIO.write(bufferedImg,UtilConstant.FILE_PIC_TYPE_JPG,outputStream);
+    	ImageIO.write(bufferedImg,UtilConstant.FILE_TYPE_PIC_JPG,outputStream);
     	return outputStream.toByteArray();
     }
     
