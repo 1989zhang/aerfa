@@ -1,6 +1,8 @@
 package com.zhangysh.accumulate.back.sys.base;
 
 import javax.servlet.ServletContext;
+
+import com.zhangysh.accumulate.back.sys.util.SpringContextUtil;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import com.alibaba.fastjson.JSON;
@@ -26,7 +28,16 @@ public class BaseController {
 		Object obj = wac.getBean(beanName);
 		return obj;
 	}
-	
+
+	/**
+	 *获取service的具体实现bean，由于要启动加载用public标记
+	 *@param beanName 实现名称，service用标记：@Service(value = "DirFile")
+	 */
+	public Object getBean(String beanName) {
+		Object bean = SpringContextUtil.getBean(beanName);
+		return bean;
+	}
+
 	/***
 	 * 根据数据影响条数返回字符串：
 	 * 结果条数大于0为ResultVo操作成功，否则操作失败。

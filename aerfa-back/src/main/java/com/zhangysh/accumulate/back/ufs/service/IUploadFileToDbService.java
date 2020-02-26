@@ -3,6 +3,7 @@ package com.zhangysh.accumulate.back.ufs.service;
 import com.zhangysh.accumulate.pojo.ufs.dataobj.AefufsUploadFile;
 /*****
  * 保存文件aefufs_upload_file对象的方法 ，并返回带id的对象
+ * 此方法和带ID的是两回事，二者无父子关系，FtpFileServiceImpl和DirFileServiceImpl调用此方法
  * @author zhangysh
  * @date 2019年5月14日
  *****/

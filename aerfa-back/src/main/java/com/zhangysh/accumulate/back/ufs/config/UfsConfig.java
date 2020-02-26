@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class UfsConfig {
 
 	//上传文件实现方式
-	@Value("${ufs.impl}")
+	@Value("${ufs.impl:FtpFile}")
 	private String ufsImpl;
 	//图片是否压缩，默认不压缩
 	@Value("${ufs.file.compress:false}")

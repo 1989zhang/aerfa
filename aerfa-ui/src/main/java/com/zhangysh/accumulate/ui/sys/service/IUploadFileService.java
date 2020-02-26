@@ -20,10 +20,5 @@ public interface IUploadFileService {
 	 ***/
 	@RequestMapping(value = "/ufs/upload",method = RequestMethod.POST)
 	public String uploadFile(@RequestBody AefufsUploadFileDto uploadFileDto);
-	
-	/****
-	 *通过传JSON的形势上传文件 
-	 *@param fileDtoJson 文件相关JSON上传
-	 ***/
 
 }

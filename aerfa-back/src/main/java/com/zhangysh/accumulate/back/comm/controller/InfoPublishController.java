@@ -2,8 +2,11 @@ package com.zhangysh.accumulate.back.comm.controller;
 
 import com.zhangysh.accumulate.back.support.service.IGenerateCodeService;
 import com.zhangysh.accumulate.back.sys.base.aspect.annotation.DataPermission;
+import com.zhangysh.accumulate.back.ufs.controller.UploadFileController;
 import com.zhangysh.accumulate.common.util.FileUtil;
+import com.zhangysh.accumulate.common.util.InputStreamUtil;
 import com.zhangysh.accumulate.pojo.comm.viewobj.AefcommInfoPublishVo;
+import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsUploadFileDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +51,8 @@ public class InfoPublishController extends BaseController{
     private IRedisRelatedService redisRelatedService;
 	@Autowired
 	private IGenerateCodeService generateCodeService;
+	@Autowired
+	private UploadFileController uploadFileController;
 	/****
 	 * 获取展示发布信息列表
 	 * @param request 请求对象
@@ -98,6 +103,10 @@ public class InfoPublishController extends BaseController{
 			try {
 				byte[] retByte=generateCodeService.generatorInfoPublishHtml(infoPublishVo);
 				FileUtil.byteToFile(retByte,"D://testaerfa//","11.html");
+				AefufsUploadFileDto uploadFileDto=new AefufsUploadFileDto();
+				uploadFileDto.setFileBase64Data(InputStreamUtil.ByteToBase64(retByte));
+				uploadFileDto.setFileName("11.html");
+				uploadFileController.uploadFile(request,uploadFileDto);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

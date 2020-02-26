@@ -45,9 +45,12 @@ public class DbFileServiceImpl implements IUploadFileService{
 		uploadFileBlob.setCreateTime(new Date());
 		uploadFileBlobToDbService.insertUploadFileBlobToDb(uploadFileBlob);
 		
-		//为了保持一致返回带id的AefufsUploadFile即可
+		//为了保持一致新建的AefufsUploadFile即可
 		AefufsUploadFile retUploadFile=new AefufsUploadFile();
 		retUploadFile.setId(uploadFileBlob.getId());
+		retUploadFile.setFileName(fileName);
+		retUploadFile.setFileType(suffix);
+		retUploadFile.setCreateBy(createBy);
 		return retUploadFile;
 	}
 
