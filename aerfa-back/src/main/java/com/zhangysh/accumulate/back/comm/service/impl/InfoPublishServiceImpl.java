@@ -121,6 +121,10 @@ public class InfoPublishServiceImpl implements IInfoPublishService {
 	public int updateInfoPublish(AefcommInfoPublishVo infoPublishVo){
 		AefcommInfoPublish infoPublish=new AefcommInfoPublish();
 		BeanUtils.copyProperties(infoPublishVo,infoPublish);
+		//th:field="*{pubDateStr}"修改传过来的为null了
+		if(infoPublishVo.getPubDate()==null){
+			infoPublish.setPubDate(DateOperate.StringtoUtilDate(infoPublishVo.getPubDateStr(),UtilConstant.MOST_MIDDLE_DATE));
+		}
 		int updateRows=infoPublishDao.updateInfoPublish(infoPublish);
 		//修改信息发布内容
 		AefcommInfoContent infoContent=infoContentService.getInfoContentByPublishId(infoPublish.getId());

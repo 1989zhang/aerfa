@@ -89,7 +89,7 @@ public class GenerateCodeServiceImpl implements IGenerateCodeService{
         //设置模板对象参数
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("title", infoPublishVo.getTitle());
-        velocityContext.put("pubDateStr", DateOperate.UtilDatetoString(infoPublishVo.getPubDate(), UtilConstant.MOST_MIDDLE_DATE));
+        velocityContext.put("pubDateStr", infoPublishVo.getPubDate()==null?infoPublishVo.getPubDateStr():DateOperate.UtilDatetoString(infoPublishVo.getPubDate(), UtilConstant.MOST_MIDDLE_DATE));
         velocityContext.put("content", infoPublishVo.getContent());
         // 获取模板列表
         String template = "templates/publish/article.html.vm";

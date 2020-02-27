@@ -1,0 +1,11 @@
+/*==========清理首页信息发布aefcomm_info_publish测试数据==========*/
+delete from aefcomm_info_publish where id=1;
+delete from aefcomm_info_publish where id=2;
+delete from aefcomm_info_publish where id=3;
+delete from aefcomm_info_publish where id=4;
+delete from aefcomm_info_publish where id=5;
+delete from aefcomm_info_publish where id=6;
+delete from aefcomm_info_publish where id=7;
+delete from aefcomm_info_publish where id=8;
+delete from aefcomm_info_publish where id=9;
+delete from aefcomm_info_publish where id=10;
