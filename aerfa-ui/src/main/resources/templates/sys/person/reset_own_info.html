@@ -26,7 +26,7 @@
 	                        </li>
 	                        <li class="list-group-item"><i class="fa fa-group"></i>
 	                            <b  class="font-noraml">所属部门：</b>
-	                            <p class="pull-right" ></p>
+	                            <p class="pull-right" >[[${org.fullName}]]</p>
 	                        </li>
 	                        <li class="list-group-item"><i class="fa fa-envelope-o"></i>
 	                            <b  class="font-noraml">邮箱地址：</b>
@@ -58,7 +58,7 @@
 	                            	<div class="panel-body">
 		                                <form class="form-horizontal" id="form-person-reset-own-info">
 		                                    <!--隐藏ID-->
-		                                    <input name="id" id="id" type="hidden"  th:value="${person.id}" />
+		                                    <input name="id" id="id" type="hidden" th:value="${person.id}" />
 		                                    <div class="form-group">
 		                                        <label class="col-sm-2 control-label">用户名称：</label>
 		                                        <div class="col-sm-10">

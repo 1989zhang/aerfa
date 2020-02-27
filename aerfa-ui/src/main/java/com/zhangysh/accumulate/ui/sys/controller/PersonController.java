@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.zhangysh.accumulate.common.constant.MarkConstant;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysOrg;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -247,10 +248,14 @@ public class PersonController {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		String sessionInfoStr=loginService.getSessionByToken(aerfatoken);
 		TokenModel tokenModel=JSON.parseObject(sessionInfoStr,TokenModel.class);
+		//单位个人对象转化
 		String personObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_PERSON)+"";
 		AefsysPersonVo personVo=JSON.parseObject(personObjectJson,AefsysPersonVo.class);
+		String orgObjectJson =tokenModel.getSession().get(CacheConstant.TOKENMODEL_SESSION_KEY_ORG)+"";
+		AefsysOrg orgVo=JSON.parseObject(orgObjectJson,AefsysOrg.class);
 		modelMap.put("prefix", prefix);
 		modelMap.put("person", personVo);
+		modelMap.put("org", orgVo);
 		return prefix+"/reset_own_info";
 	}
 	
