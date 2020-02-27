@@ -99,6 +99,6 @@ insert into aefsys_data_dic values (182, 'execute_policy', '执行策略', '2', 
 /*信息发布相关数据字典*/
 insert into aefsys_data_dic values (185, 'publish_info_type', '信息发布类型', null, null, null, 1, 1, null, 1, '信息发布类型数据字典', null, null, null, null);
 insert into aefsys_data_dic values (186, 'publish_info_type', '信息发布类型', 'tzxx', '通知信息', null, 1, 0, null, 1, null, null, null, null, null);
-insert into aefsys_data_dic values (187, 'publish_info_type', '信息发布类型', 'gsgg', '公示公告', null, 2, 0, null, 1, null, null, null, null, null);
-insert into aefsys_data_dic values (188, 'publish_info_type', '信息发布类型', 'gzdt', '工作动态', null, 3, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (187, 'publish_info_type', '信息发布类型', 'gzdt', '工作动态', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (188, 'publish_info_type', '信息发布类型', 'gsgg', '公示公告', null, 3, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (189, 'publish_info_type', '信息发布类型', 'bszn', '办事指南', null, 4, 0, null, 1, null, null, null, null, null);

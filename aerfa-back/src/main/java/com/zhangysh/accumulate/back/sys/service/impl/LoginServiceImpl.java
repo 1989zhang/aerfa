@@ -119,16 +119,13 @@ public class LoginServiceImpl implements ILoginService{
         //查询出联系地址
 		AefsysPersonAddress personAddress=personAddressService.getPersonAddressByPersonId(sysPerson.getId());
 		if(personAddress!=null) {sysPersonVo.setAddress(personAddress.getFullAddress());}
-		//查询组装头像访问全路径
-		List<AefsysConfigData> configDataList=configDataService.getAllConfigDataFromRedis();
-		for(AefsysConfigData configData:configDataList) {
-			if(SysDefineConstant.CONFIG_DATA_PIC_IP_ADDRESS.equals(configData.getDataCode())) {
-				if(StringUtil.isNotEmpty(sysPerson.getHeadPic())) {
-					sysPersonVo.setHeadPic(configData.getDataValue()+sysPerson.getHeadPic());	
-				}else {
-					sysPersonVo.setHeadPic(WebimDefineConstant.WEBIM_DEFAULT_PERSONAL_AVATAR);
-				}
-			}
+
+		//查询组装头像访问全路径，头像前缀配置路径
+		AefsysConfigData picIpAddressConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_SYS_PIC_IP_ADDRESS);
+		if(StringUtil.isNotEmpty(sysPerson.getHeadPic())) {
+			sysPersonVo.setHeadPic(picIpAddressConfigData.getDataValue()+sysPerson.getHeadPic());
+		}else {
+			sysPersonVo.setHeadPic(WebimDefineConstant.WEBIM_DEFAULT_PERSONAL_AVATAR);
 		}
 
 		//查询出人员所在单位

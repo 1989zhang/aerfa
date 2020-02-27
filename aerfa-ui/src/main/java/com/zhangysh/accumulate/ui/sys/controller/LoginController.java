@@ -10,8 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zhangysh.accumulate.common.constant.*;
+import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
 import com.zhangysh.accumulate.common.pojo.ResultVo;
+import com.zhangysh.accumulate.pojo.comm.dataobj.AefcommInfoPublish;
+import com.zhangysh.accumulate.pojo.comm.transobj.AefcommInfoPublishDto;
+import com.zhangysh.accumulate.pojo.comm.viewobj.AefcommInfoPublishVo;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysResourceVo;
+import com.zhangysh.accumulate.ui.comm.service.IInfoPublishService;
 import com.zhangysh.accumulate.ui.manage.shiro.ShiroUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -46,7 +51,9 @@ public class LoginController {
 	private ILoginService loginService;
 	@Autowired
 	private IConfigDataService configDataService;
-	
+	@Autowired
+	private IInfoPublishService infoPublishService;
+
 	/****
 	 * 跳转到sys默认登陆页面
 	 *@param request 请求对象
@@ -175,7 +182,27 @@ public class LoginController {
 	@RequestMapping(value="/current")
 	public String toSysCurrent(HttpServletRequest request,ModelMap modelMap) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
-		String sessionInfoStr=loginService.getSessionByToken(aerfatoken);
+		//组装首页的查询信息发布列表的参数,每页7条信息发布
+		BsTablePageInfo pageInfo=new BsTablePageInfo();
+		pageInfo.setPageNum(1);pageInfo.setPageSize(7);
+		AefcommInfoPublishDto infoPublishDto=new AefcommInfoPublishDto();
+		AefcommInfoPublish searchInfoPublish=new AefcommInfoPublish();
+		infoPublishDto.setPageInfo(pageInfo);
+		//查询通知信息
+		searchInfoPublish.setInfoType(SysDefineConstant.DIC_PUBLISH_INFO_TYPE_TZXX);
+		infoPublishDto.setInfoPublish(searchInfoPublish);
+		String tzxxRetInfoJson=infoPublishService.getList(aerfatoken,infoPublishDto);
+		JSONObject tzxxJson=JSON.parseObject(tzxxRetInfoJson);
+		List<AefcommInfoPublishVo> tzxxRetInfoList=JSON.parseArray(tzxxJson.getString("rows"), AefcommInfoPublishVo.class);
+		//查询工作动态
+		searchInfoPublish.setInfoType(SysDefineConstant.DIC_PUBLISH_INFO_TYPE_GZDT);
+		infoPublishDto.setInfoPublish(searchInfoPublish);
+		String gzdtRetInfoJson=infoPublishService.getList(aerfatoken,infoPublishDto);
+		JSONObject gzdtJson=JSON.parseObject(gzdtRetInfoJson);
+		List<AefcommInfoPublishVo> gzdtRetInfoList=JSON.parseArray(gzdtJson.getString("rows"), AefcommInfoPublishVo.class);
+
+		modelMap.addAttribute("tzxx",tzxxRetInfoList);
+		modelMap.addAttribute("gzdt",gzdtRetInfoList);
 		modelMap.addAttribute("prefix","/comm/note_calendar");
 		return "sys/current";
 	}

@@ -138,5 +138,6 @@ insert into aefsys_role_resource values (2, 73);
 insert into aefsys_config_data values ('1', 'fullSystemName', 'α管理系统', '1', '系统名称全称', '超级管理员', '2019-05-24 00:00:00', null, null);
 insert into aefsys_config_data values ('2', 'shortSystemName', '阿尔法', '2', '系统名称简称', '超级管理员', '2019-05-24 00:00:00', null, null);
 insert into aefsys_config_data values ('3', 'divisionCode', '000000', '3', '系统使用者所在行政区划代码', '超级管理员', '2019-05-24 00:00:00', null, null);
-insert into aefsys_config_data values ('4', 'picIpAddress', 'http://127.0.0.1/', '4', '头像图片的nginx访问地址', '超级管理员', '2019-05-24 00:00:00', null, null);
+insert into aefsys_config_data values ('4', 'sysPicIpAddress', 'http://127.0.0.1/', '4', '系统图片的nginx访问地址', '超级管理员', '2019-05-24 00:00:00', null, null);
 insert into aefsys_config_data values ('5', 'templateFolderPath', 'd://testaerfa//template//', '5', 'template报表模板相关存储路径配置参数要带结尾符', '超级管理员', '2019-06-20 00:00:00', null, null);
+insert into aefsys_config_data values ('6', 'sysHtmlIpAddress', 'http://127.0.0.1/', '6', '信息发布html的nginx访问地址', '超级管理员', '2020-02-26 00:00:00', null, null);

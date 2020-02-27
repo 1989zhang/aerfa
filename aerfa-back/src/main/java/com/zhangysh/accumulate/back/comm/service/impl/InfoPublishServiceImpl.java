@@ -3,9 +3,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zhangysh.accumulate.back.comm.service.IInfoContentService;
+import com.zhangysh.accumulate.back.sys.service.IConfigDataService;
 import com.zhangysh.accumulate.common.constant.MarkConstant;
+import com.zhangysh.accumulate.common.constant.SysDefineConstant;
+import com.zhangysh.accumulate.common.constant.UtilConstant;
+import com.zhangysh.accumulate.common.util.DateOperate;
 import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.comm.dataobj.AefcommInfoContent;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysConfigData;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Transient;
 import org.springframework.stereotype.Service;
@@ -35,13 +40,14 @@ public class InfoPublishServiceImpl implements IInfoPublishService {
 	private InfoPublishDao infoPublishDao;
 	@Autowired
 	private IInfoContentService infoContentService;
+	@Autowired
+	private IConfigDataService configDataService;
 
     @Override
 	public AefcommInfoPublishVo getInfoPublishById(Long id){
 		AefcommInfoPublish infoPublish=infoPublishDao.getInfoPublishById(id);
 		AefcommInfoContent infoContent=infoContentService.getInfoContentByPublishId(id);
-		AefcommInfoPublishVo retPublishVo=new AefcommInfoPublishVo();
-		BeanUtils.copyProperties(infoPublish,retPublishVo);
+		AefcommInfoPublishVo retPublishVo=changInfoPublishToVo(infoPublish);
 		retPublishVo.setContent(infoContent.getContent());
 	    return retPublishVo;
 	}
@@ -51,8 +57,7 @@ public class InfoPublishServiceImpl implements IInfoPublishService {
 		List<AefcommInfoPublish> infoPublishList=infoPublishDao.listBypksInfoPublish(ConvertUtil.toStrArray(ids));
 		List<AefcommInfoPublishVo> retInfoPublishVoList=new ArrayList<AefcommInfoPublishVo>();
 		for(AefcommInfoPublish infoPublish:infoPublishList){
-			AefcommInfoPublishVo retPublishVo=new AefcommInfoPublishVo();
-			BeanUtils.copyProperties(infoPublish,retPublishVo);
+			AefcommInfoPublishVo retPublishVo=changInfoPublishToVo(infoPublish);
 			retPublishVo.setContent(infoContentService.getInfoContentByPublishId(infoPublish.getId()).getContent());
 			retInfoPublishVoList.add(retPublishVo);
 		}
@@ -73,14 +78,24 @@ public class InfoPublishServiceImpl implements IInfoPublishService {
 		infoPublishDao.listInfoPublish(infoPublish);
 		BsTableDataInfo tableInfo=new BsTableDataInfo();
 		tableInfo.setTotal(page.getTotal());
-		tableInfo.setRows(page.getResult());
+		List<AefcommInfoPublish> infoPublishList=page.getResult();
+		List<AefcommInfoPublishVo> infoPublishVoList=new ArrayList<AefcommInfoPublishVo>();
+		for(AefcommInfoPublish sourceInfoPublish:infoPublishList){
+			infoPublishVoList.add(changInfoPublishToVo(sourceInfoPublish));
+		}
+		tableInfo.setRows(infoPublishVoList);
 	    return tableInfo; 
 	}
 
 	@Override
-	public List<AefcommInfoPublish> listInfoPublish(AefcommInfoPublish infoPublish){
+	public List<AefcommInfoPublishVo> listInfoPublish(AefcommInfoPublish infoPublish){
 		infoPublish.getParams().put(MarkConstant.SORT_CONDITION,"top desc,order_no desc,pub_date desc");
-		return infoPublishDao.listInfoPublish(infoPublish);
+		List<AefcommInfoPublish> infoPublishList=infoPublishDao.listInfoPublish(infoPublish);
+		List<AefcommInfoPublishVo> infoPublishVoList=new ArrayList<AefcommInfoPublishVo>();
+		for(AefcommInfoPublish sourceInfoPublish:infoPublishList){
+			infoPublishVoList.add(changInfoPublishToVo(sourceInfoPublish));
+		}
+		return infoPublishVoList;
 	}
 
 	@Override
@@ -132,6 +147,19 @@ public class InfoPublishServiceImpl implements IInfoPublishService {
 			infoContentService.deleteInfoContentByPublishId(infoPublishId);
 		}
 		return deleteRows;
+	}
+
+   /**
+	* 把 AefcommInfoPublish对象转为AefcommInfoPublishVo
+	* @param
+	**/
+	private AefcommInfoPublishVo changInfoPublishToVo(AefcommInfoPublish sourceInfoPublish){
+		AefcommInfoPublishVo infoPublishVo=new AefcommInfoPublishVo();
+		BeanUtils.copyProperties(sourceInfoPublish,infoPublishVo);
+		infoPublishVo.setPubDateStr(DateOperate.UtilDatetoString(sourceInfoPublish.getPubDate(), UtilConstant.MOST_MIDDLE_DATE));
+		AefsysConfigData htmlIpAddressConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_SYS_HTML_IP_ADDRESS);
+		infoPublishVo.setFullViewUrl(htmlIpAddressConfigData.getDataValue()+infoPublishVo.getViewUrl());
+		return infoPublishVo;
 	}
 	
 }

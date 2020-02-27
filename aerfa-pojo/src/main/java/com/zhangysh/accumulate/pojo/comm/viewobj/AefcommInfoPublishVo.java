@@ -13,9 +13,12 @@ public class AefcommInfoPublishVo extends AefcommInfoPublish{
 
 	private static final long serialVersionUID = 1L;
 
-	private String content;//信息内容
-	//因为modelMap存对象日期显示不对，所以单独列出来，也为了实现保存日期对应
-	private String pubDateStr;//发布日期字符串
+	/** 信息内容：保存的时候用 **/
+	private String content;
+	/** 发布日期字符串：因为modelMap存对象日期显示不对，所以单独列出来，也为了实现保存日期对应 **/
+	private String pubDateStr;
+	/** 根据全路径地址查看信息发布html **/
+	private String fullViewUrl;
 
 	public String getContent() {
 		return content;
@@ -28,5 +31,13 @@ public class AefcommInfoPublishVo extends AefcommInfoPublish{
 	}
 	public void setPubDateStr(String pubDateStr) {
 		this.pubDateStr = pubDateStr;
+	}
+	
+	public String getFullViewUrl() {
+		return fullViewUrl;
+	}
+
+	public void setFullViewUrl(String fullViewUrl) {
+		this.fullViewUrl = fullViewUrl;
 	}
 }

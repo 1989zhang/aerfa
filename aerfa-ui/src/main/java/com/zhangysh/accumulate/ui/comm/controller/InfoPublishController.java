@@ -113,7 +113,6 @@ public class InfoPublishController {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		String retInfoPublishStr=infoPublishService.getSingle(aerfatoken, id);
 		AefcommInfoPublishVo infoPublishVo=JSON.parseObject(retInfoPublishStr,AefcommInfoPublishVo.class);
-		infoPublishVo.setPubDateStr(DateOperate.UtilDatetoString(infoPublishVo.getPubDate(),UtilConstant.MOST_MIDDLE_DATE));
 		modelMap.put("prefix", prefix);
 		modelMap.put("infoPublish", infoPublishVo);
 		return prefix+"/edit";
@@ -143,11 +142,36 @@ public class InfoPublishController {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		String retInfoPublishStr=infoPublishService.getSingle(aerfatoken, id);
 		AefcommInfoPublishVo infoPublishVo=JSON.parseObject(retInfoPublishStr,AefcommInfoPublishVo.class);
-		infoPublishVo.setPubDateStr(DateOperate.UtilDatetoString(infoPublishVo.getPubDate(),UtilConstant.MOST_MIDDLE_DATE));
 		modelMap.put("prefix", prefix);
 		modelMap.put("infoPublish", infoPublishVo);
 		return prefix+"/view_publish";
 	}
 
+	/**
+	 * 改变信息发布的top状态,文章置顶或取消置顶
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param infoPublishVo 保存的修改对象
+	 **/
+	@RequestMapping(value="/top_status")
+	@ResponseBody
+	public String setTopStatus(HttpServletRequest request, ModelMap modelMap,AefcommInfoPublishVo infoPublishVo){
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return infoPublishService.saveAdd(aerfatoken, infoPublishVo);
+	}
+
+	/****
+	 * 跳转到首页查看信息发布更多页面
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @return templates下的页面
+	 ****/
+	@RequestMapping(value="/to_more_publish/{infoType}")
+	public String toMorePublish(HttpServletRequest request, ModelMap modelMap,@PathVariable("infoType") String infoType) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		modelMap.addAttribute("prefix", prefix);
+		modelMap.addAttribute("infoType", infoType);
+		return prefix+"/more_publish";
+	}
 
 }

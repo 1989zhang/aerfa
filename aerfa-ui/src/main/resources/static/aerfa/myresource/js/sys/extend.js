@@ -275,6 +275,17 @@
 	            	}
             	});
             },
+			//多个参数组装成对象：并执行确认提交刷新的方法
+			manageCommon:function(url,data,tips,dataUrl) {
+				$.modal.confirm($.common.trim(tips), function() {
+					$.ajaxSettings.async = false;
+					$.operate.submit(url, "post", "json", data);
+					//执行刷新指定页面方法
+					if(!$.common.isEmpty(dataUrl)){
+						refreshMenuItem(dataUrl)
+					}
+				});
+			},
             // 保存信息
             save: function(url, data) {
             	$.modal.loading("正在处理中，请稍后...");

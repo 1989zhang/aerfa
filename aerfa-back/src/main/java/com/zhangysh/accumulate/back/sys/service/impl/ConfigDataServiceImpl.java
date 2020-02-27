@@ -47,6 +47,15 @@ public class ConfigDataServiceImpl implements IConfigDataService {
 				return configData;
 			}
 		}
+
+		//没有获取到配置的话就从数据库查询一遍，解决直接插入数据库的情况
+		AefsysConfigData searchConfigData=new AefsysConfigData();
+		searchConfigData.setDataCode(dataCode);
+		List<AefsysConfigData> retConfigDataList=checkDataCodeUnique(searchConfigData);
+		if(StringUtil.isNotEmpty(retConfigDataList)){
+			getAllConfigDataAndRefreshRedis();//刷新redis
+			return retConfigDataList.get(0);
+		}
 		return null;
 	}
 	

@@ -44,7 +44,7 @@ public interface IInfoPublishService {
 	 * @param infoPublish 条件发布对象
 	 * @return 发布条件下结果集合
 	 */
-	List<AefcommInfoPublish> listInfoPublish(AefcommInfoPublish infoPublish);
+	List<AefcommInfoPublishVo> listInfoPublish(AefcommInfoPublish infoPublish);
 
 	/**
      * 新增发布,级联内容新增

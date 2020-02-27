@@ -43,7 +43,7 @@ public interface IConfigDataService {
 	 BsTableDataInfo listPageConfigData(BsTablePageInfo pageInfo,AefsysConfigData configData);
 	
 	/**
-     * 根据条件查询配置不分页列表
+     * 根据条件查询配置不分页列表，dataCode为like查询
      * 
      * @param configData 条件配置对象
      * @return 配置条件下结果集合
@@ -51,7 +51,7 @@ public interface IConfigDataService {
 	 List<AefsysConfigData> listConfigData(AefsysConfigData configData);
 	 
 	/****
-	 * 配置参数编码唯一性检测，查询出配置list集合，未分页排序等 
+	 * 配置参数编码唯一性检测，查询出配置list集合，未分页排序等 ，dataCode为=查询
 	 * @param configData 查询条件,内含参数编码属性和id,id为了排除自己
 	 ****/
 	List<AefsysConfigData> checkDataCodeUnique(AefsysConfigData configData);

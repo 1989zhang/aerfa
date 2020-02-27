@@ -192,7 +192,7 @@ public class FriendServiceImpl implements IFriendService {
 	@Override
 	public AefwebimFriendVo changeToWebimFriendVoBySysPerson(AefsysPerson sysPerson) {
 		//头像前缀配置路径
-		AefsysConfigData picIpAddressConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_PIC_IP_ADDRESS);
+		AefsysConfigData picIpAddressConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_SYS_PIC_IP_ADDRESS);
         //拓展对象信息
 		AefwebimPerson friendWebimPerson=webimPersonService.getWebimPersonBySysPersonId(sysPerson.getId());
 		

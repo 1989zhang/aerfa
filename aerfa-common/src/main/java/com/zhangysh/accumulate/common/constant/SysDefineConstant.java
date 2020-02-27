@@ -12,8 +12,11 @@ public class SysDefineConstant {
 	public static final String CONFIG_DATA_FULL_SYSTEM_NAME="fullSystemName";
 	/**系统名称简称配置参数**/
 	public static final String CONFIG_DATA_SHORT_SYSTEM_NAME="shortSystemName";
-	/**图片头像服务器ip访问地址前缀即nginx代理地址配置参数**/
-	public static final String CONFIG_DATA_PIC_IP_ADDRESS="picIpAddress";
+	/**系统图片头像服务器ip访问地址前缀即nginx代理地址配置参数**/
+	public static final String CONFIG_DATA_SYS_PIC_IP_ADDRESS="sysPicIpAddress";
+	/** 系统信息发布html服务器ip访问地址前缀即nginx代理地址配置参数 **/
+	public static final String CONFIG_DATA_SYS_HTML_IP_ADDRESS="sysHtmlIpAddress";
+
 	/**template报表模板相关存储路径配置参数要带结尾符**/
 	public static final String CONFIG_DATA_TEMPLATE_FOLDER_PATH="templateFolderPath";
 	/**template报表模板相关的模板子文件夹，前面是储路径配置参数 **/
@@ -81,6 +84,9 @@ public class SysDefineConstant {
 	public static final String DIC_EXECUTE_POLICY_WAITING ="1";
 	/** 系统定时任务相关定义变量：job执行计划立即执行 **/
 	public static final String DIC_EXECUTE_POLICY_IMMEDIATELY ="2";
-
+	/** 数据字典信息发布类型通知信息tzxx**/
+	public static final String DIC_PUBLISH_INFO_TYPE_TZXX ="tzxx";
+	/** 数据字典信息发布类型工作动态gzdt**/
+	public static final String DIC_PUBLISH_INFO_TYPE_GZDT ="gzdt";
 
 }

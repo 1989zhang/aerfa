@@ -46,7 +46,7 @@ public class InitServiceImpl implements IInitService{
 	@Override
 	public Map<String,Object> getUserData(Long personId) {
 		Map<String,Object> retMap=new HashMap<String,Object>();
-		AefsysConfigData picIpAddressConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_PIC_IP_ADDRESS);
+		AefsysConfigData picIpAddressConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_SYS_PIC_IP_ADDRESS);
 		AefsysPerson sysPerson=personService.getPersonById(personId);
 
 		//1查出个人信息并组装
