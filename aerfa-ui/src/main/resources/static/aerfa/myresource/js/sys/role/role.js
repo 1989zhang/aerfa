@@ -45,8 +45,8 @@ $(function() {
                     var actions = [];
                     if(editFlag){
                         actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-success btn-xs" href="#" onclick="manageRoleResource(\'' + row.id + '\')"><i class="fa fa-edit"></i>角色资源</a> ');
-                        actions.push('<a class="btn btn-success btn-xs" href="#" onclick="manageDataPermission(\'' + row.id + '\')"><i class="fa fa-edit"></i>数据权限</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs" href="#" onclick="manageRoleResource(\'' + row.id + '\')"><i class="fa fa-inbox"></i>角色资源</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs" href="#" onclick="manageDataPermission(\'' + row.id + '\')"><i class="fa fa-inbox"></i>数据权限</a> ');
                     }
                     if(removeFlag){
                         actions.push('<a class="btn btn-danger btn-xs" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a> ');

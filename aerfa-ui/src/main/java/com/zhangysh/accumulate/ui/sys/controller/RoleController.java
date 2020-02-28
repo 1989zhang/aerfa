@@ -135,4 +135,36 @@ public class RoleController {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		return roleService.deleteRoleByIds(aerfatoken, ids);
     }
+
+	/****
+	 * 角色对应资源管理
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param roleId 角色ID
+	 * @return templates下的页面
+	 ****/
+	@RequiresPermissions("sys:role:edit")
+	@RequestMapping(value="/to_role_resource/{roleId}")
+	public String toRoleResource(HttpServletRequest request, ModelMap modelMap,@PathVariable("roleId") Long roleId) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		modelMap.addAttribute("roleId", roleId);
+		modelMap.addAttribute("prefix", prefix);
+		return prefix+"/role_resource";
+	}
+
+	/****
+	 * 角色对应数据权限管理
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param roleId 角色ID
+	 * @return templates下的页面
+	 ****/
+	@RequiresPermissions("sys:role:edit")
+	@RequestMapping(value="/to_role_data_permission/{roleId}")
+	public String toRoleDataPermission(HttpServletRequest request, ModelMap modelMap,@PathVariable("roleId") Long roleId) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		modelMap.addAttribute("roleId", roleId);
+		modelMap.addAttribute("prefix", prefix);
+		return prefix+"/role_data_permission";
+	}
 }
