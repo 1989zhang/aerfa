@@ -1,0 +1,4 @@
+(一):bootstrap-treetable.js由于不支持已经选中数据展示自己拓展修改，修改内容如下：
+1:新增了方法内容：设置默认选中
+在BootstrapTreeTable.METHODS附件新增"setSelection",
+在BootstrapTreeTable.prototype.getSelections后新增BootstrapTreeTable.prototype.setSelection

@@ -1,7 +1,7 @@
 /**
  * bootstrap-treetable
  * v1.0.10-beta
- * @author zhangysh
+ * @author swifly
  * @url https://gitee.com/cyf783/bootstrap-treetable/
  */
 (function($) {
@@ -580,16 +580,16 @@
     BootstrapTreeTable.prototype.getScrollWidth = function(elem){
         var width = 0;
         if(elem){
-          width = elem.offsetWidth - elem.clientWidth;
+            width = elem.offsetWidth - elem.clientWidth;
         } else {
-          elem = document.createElement('div');
-          elem.style.width = '100px';
-          elem.style.height = '100px';
-          elem.style.overflowY = 'scroll';
+            elem = document.createElement('div');
+            elem.style.width = '100px';
+            elem.style.height = '100px';
+            elem.style.overflowY = 'scroll';
 
-          document.body.appendChild(elem);
-          width = elem.offsetWidth - elem.clientWidth;
-          document.body.removeChild(elem);
+            document.body.appendChild(elem);
+            width = elem.offsetWidth - elem.clientWidth;
+            document.body.removeChild(elem);
         }
         return width;
     };
@@ -647,11 +647,11 @@
         if (self.options.hover) {
             self.$el.parent().parent().find("tbody").on('mouseenter', 'tr', function(){ //鼠标移入行
                 var othis = $(this)
-                ,index = othis.index();
+                    ,index = othis.index();
                 self.$el.parent().parent().find("tbody").find('tr:eq('+ index +')').addClass("treetable-hover")
             }).on('mouseleave', 'tr', function(){ //鼠标移出行
                 var othis = $(this)
-                ,index = othis.index();
+                    ,index = othis.index();
                 self.$el.parent().parent().find("tbody").find('tr:eq('+ index +')').removeClass("treetable-hover")
             });
         }
@@ -932,13 +932,13 @@
         var self = this;
         if(self.hasFixedColumn && self.expandColumnIsFixed){
             self.$leftBox.find("tbody").find("tr").find(".treetable-expander").each(function(i, n) {
-            var _isExpanded = $(n).hasClass(self.options.expanderExpandedClass);
-            if (_isExpanded) {
-                var $tr = $(n).parent().parent();
-                var dataid = $tr.attr("dataid");
-                self.toggleRow(dataid)
-            }
-        })
+                var _isExpanded = $(n).hasClass(self.options.expanderExpandedClass);
+                if (_isExpanded) {
+                    var $tr = $(n).parent().parent();
+                    var dataid = $tr.attr("dataid");
+                    self.toggleRow(dataid)
+                }
+            })
         }else{
             self.$el.find("tbody").find("tr").find(".treetable-expander").each(function(i, n) {
                 var _isExpanded = $(n).hasClass(self.options.expanderExpandedClass);
@@ -1002,12 +1002,6 @@
         }
         return;
     };
-    //checkbox状态事件,设置默认选中
-    BootstrapTreeTable.prototype.setSelection = function(idValue) {
-        var checkBox = $("#bootstrap-treeTable").find("tbody").find("tr[dataid='" + idValue + "']").find(":first-child").find("input[type='checkbox']")
-        this.selectedDataIdsManager(checkBox.val(),true,true);
-        return;
-    };
     // 触发事件
     BootstrapTreeTable.prototype.trigger = function(name) {
         var self = this;
@@ -1045,7 +1039,6 @@
     // 组件方法
     BootstrapTreeTable.METHODS = [
         "getSelections",
-        "setSelection",
         "refresh",
         "appendData",
         "toggleRow",

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<th:block th:include="sys/include :: treetable-css"/>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated">
+        <!--搜索区域开始-->
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <form role="form" class="form-inline" id="resource-form-search">
+                     <div class="form-group">
+                         <label>资源名称：</label>
+                         <input type="text" id="resourceName" name="resourceName" class="form-control">
+                     </div>
+                     <a class="btn btn-primary btn-rounded btn-sm" onclick="saveRoleResource()"><i class="fa fa-search"></i>&nbsp;查询</a>
+                 </form>
+             </div>
+          </div>
+          <!--搜索区域结束-->
+          <!--treegrid列表开始-->
+          <div class="ibox float-e-margins">
+              <div class="ibox-content">
+                   <table id="bootstrap-treeTable"></table>
+              </div>
+          </div>
+          <!--treegrid列表结束-->
+    </div>
+
+    <div th:include="sys/include :: footer"></div>
+    <th:block th:include="sys/include :: treetable-js"/>
+
+    <!-- 带@放到单独的js会不执行，所以外面定义变量里面引用。-->
+    <script th:inline="javascript">
+        var statusDatas = [[${@dic.getDic('resource_status')}]];
+    </script>
+
+    <script th:inline="javascript">
+        //初始化树形网格数据
+        $(function() {
+            var options = {
+                url: "/sys/resource/list",
+                modalName: "资源",//提示信息要用到
+                id: 'id',
+                parentId: 'parentId',
+                showRefresh: false,
+                showColumns: false,
+                expandColumn : 1 ,
+                columns: [{
+                    checkbox: true,
+                    title: '绑定',
+                    align: 'center'
+                },{
+                    field: 'resourceName',
+                    title: '资源名称',
+                    width: '30%'
+                },{
+                    title: '资源类型',
+                    width: '10%',
+                    align: "center",
+                    formatter: function(value,item,index) {
+                        if (item.resourceType == 'system') {
+                            return '<span class="label label-danger">系统</span>';
+                        }
+                        else if (item.resourceType == 'module') {
+                            return '<span class="label label-warning">模块</span>';
+                        }
+                        else if (item.resourceType == 'menu') {
+                            return '<span class="label label-success">菜单</span>';
+                        }
+                        else if (item.resourceType == 'button') {
+                            return '<span class="label label-primary">按钮</span>';
+                        }
+                    }
+                },{
+                    field: 'status',
+                    title: '资源状态',
+                    width: '10%',
+                    align: "center",
+                    formatter: function(value, row, index) {
+                        return $.table.formatDicLabel(statusDatas, value);
+                    }
+                }],
+                onLoadSuccess: function(data) {
+                    initOldRoleResource(data);
+                    return false;
+                }
+            };
+            $.treeTable.init(options);
+        });
+
+        /*把已授权的勾选上*/
+        function initOldRoleResource(data){
+            $('#bootstrap-treeTable').bootstrapTreeTable('setSelection','1');
+            $('#bootstrap-treeTable').bootstrapTreeTable('setSelection','3');
+        }
+
+        /* 保存角色对应的资源 */
+        function saveRoleResource(){
+            var selecteds = $('#bootstrap-treeTable').bootstrapTreeTable('getSelections');
+            alert(selecteds);
+            $.each(selecteds,function(_i,_item){
+                console.log(_item);
+            });
+            //alert("看console");
+
+        }
+    </script>
+	
+</body>
+
+</html>

@@ -110,17 +110,18 @@
                 $.table._option = options;
                 var treeTable = $('#bootstrap-treeTable').bootstrapTreeTable({
         	        url: options.url,                                      // 请求后台数据的URL（*）
-                	idField:$.common.defaultIdField(options.id),           //id列
-        		    code : options.id,                                     // 用于设置父子关系
-        	        parentCode : options.parentId,                         // 用于设置父子关系
+                	id:$.common.defaultIdField(options.id),                //id列,用于设置父子关系
+        		    parentId : options.parentId,                           //用于设置父子关系
         	    	type: 'get',                                           // 请求方式（*）
         	        ajaxParams : {},                                       // 请求数据的ajax的data属性
-        			expandColumn : '0',                                    // 在哪一列上面显示展开按钮
+        			expandColumn:$.common.defaultZero(options.expandColumn),// 在哪一列上面显示展开按钮,有checkbox要加1
         			striped : false,                                       // 是否各行渐变色
         			bordered : true,                                       // 是否显示边框
-        			search: false,                                         // 是否显示搜索框功能
+					showRefresh:$.common.defaultTrue(options.showRefresh), //是否展示刷新按钮
+					showColumns:$.common.defaultTrue(options.showColumns), //是否展示内容列下拉框
         			expandAll : $.common.defaultTrue(options.expandAll),   // 是否全部展开
-        	        columns: options.columns
+        	        columns: options.columns,                              //加载展示列
+					onLoadSuccess: options.onLoadSuccess                   //数据加载完成后执行的方法
         	    });
                 $.treeTable._treeTable = treeTable;
             },
@@ -522,6 +523,13 @@
                 }
                 return value;
             },
+			// 默认为0值返回
+			defaultZero:function (value) {
+				if (value == null || this.trim(value) == "") {
+					return 0;
+				}
+				return value;
+			},
             // 默认导出文件名
             defaultExportFileName: function (value) {
                 if (value == null || this.trim(value) == "") {
