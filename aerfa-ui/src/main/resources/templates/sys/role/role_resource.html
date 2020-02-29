@@ -5,15 +5,14 @@
 
 <body class="gray-bg">
     <div class="wrapper wrapper-content animated">
-        <!--搜索区域开始-->
-        <div class="ibox float-e-margins">
-            <div class="ibox-content">
-                <form role="form" class="form-inline" id="resource-form-search">
+          <!--搜索区域开始-->
+          <div class="ibox float-e-margins">
+             <div class="ibox-content">
+                 <form role="form" class="form-inline" id="resource-form-search" style="text-align:center">
                      <div class="form-group">
-                         <label>资源名称：</label>
-                         <input type="text" id="resourceName" name="resourceName" class="form-control">
+                         <label>勾选完成后请点击按钮：</label>
                      </div>
-                     <a class="btn btn-primary btn-rounded btn-sm" onclick="saveRoleResource()"><i class="fa fa-search"></i>&nbsp;查询</a>
+                     <a class="btn btn-primary btn-sm" onclick="saveRoleResource()"><i class="fa fa-floppy-o"></i> 保存[[${role.roleName}]]授权</a>
                  </form>
              </div>
           </div>
@@ -32,14 +31,16 @@
 
     <!-- 带@放到单独的js会不执行，所以外面定义变量里面引用。-->
     <script th:inline="javascript">
-        var statusDatas = [[${@dic.getDic('resource_status')}]];
+        var resourceStatusDatas = [[${@dic.getDic('resource_status')}]];
+        var commonStatusDatas = [[${@dic.getDic('common_status')}]];
+        var roleId=[[${role.id}]];//角色ID
     </script>
 
     <script th:inline="javascript">
         //初始化树形网格数据
         $(function() {
             var options = {
-                url: "/sys/resource/list",
+                url: prefix + "/role_resource/"+roleId,
                 modalName: "资源",//提示信息要用到
                 id: 'id',
                 parentId: 'parentId',
@@ -73,12 +74,20 @@
                         }
                     }
                 },{
-                    field: 'status',
-                    title: '资源状态',
-                    width: '10%',
+                    field: 'authority',
+                    title: '权限控制',
+                    width: '8%',
                     align: "center",
                     formatter: function(value, row, index) {
-                        return $.table.formatDicLabel(statusDatas, value);
+                        return $.table.formatDicLabel(commonStatusDatas, value);
+                    }
+                },{
+                    field: 'status',
+                    title: '资源状态',
+                    width: '8%',
+                    align: "center",
+                    formatter: function(value, row, index) {
+                        return $.table.formatDicLabel(resourceStatusDatas, value);
                     }
                 }],
                 onLoadSuccess: function(data) {
@@ -89,21 +98,28 @@
             $.treeTable.init(options);
         });
 
-        /*把已授权的勾选上*/
-        function initOldRoleResource(data){
-            $('#bootstrap-treeTable').bootstrapTreeTable('setSelection','1');
-            $('#bootstrap-treeTable').bootstrapTreeTable('setSelection','3');
+        /** 把已授权的勾选上 **/
+        function initOldRoleResource(dataArr){
+            $.each(dataArr,function(i,data){
+                if(1==data.roleGrant){
+                    $('#bootstrap-treeTable').bootstrapTreeTable('setSelection',data.id);
+                }
+            });
         }
 
-        /* 保存角色对应的资源 */
+        /** 保存角色对应的资源 **/
         function saveRoleResource(){
             var selecteds = $('#bootstrap-treeTable').bootstrapTreeTable('getSelections');
-            alert(selecteds);
-            $.each(selecteds,function(_i,_item){
-                console.log(_item);
+            var resourceIds="";
+            $.each(selecteds,function(i,item){
+                if((1==item.authority&&"menu"==item.resourceType)||(1==item.authority&&"button"==item.resourceType)){
+                    resourceIds+=item.id+","
+                }
             });
-            //alert("看console");
-
+            var url= prefix + "/save_role_resource";
+            var data={};data.roleId=roleId;data.resourceIds=resourceIds;
+            var tipsInfo="确定保存角色对应资源吗";
+            $.operate.manageCommon(url,data,tipsInfo);
         }
     </script>
 	
