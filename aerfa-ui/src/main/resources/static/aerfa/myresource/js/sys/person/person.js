@@ -109,3 +109,9 @@ function resetPwd(personId) {
     var url = prefix +'/to_reset_pwd/' + personId;
     $.modal.open("重置密码", url);
 }
+
+/** 管理人员对应的角色 **/
+function managePersonRole(personId){
+	var toPersonRoleUrl = prefix + "/to_person_role/"+personId;
+	$.modal.open("人员角色管理", toPersonRoleUrl,1000);
+}
