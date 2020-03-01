@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.PersonRoleDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="personRoleResult" type="AefsysPersonRole" >
+        <result property="personId"    column="person_id"    />
+        <result property="roleId"    column="role_id"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectPersonRole">
+        select person_id, role_id from aefsys_person_role
+    </sql>
+    
+    <!--根据条件查询多个对象-->	
+    <select id="listPersonRole" parameterType="AefsysPersonRole" resultMap="personRoleResult">
+        <include refid="selectPersonRole"/>
+        <where>  
+            <if test="personId != null  "> and person_id = #{personId}</if>
+            <if test="roleId != null  "> and role_id = #{roleId}</if>
+        </where>
+    </select>
+
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertPersonRole" parameterType="AefsysPersonRole">
+        insert into aefsys_person_role(person_id,role_id) values (#{personId},#{roleId})
+    </insert>
+
+    <!--根据人员ID删除人员角色关系-->
+	<delete id="deletePersonRoleByPersonId" parameterType="Long">
+        delete from aefsys_person_role where person_id = #{personId}
+    </delete>
+
+    <!--根据角色ID删除人员角色关系-->
+    <delete id="deletePersonRoleByRoleId" parameterType="Long">
+        delete from aefsys_person_role where role_id = #{roleId}
+    </delete>
+
+</mapper>

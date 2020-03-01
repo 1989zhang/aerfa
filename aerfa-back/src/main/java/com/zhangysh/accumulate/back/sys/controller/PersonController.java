@@ -1,6 +1,13 @@
 package com.zhangysh.accumulate.back.sys.controller;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.zhangysh.accumulate.back.sys.service.IPersonRoleService;
+import com.zhangysh.accumulate.back.sys.service.IRoleService;
+import com.zhangysh.accumulate.common.constant.MarkConstant;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPersonRole;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysRoleResource;
+import com.zhangysh.accumulate.pojo.sys.transobj.AefsysPersonRoleDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +41,13 @@ import com.zhangysh.accumulate.pojo.sys.transobj.AefsysPersonDto;
 public class PersonController extends BaseController{
 	
 	private static final Logger logger=LoggerFactory.getLogger(PersonController.class);
-	
-	
+
+	@Autowired
+	private IRoleService roleService;
 	@Autowired
 	private IPersonService personService;
+	@Autowired
+	private IPersonRoleService personRoleService;
     @Autowired
     private IRedisRelatedService redisRelatedService;
     
@@ -127,4 +137,44 @@ public class PersonController extends BaseController{
 		boolean checkRet=personService.checkOldPassword(operPerson.getAccount(),oldPassword);
 		return toHandlerResultStr(checkRet,null,CodeMsgConstant.SYS_DATA_VALIDATE_ERROR,null);
 	}
+
+	/****
+	 * 获取人员对应的角色集合
+	 * @param request 请求对象
+	 * @param personId 人员的ID
+	 **/
+	@RequestMapping(value = "/person_role",method = RequestMethod.POST)
+	@ResponseBody
+	public String getPersonRole(HttpServletRequest request, @RequestBody Long personId){
+		return JSON.toJSONStringWithDateFormat(roleService.getPersonRolesByPersonId(personId),UtilConstant.NORMAL_MIDDLE_DATE);
+	}
+
+
+	/****
+	 * 保存人员对应的角色
+	 * @param request 请求对象
+	 * @param personRoleDto 保存的角色对应资源对象
+	 ***/
+	@Log(system="后台管理系统",module="系统管理",menu="人员管理",button="人员授权角色",saveParam=true)
+	@RequestMapping(value = "/save_person_role",method = RequestMethod.POST)
+	@ResponseBody
+	public String savePersonRole(HttpServletRequest request,@RequestBody AefsysPersonRoleDto personRoleDto){
+		int countEffectRows=0;
+		//首先是删除人员对应的角色
+		int deleteRows=personRoleService.deletePersonRoleByPersonId(personRoleDto.getPersonId());
+		//再新增角色对应的资源
+		String[] roleIdArr=personRoleDto.getRoleIds().split(MarkConstant.MARK_SPLIT_EN_COMMA);
+		countEffectRows=deleteRows;
+		for(int i=0;i<roleIdArr.length;i++){
+			if(StringUtil.isNotEmpty(roleIdArr[i])){
+				AefsysPersonRole personRole=new AefsysPersonRole();
+				personRole.setPersonId(personRoleDto.getPersonId());
+				personRole.setRoleId(Long.valueOf(roleIdArr[i]));
+				personRoleService.insertPersonRole(personRole);
+				countEffectRows=countEffectRows+1;
+			}
+		}
+		return toHandlerResultStr(countEffectRows);
+	}
+
 }

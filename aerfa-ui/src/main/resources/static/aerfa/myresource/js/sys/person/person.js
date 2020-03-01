@@ -66,7 +66,8 @@ $(function() {
 				var actions = [];
 			    if(editFlag){
 					actions.push('<a class="btn btn-success btn-xs true " href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit">编辑</i></a> ');
-				}
+					actions.push('<a class="btn btn-primary btn-xs" href="#" onclick="managePersonRole(\'' + row.id + '\')"><i class="fa fa-inbox"></i>授予角色</a> ');
+			    }
 			    if(removeFlag){
 					actions.push('<a class="btn btn-danger btn-xs false " href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove">删除</i></a> ');
 				}

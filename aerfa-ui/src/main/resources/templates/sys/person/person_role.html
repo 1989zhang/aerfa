@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head th:include="sys/include :: header"></head>
 <body class="gray-bg">
 	<div class="wrapper wrapper-content animated">
         <!--搜索区域开始-->
         <div class="ibox float-e-margins">
             <div class="ibox-content">
-            	<form role="form" class="form-inline" id="form-dataPermission-search">
+            	<form role="form" class="form-inline" id="form-role-search">
                     <div class="form-group">
                         <label>勾选完成后请点击按钮：</label>
                     </div>
-                    <a class="btn btn-primary btn-sm" onclick="saveRoleDataPermission()"><i class="fa fa-floppy-o"></i> 保存[[${role.roleName}]]数据权限</a>
+                    <a class="btn btn-primary btn-sm" onclick="savePersonRole()"><i class="fa fa-floppy-o"></i> 保存人员授权</a>
                 </form>
             </div>
         </div>
@@ -23,13 +23,14 @@
     </div>
     <div th:include="sys/include :: footer"></div>
 
+    <!-- 带@放到单独的js会不执行，所以外面定义变量里面引用。-->
     <script th:inline="javascript">
-        var dataPermissionTypeDatas = [[${@dic.getDic('data_permission_type')}]];
-        var roleId=[[${role.id}]];//角色ID
+        var statusDatas = [[${@dic.getDic('role_status')}]];
+        var personId=[[${personId}]];//人员ID
         //初始化参数和数据
         $(function() {
             var options = {
-                url:  "/sys/data_permission/list",
+                url:  "/sys/role/list",
                 modalName: "数据权限",
                 id:'id',//id字段
                 showRefresh:false,
@@ -39,36 +40,41 @@
                 paginationL:false,
                 columns: [{
                     checkbox: true
-		        },{
-                    field : 'tableNameIdentify',
-                    title : '数据权限表名标识',
+                },{
+                    field : 'roleName',
+                    title : '角色名称',
                     width: '25.0%',
                     align: 'center',
                 },{
-                    field : 'permissionType',
-                    title : '数据权限类型',
-                    width: '20.0%',
+                    field : 'roleCode',
+                    title : '角色编码',
+                    width: '25.0%',
+                    align: 'center'
+                },{
+                    field : 'status',
+                    title : '状态',
+                    width: '10.0%',
                     align: 'center',
                     formatter: function(value, row, index) {
-                        return $.table.formatDicLabel(dataPermissionTypeDatas, value);
+                        return $.table.formatDicLabel(statusDatas, value);
                     }
                 },{
-                    field : 'permissionSql',
-                    title : '数据权限SQL',
-                    width: '50.0%',
+                    field : 'remark',
+                    title : '备注',
+                    width: '35.0%',
                     align: 'center',
                 }],
                 onLoadSuccess: function(data) {
-                    initOldRoleDataPermission();
+                    initOldPersonRole();
                 }
             };
             $.table.init(options);
         });
 
-        function initOldRoleDataPermission(){
+        function initOldPersonRole(){
             $.ajax({
                 type: "post",
-                url: prefix+"/role_data_permission/"+roleId,
+                url: prefix+"/person_role/"+personId,
                 dataType: "json",
                 success: function (result) {
                     var idArr=[];
@@ -81,17 +87,18 @@
         }
 
         /** 保存角色对应的数据权限 **/
-        function saveRoleDataPermission(){
-            var dataPermissionIds="";
+        function savePersonRole(){
+            var roleIds="";
             var selectionsRow=$("#bootstrap-table").bootstrapTable('getSelections');
             for(var i=0;i<selectionsRow.length;i++){
-                dataPermissionIds+=selectionsRow[i].id+","
+                roleIds+=selectionsRow[i].id+","
             }
-            var url= prefix + "/save_role_data_permission";
-            var data={};data.roleId=roleId;data.dataPermissionIds=dataPermissionIds;
-            var tipsInfo="确定保存角色对应数据权限吗";
+            var url= prefix + "/save_person_role";
+            var data={};data.personId=personId;data.roleIds=roleIds;
+            var tipsInfo="确定保存人员对应的角色吗";
             $.operate.manageCommon(url,data,tipsInfo);
         }
+
     </script>
 </body>
 </html>

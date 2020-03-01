@@ -61,7 +61,7 @@ insert into aefsys_resource values (44, 41, '任务修改', 'button', 1, 1, 'sys
 insert into aefsys_resource values (45, 41, '任务删除', 'button', 1, 1, 'sys:job:remove', '#', null, 4, null, null, null, null, null);
 insert into aefsys_resource values (46, 30, '行政区划', 'menu', 1, 1, 'comm:division:view', '/comm/division/to_division', null, 4, null, null, null, null, null);
 insert into aefsys_resource values (47, 30, '工作日期', 'menu', 1, 1, 'comm:workDay:view', '/comm/work_day/to_work_day', null, 5, null, null, null, null, null);
-insert into aefsys_resource values (48, 30, '快捷访问', 'menu', 1, 1, 'sys:quickVisit:view', '/sys/quick_visit/to_quick_visit', null, 6, null, null, null, null, null);
+insert into aefsys_resource values (48, 30, '快捷访问', 'menu', 1, 0, 'sys:quickVisit:view', '/sys/quick_visit/to_quick_visit', null, 6, null, null, null, null, null);
 insert into aefsys_resource values (50, 1, '系统工具', 'module', 1, null, null, '#', 'fa fa-cutlery', 3, null, null, null, null, null);
 insert into aefsys_resource values (51, 50, '代码生成', 'menu', 1, 1, 'support:code:view', '/support/code/to_generate_code', null, 1, null, null, null, null, null);
 insert into aefsys_resource values (52, 50, '模板定义', 'menu', 1, 1, 'tdm:template:view', '/tdm/template/to_template', null, 2, null, null, null, null, null);

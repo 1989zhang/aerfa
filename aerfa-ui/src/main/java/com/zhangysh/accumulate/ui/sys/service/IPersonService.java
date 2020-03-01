@@ -1,5 +1,6 @@
 package com.zhangysh.accumulate.ui.sys.service;
 
+import com.zhangysh.accumulate.pojo.sys.transobj.AefsysPersonRoleDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -66,5 +67,20 @@ public interface IPersonService {
 	@RequestMapping(value = "/sys/person/check_old_password",method = RequestMethod.POST)
 	public String checkOldPassword(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody String oldPassword);
 
-	
+	/****
+	 * 获取人员对应的角色集合
+	 * @param aerfatoken token对象
+	 * @param personId 人员的ID
+	 **/
+	@RequestMapping(value = "/sys/person/person_role",method = RequestMethod.POST)
+	public String getPersonRole(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody Long personId);
+
+	/****
+	 * 保存人员对应的角色
+	 * @param aerfatoken token对象
+	 * @param personRoleDto 人员角色
+	 **/
+	@RequestMapping(value = "/sys/person/save_person_role",method = RequestMethod.POST)
+	public String savePersonRole(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefsysPersonRoleDto personRoleDto);
+
 }

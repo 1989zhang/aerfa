@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.zhangysh.accumulate.common.constant.MarkConstant;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysOrg;
+import com.zhangysh.accumulate.pojo.sys.transobj.AefsysPersonRoleDto;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -313,4 +314,44 @@ public class PersonController {
 		}
 		return JSON.toJSONString(ResultVo.error(CodeMsgConstant.UFS_UPLOAD_FILE_ERROR.fillArgs("图片内容为空！")));
 	}
+
+	/**
+	 * 跳转到人员角色管理页面
+	 *
+	 */
+	@RequiresPermissions("sys:person:edit")
+	@RequestMapping(value="/to_person_role/{personId}")
+	public String toPersonRole(HttpServletRequest request, ModelMap modelMap,@PathVariable("personId") Long personId){
+		modelMap.addAttribute("prefix", prefix);
+		modelMap.addAttribute("personId", personId);
+		return prefix+"/person_role";
+	}
+
+	/***
+	 * 获取人员对应的角色集合
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param personId 人员id
+	 * @return 个人拥有的角色集合
+	 */
+	@RequestMapping(value="/person_role/{personId}")
+	@ResponseBody
+	public String getPersonRole(HttpServletRequest request, ModelMap modelMap,@PathVariable("personId") Long personId){
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return personService.getPersonRole(aerfatoken,personId);
+	}
+
+	/***
+	 * 保存人员对应的角色
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param personRoleDto 保存的对象
+	 **/
+	@RequestMapping(value="/save_person_role")
+	@ResponseBody
+	public String savePersonRole(HttpServletRequest request, ModelMap modelMap, AefsysPersonRoleDto personRoleDto){
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return personService.savePersonRole(aerfatoken,personRoleDto);
+	}
+
 }

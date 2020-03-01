@@ -25,7 +25,7 @@
     </select>
 
     <!--根据对象和属性insert新增对象-->
-    <insert id="insertRoleResource" parameterType="AefsysRoleResource" useGeneratedKeys="true" keyProperty="role_id">
+    <insert id="insertRoleResource" parameterType="AefsysRoleResource">
         insert into aefsys_role_resource(role_id,resource_id) values (#{roleId},#{resourceId})
     </insert>
 
