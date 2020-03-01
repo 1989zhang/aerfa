@@ -40,7 +40,8 @@
         			exportDataType: 'all',                                   //支持导出方式: 'basic','all','selected'，因为后台分页所以就只支持all
         			exportTypes:[ 'csv', 'txt', 'sql'],                      //导出文件类型
         			queryParams: $.table._params,                            // 传递参数
-                    columns: options.columns                                 // 显示列信息
+                    columns: options.columns,                                // 显示列信息
+					onLoadSuccess: options.onLoadSuccess                     //数据加载完成后执行的方法
                 });
             },
             // 查询分页往后台传参数条件封装
@@ -109,19 +110,19 @@
             init: function(options) {
                 $.table._option = options;
                 var treeTable = $('#bootstrap-treeTable').bootstrapTreeTable({
-        	        url: options.url,                                      // 请求后台数据的URL（*）
-                	id:$.common.defaultIdField(options.id),                //id列,用于设置父子关系
-        		    parentId : options.parentId,                           //用于设置父子关系
-        	    	type: 'get',                                           // 请求方式（*）
-        	        ajaxParams : {},                                       // 请求数据的ajax的data属性
+        	        url: options.url,                                       // 请求后台数据的URL（*）
+                	id:$.common.defaultIdField(options.id),                 //id列,用于设置父子关系
+        		    parentId : options.parentId,                            //用于设置父子关系
+        	    	type: 'get',                                            // 请求方式（*）
+        	        ajaxParams : {},                                        // 请求数据的ajax的data属性
         			expandColumn:$.common.defaultZero(options.expandColumn),// 在哪一列上面显示展开按钮,有checkbox要加1
-        			striped : false,                                       // 是否各行渐变色
-        			bordered : true,                                       // 是否显示边框
-					showRefresh:$.common.defaultTrue(options.showRefresh), //是否展示刷新按钮
-					showColumns:$.common.defaultTrue(options.showColumns), //是否展示内容列下拉框
-        			expandAll : $.common.defaultTrue(options.expandAll),   // 是否全部展开
-        	        columns: options.columns,                              //加载展示列
-					onLoadSuccess: options.onLoadSuccess                   //数据加载完成后执行的方法
+        			striped : false,                                        // 是否各行渐变色
+        			bordered : true,                                        // 是否显示边框
+					showRefresh:$.common.defaultTrue(options.showRefresh),  //是否展示刷新按钮
+					showColumns:$.common.defaultTrue(options.showColumns),  //是否展示内容列下拉框
+        			expandAll : $.common.defaultTrue(options.expandAll),    // 是否全部展开
+        	        columns: options.columns,                               //加载展示列
+					onLoadSuccess: options.onLoadSuccess                    //数据加载完成后执行的方法
         	    });
                 $.treeTable._treeTable = treeTable;
             },

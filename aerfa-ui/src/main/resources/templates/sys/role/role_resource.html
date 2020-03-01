@@ -8,7 +8,7 @@
           <!--搜索区域开始-->
           <div class="ibox float-e-margins">
              <div class="ibox-content">
-                 <form role="form" class="form-inline" id="resource-form-search" style="text-align:center">
+                 <form role="form" class="form-inline" id="resource-form-search">
                      <div class="form-group">
                          <label>勾选完成后请点击按钮：</label>
                      </div>
@@ -92,7 +92,6 @@
                 }],
                 onLoadSuccess: function(data) {
                     initOldRoleResource(data);
-                    return false;
                 }
             };
             $.treeTable.init(options);

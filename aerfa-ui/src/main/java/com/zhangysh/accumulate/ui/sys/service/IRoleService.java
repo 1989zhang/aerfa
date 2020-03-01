@@ -1,5 +1,7 @@
 package com.zhangysh.accumulate.ui.sys.service;
 
+import com.zhangysh.accumulate.pojo.sys.transobj.AefsysRoleDataPermissionDto;
+import com.zhangysh.accumulate.pojo.sys.transobj.AefsysRoleResourceDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -58,5 +60,39 @@ public interface IRoleService {
 	 ***/
 	@RequestMapping(value = "/sys/role/delete",method = RequestMethod.POST)
 	public String deleteRoleByIds(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody String ids);
+
+	/****
+	 * 展示所有资源且带父子结构,且根据角色是否被授权打上标签
+	 * @param aerfatoken token对象
+	 * @param id 角色的ID
+	 **/
+	@RequestMapping(value = "/sys/role/role_resource",method = RequestMethod.POST)
+	public String getRoleResource(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody Long id);
+
+	/****
+	 * 根据角色获取对应的数据权限对象
+	 * @param aerfatoken token对象
+	 * @param id 角色的ID
+	 **/
+	@RequestMapping(value = "/sys/role/role_data_permission",method = RequestMethod.POST)
+	public String getRoleDataPermission(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody Long id);
+
+	/****
+	 * 保存角色对应的资源
+	 * @param aerfatoken token对象
+	 * @param roleResourceDto 保存的角色对应资源对象
+	 **/
+	@RequestMapping(value = "/sys/role/save_role_resource",method = RequestMethod.POST)
+	public String saveRoleResource(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefsysRoleResourceDto roleResourceDto);
+
+	/**
+	 * 保存角色对应的单个数据权限
+	 * @param aerfatoken token对象
+	 * @param roleDataPermissionDto 保存的角色对应数据权限对象
+	 **/
+	@RequestMapping(value = "/sys/role/save_role_data_permission",method = RequestMethod.POST)
+	public String saveRoleDataPermission(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefsysRoleDataPermissionDto roleDataPermissionDto);
+
+
 
 }

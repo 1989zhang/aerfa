@@ -56,12 +56,12 @@
         /*打开角色资源管理页面*/
         function manageRoleResource(roleId){
             var toRoleResourceUrl = prefix + "/to_role_resource/"+roleId;
-            $.modal.open("角色资源管理", toRoleResourceUrl);
+            $.modal.open("角色资源管理", toRoleResourceUrl,1000);
         }
         /*打开角色数据权限管理页面*/
         function manageDataPermission(roleId){
             var toRoleDataPermissionUrl = prefix + "/to_role_data_permission/"+roleId;
-            $.modal.open("角色数据权限管理", toRoleDataPermissionUrl);
+            $.modal.open("角色数据权限管理", toRoleDataPermissionUrl,1000);
         }
 
     </script>

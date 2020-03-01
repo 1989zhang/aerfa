@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="sys/include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated">
+        <!--搜索区域开始-->
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+            	<form role="form" class="form-inline" id="form-dataPermission-search">
+                    <div class="form-group">
+                        <label>数据权限标识：</label>
+                        <input type="text" id="tableNameIdentify" name="tableNameIdentify" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>数据权限类型：</label>
+                        <select class="form-control form-selectdown" id="permissionType" name="permissionType" th:with="statusDicList=${@dic.getDic('data_permission_type')}">
+                            <option value="">所有</option>
+                            <option th:each="dic:${statusDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+                        </select>
+                    </div>
+	                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search($('form').attr('id'))"><i class="fa fa-search"></i>&nbsp;查询</a>
+            	</form>
+            </div>
+        </div>
+        <!--搜索区域结束-->
+        <div class="ibox float-e-margins">
+        	<div class="ibox-content">
+                 <div id="toolbar" >
+                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.add()" shiro:hasPermission="sys:dataPermission:add">
+                          <i class="glyphicon glyphicon-plus" aria-hidden="true" ></i>新增
+                      </button>
+                      <button type="button" class="btn btn-outline btn-default" onclick="$.operate.batRemove()" shiro:hasPermission="sys:dataPermission:remove">
+                          <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>删除
+                      </button>
+                  </div>
+              
+                  <table id="bootstrap-table"></table>
+        	</div>
+        </div>
+    </div>
+    <div th:include="sys/include :: footer"></div>
+
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermission('sys:dataPermission:edit')}]];
+        var removeFlag = [[${@permission.hasPermission('sys:dataPermission:remove')}]];
+        var dataPermissionTypeDatas = [[${@dic.getDic('data_permission_type')}]];
+
+        //初始化参数和数据
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/to_add",
+                updateUrl: prefix + "/to_edit/{id}",
+                removeUrl: prefix + "/remove/{id}",
+                modalName: "数据权限",
+                id:'id',//id字段
+                columns: [{
+		            checkbox: true
+		        },{
+                    field : 'tableNameIdentify',
+                    title : '数据权限表名标识',
+                    width: '20.0%',
+                    align: 'center',
+                },{
+                    field : 'permissionType',
+                    title : '数据权限类型',
+                    width: '15.0%',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.formatDicLabel(dataPermissionTypeDatas, value);
+                    }
+                },{
+                    field : 'permissionSql',
+                    title : '数据权限SQL',
+                    width: '45.0%',
+                    align: 'center',
+                },
+		        {
+		            title: '操作',
+		            align: 'center',
+		            width: '20%',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	if(editFlag){
+                            actions.push('<a class="btn btn-success btn-xs" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        }
+		            	if(removeFlag){
+                            actions.push('<a class="btn btn-danger btn-xs" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        }
+ 						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

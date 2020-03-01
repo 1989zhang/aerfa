@@ -102,3 +102,10 @@ insert into aefsys_data_dic values (186, 'publish_info_type', '信息发布类�
 insert into aefsys_data_dic values (187, 'publish_info_type', '信息发布类型', 'gzdt', '工作动态', null, 2, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (188, 'publish_info_type', '信息发布类型', 'gsgg', '公示公告', null, 3, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (189, 'publish_info_type', '信息发布类型', 'bszn', '办事指南', null, 4, 0, null, 1, null, null, null, null, null);
+/*数据权限相关数据字典*/
+insert into aefsys_data_dic values (190, 'data_permission_type', '数据权限类型', null, null, null, 1, 1, null, 1, '数据权限类型数据字典', null, null, null, null);
+insert into aefsys_data_dic values (191, 'data_permission_type', '数据权限类型', '1', '无权限控制', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (192, 'data_permission_type', '数据权限类型', '2', '自定义权限', null, 2, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (193, 'data_permission_type', '数据权限类型', '3', '本单位数据', null, 3, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (194, 'data_permission_type', '数据权限类型', '4', '本人的数据', null, 4, 0, null, 1, null, null, null, null, null);
+

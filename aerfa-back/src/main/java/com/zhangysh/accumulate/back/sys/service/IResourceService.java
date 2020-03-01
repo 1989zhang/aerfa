@@ -91,4 +91,10 @@ public interface IResourceService {
 	 **/
 	List<AefsysResource> getDirectResourcesByPersonId(Long personId);
 
+	/**
+	 * 根据角色ID获取它打标签的资源，资源还是用的list资源
+	 * @param roleId 角色ID
+	 **/
+	List<AefsysResourceVo> getResourceListByRoleId(Long roleId);
+
 }

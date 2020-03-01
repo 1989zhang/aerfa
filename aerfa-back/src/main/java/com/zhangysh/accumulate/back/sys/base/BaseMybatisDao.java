@@ -44,6 +44,7 @@ public class BaseMybatisDao {
 	/****
 	 * 执行自定义插入sql
 	 * @param sql 纯sql语句
+	 * @return 新增条数
 	 ***/
 	public int insertBySql(String sql) {
 		return mybatisQuerySqlDao.customQuerySqlInsert(sql);
@@ -53,6 +54,7 @@ public class BaseMybatisDao {
 	 * 执行自定义插入sql且带参数
 	 * @param sql 执行查询带参数sql语句,例如:insert into aefsys_org(status) values(#{status}),必须用#
 	 * @param paramMap 参数组装集合,例如: paramMap.put("status", 1);
+	 * @return 新增条数
 	 ***/
 	public int insertBySqlWithParam(String sql,Map<String,Object> paramMap) {
 		Map<String,Object> sqlParamMap=new HashMap<String,Object>();
@@ -64,6 +66,7 @@ public class BaseMybatisDao {
 	/****
 	 * 执行自定义修改sql
 	 * @param sql 纯sql语句
+	 * @return 修改条数
 	 ***/
 	public int updateBySql(String sql) {
 		return mybatisQuerySqlDao.customQuerySqlUpdate(sql);
@@ -73,6 +76,7 @@ public class BaseMybatisDao {
 	 * 执行自定义修改sql且带参数
 	 * @param sql 执行查询带参数sql语句,例如:update aefsys_org set status=#{status} where id=#{id} 必须用#
 	 * @param paramMap 参数组装集合,例如: paramMap.put("status", 2); paramMap.put("id", 6);
+	 * @return 修改条数
 	 ***/
 	public int updateBySqlWithParam(String sql,Map<String,Object> paramMap) {
 		Map<String,Object> sqlParamMap=new HashMap<String,Object>();
@@ -84,6 +88,7 @@ public class BaseMybatisDao {
 	/****
 	 * 执行自定义删除sql
 	 * @param sql 纯sql语句
+	 * @return 删除条数
 	 ***/
 	public int deleteBySql(String sql) {
 		return mybatisQuerySqlDao.customQuerySqlDelete(sql);
@@ -93,6 +98,7 @@ public class BaseMybatisDao {
 	 * 执行自定义删除sql且带参数
 	 * @param sql 执行查询带参数sql语句,例如:delete from aefsys_org where id=#{id} 必须用#
 	 * @param paramMap 参数组装集合,例如: paramMap.put("id", 6);
+	 * @return 删除条数
 	 ***/
 	public int deleteBySqlWithParam(String sql,Map<String,Object> paramMap) {
 		Map<String,Object> sqlParamMap=new HashMap<String,Object>();

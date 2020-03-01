@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--namespace要和java类型的Mapper的全路径对应 -->
+<mapper namespace="com.zhangysh.accumulate.back.sys.dao.RoleResourceDao">
+    
+    <!--返回对象映射-->
+    <resultMap id="roleResourceResult" type="AefsysRoleResource" >
+        <result property="roleId"    column="role_id"    />
+        <result property="resourceId"    column="resource_id"    />
+    </resultMap>
+	
+	<!--查询对象语句拼装-->
+	<sql id="selectRoleResource">
+        select role_id, resource_id from aefsys_role_resource
+    </sql>
+
+    <!--根据条件查询多个对象-->
+    <select id="listRoleResource" parameterType="AefsysRoleResource" resultMap="roleResourceResult">
+        <include refid="selectRoleResource"/>
+        <where>
+            <if test="roleId != null  "> and role_id = #{roleId}</if>
+            <if test="resourceId != null  "> and resource_id = #{resourceId}</if>
+        </where>
+    </select>
+
+    <!--根据对象和属性insert新增对象-->
+    <insert id="insertRoleResource" parameterType="AefsysRoleResource" useGeneratedKeys="true" keyProperty="role_id">
+        insert into aefsys_role_resource(role_id,resource_id) values (#{roleId},#{resourceId})
+    </insert>
+
+    <!--根据ID删除单个对象-->
+	<delete id="deleteRoleResourceByRoleId" parameterType="Long">
+        delete from aefsys_role_resource where role_id = #{roleId}
+    </delete>
+
+    <!--根据ID删除单个对象-->
+    <delete id="deleteRoleResourceByResourceId" parameterType="Long">
+        delete from aefsys_role_resource where resource_id = #{resourceId}
+    </delete>
+
+</mapper>

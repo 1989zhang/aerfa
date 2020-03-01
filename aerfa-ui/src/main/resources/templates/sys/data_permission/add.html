@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<body class="white-bg">
+	<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+		<form class="form-horizontal m" id="form-dataPermission-add">
+			<input id="id" name="id" type="hidden"><!--判断唯一要用到id，避免出现undefine-->
+		    <div class="form-group">
+				<label class="col-sm-3 control-label">权限标识：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="tableNameIdentify" name="tableNameIdentify">
+				</div>
+			</div>
+		    <div class="form-group">
+				<label class="col-sm-3 control-label">权限类型：</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="permissionType" name="permissionType" th:with="permissionTypeDicList=${@dic.getDic('data_permission_type')}">
+		         		<option th:each="dic:${permissionTypeDicList}" th:text="${dic.fullName}" th:value="${dic.code}"></option>
+	                </select> 
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">备注描述：</label>
+				<div class="col-sm-8">
+					<input class="form-control" type="text" id="remark" name="remark">
+				</div>
+			</div>
+		    <div class="form-group">
+				<label class="col-sm-3 control-label">权限SQL：</label>
+				<div class="col-sm-8">
+					<textarea class="form-control" id="permissionSql" name="permissionSql" rows=6></textarea>
+				</div>
+			</div>
+
+
+
+			<div class="form-group">
+				<div class="form-control-static col-sm-offset-9">
+					<button type="submit" class="btn btn-primary">保存</button>
+					<button onclick="$.modal.close()" class="btn btn-danger" type="button">关闭</button>
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="sys/include :: footer"></div>
+
+    <script th:inline="javascript">
+		$("#form-dataPermission-add").validate({
+			rules:{
+			},
+			messages: {
+    		},
+			submitHandler: function(form) {
+				$.operate.save(prefix + "/save_add", $('#form-dataPermission-add').serialize());
+			}
+		});
+	</script>
+	
+</body>
+</html>

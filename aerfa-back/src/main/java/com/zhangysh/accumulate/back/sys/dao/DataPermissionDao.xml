@@ -34,9 +34,9 @@
         <include refid="selectDataPermission"/>
         <where>  
             <if test="id != null  "> and id = #{id}</if>
-            <if test="tableNameIdentify != null  and tableNameIdentify != ''  "> and table_name_identify = #{tableNameIdentify}</if>
+            <if test="tableNameIdentify != null  and tableNameIdentify != ''  "> and table_name_identify like concat('%',#{tableNameIdentify},'%') </if>
             <if test="permissionType != null  and permissionType != ''  "> and permission_type = #{permissionType}</if>
-            <if test="permissionSql != null  and permissionSql != ''  "> and permission_sql = #{permissionSql}</if>
+            <if test="permissionSql != null  and permissionSql != ''  "> and permission_sql like concat('%',#{permissionSql},'%') </if>
             <if test="roleId != null  "> and role_id = #{roleId}</if>
             <if test="remark != null  and remark != ''  "> and remark = #{remark}</if>
             <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>

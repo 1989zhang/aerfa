@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated">
+        <!--搜索区域开始-->
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+            	<form role="form" class="form-inline" id="form-dataPermission-search">
+                    <div class="form-group">
+                        <label>勾选完成后请点击按钮：</label>
+                    </div>
+                    <a class="btn btn-primary btn-sm" onclick="saveRoleDataPermission()"><i class="fa fa-floppy-o"></i> 保存[[${role.roleName}]]数据权限</a>
+                </form>
+            </div>
+        </div>
+        <!--搜索区域结束-->
+        <div class="ibox float-e-margins">
+        	<div class="ibox-content">
+                  <table id="bootstrap-table"></table>
+        	</div>
+        </div>
+    </div>
+    <div th:include="sys/include :: footer"></div>
+
+    <script th:inline="javascript">
+        var dataPermissionTypeDatas = [[${@dic.getDic('data_permission_type')}]];
+        var roleId=[[${role.id}]];//角色ID
+        //初始化参数和数据
+        $(function() {
+            var options = {
+                url:  "/sys/data_permission/list",
+                modalName: "数据权限",
+                id:'id',//id字段
+                showRefresh:false,
+                showColumns:false,
+                showToggle:false,
+                showExport:false,
+                paginationL:false,
+                columns: [{
+                    checkbox: true
+		        },{
+                    field : 'id',
+                    title : '数据权限表名标识',
+                    width: '20.0%',
+                    align: 'center',
+                },{
+                    field : 'tableNameIdentify',
+                    title : '数据权限表名标识',
+                    width: '20.0%',
+                    align: 'center',
+                },{
+                    field : 'permissionType',
+                    title : '数据权限类型',
+                    width: '15.0%',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        return $.table.formatDicLabel(dataPermissionTypeDatas, value);
+                    }
+                },{
+                    field : 'permissionSql',
+                    title : '数据权限SQL',
+                    width: '45.0%',
+                    align: 'center',
+                }],
+                onLoadSuccess: function(data) {
+                    initOldRoleDataPermission();
+                }
+            };
+            $.table.init(options);
+        });
+
+        function initOldRoleDataPermission(){
+            $.ajax({
+                type: "post",
+                url: prefix+"/role_data_permission/"+roleId,
+                dataType: "json",
+                success: function (result) {
+                    var idArr=[];
+                    for(var i=0;i<result.length;i++){
+                        idArr.push(result[i].id);
+                    }
+                    $("#bootstrap-table").bootstrapTable('checkBy', {field:'id',values:idArr});
+                }
+            });
+        }
+
+        /** 保存角色对应的数据权限 **/
+        function saveRoleDataPermission(){
+            debugger;
+            var dataPermissionIds="";
+            var selectionsRow=$("#bootstrap-table").bootstrapTable('getSelections');
+            for(var i=0;i<selectionsRow.length;i++){
+                dataPermissionIds+=selectionsRow[i].id+","
+            }
+            var url= prefix + "/save_role_data_permission";
+            var data={};data.roleId=roleId;data.dataPermissionIds=dataPermissionIds;
+            var tipsInfo="确定保存角色对应数据权限吗";
+            $.operate.manageCommon(url,data,tipsInfo);
+        }
+    </script>
+</body>
+</html>

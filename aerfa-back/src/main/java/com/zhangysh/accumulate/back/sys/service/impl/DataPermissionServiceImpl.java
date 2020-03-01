@@ -1,6 +1,10 @@
 package com.zhangysh.accumulate.back.sys.service.impl;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.zhangysh.accumulate.back.sys.base.BaseMybatisDao;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysDataPermissionVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.github.pagehelper.Page;
@@ -24,10 +28,15 @@ public class DataPermissionServiceImpl implements IDataPermissionService {
 
 	@Autowired
 	private DataPermissionDao dataPermissionDao;
+	@Autowired
+	private BaseMybatisDao baseMybatisDao;
 
     @Override
-	public AefsysDataPermission getDataPermissionById(Long id){
-	    return dataPermissionDao.getDataPermissionById(id);
+	public AefsysDataPermissionVo getDataPermissionById(Long id){
+		AefsysDataPermissionVo dataPermissionVo=new AefsysDataPermissionVo();
+		AefsysDataPermission dataPermission= dataPermissionDao.getDataPermissionById(id);
+		BeanUtils.copyProperties(dataPermission,dataPermissionVo);
+		return dataPermissionVo;
 	}
 	
 	@Override
@@ -47,8 +56,8 @@ public class DataPermissionServiceImpl implements IDataPermissionService {
 	}
 
 	@Override
-	public List<AefsysDataPermission> listDataPermission(AefsysDataPermission dataPermission){
-		return dataPermissionDao.listDataPermission(dataPermission);
+	public List<AefsysDataPermissionVo> listDataPermission(AefsysDataPermission dataPermission){
+		 return transToDataPermissionVo(dataPermissionDao.listDataPermission(dataPermission));
 	}
 
 	@Override
@@ -69,6 +78,34 @@ public class DataPermissionServiceImpl implements IDataPermissionService {
 	@Override
 	public int deleteDataPermissionByIds(String ids){
 		return dataPermissionDao.deleteDataPermissionByIds(ConvertUtil.toStrArray(ids));
+	}
+
+	@Override
+	public List<AefsysDataPermissionVo> getDataPermissionListByRoleId(Long roleId){
+		AefsysDataPermission searchDataPermission=new AefsysDataPermission();
+		searchDataPermission.setRoleId(roleId);
+		return listDataPermission(searchDataPermission);
+	}
+
+	@Override
+	public int cancelRoleDataPermission(Long roleId){
+    	String sql="update aefsys_data_permission set role_id=null where role_id="+roleId;
+		return baseMybatisDao.updateBySql(sql);
+	}
+
+	/**
+	 * 把数据模型对象集合转化为视图模型集合
+	 * @param dataPermissionList 数据模型对象集合
+	 * @return 转化为的视图对象集合
+	 */
+	private List<AefsysDataPermissionVo> transToDataPermissionVo(List<AefsysDataPermission> dataPermissionList){
+		List<AefsysDataPermissionVo> retDataPermissionVoList=new ArrayList<AefsysDataPermissionVo>();
+		for(AefsysDataPermission dataPermission:dataPermissionList){
+			AefsysDataPermissionVo retDataPermissionVo=new AefsysDataPermissionVo();
+			BeanUtils.copyProperties(dataPermission,retDataPermissionVo);
+			retDataPermissionVoList.add(retDataPermissionVo);
+		}
+		return retDataPermissionVoList;
 	}
 	
 }

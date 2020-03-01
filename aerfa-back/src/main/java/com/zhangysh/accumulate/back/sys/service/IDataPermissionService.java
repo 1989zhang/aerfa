@@ -4,6 +4,7 @@ import java.util.List;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysDataPermission;
 import com.zhangysh.accumulate.common.pojo.BsTableDataInfo;
 import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
+import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysDataPermissionVo;
 
 /**
  * 数据权限相关服务层接口
@@ -18,7 +19,7 @@ public interface IDataPermissionService {
      * @param id 数据权限主键ID
      * @return 数据权限信息
      */
-	 AefsysDataPermission getDataPermissionById(Long id);
+	 AefsysDataPermissionVo getDataPermissionById(Long id);
 	
 	/**
      * 根据条件查询数据权限分页列表
@@ -43,7 +44,7 @@ public interface IDataPermissionService {
      * @param dataPermission 条件数据权限对象
      * @return 数据权限条件下结果集合
      */
-	 List<AefsysDataPermission> listDataPermission(AefsysDataPermission dataPermission);
+	 List<AefsysDataPermissionVo> listDataPermission(AefsysDataPermission dataPermission);
 	 
 	/**
      * 新增数据权限
@@ -76,5 +77,16 @@ public interface IDataPermissionService {
      * @return 删除结果条数
      */
 	 int deleteDataPermissionByIds(String ids);
-	
+
+	 /**
+	  * 根据角色id获取它对应的数据权限list集合
+	  * @param roleId 角色ID
+	  **/
+	 List<AefsysDataPermissionVo> getDataPermissionListByRoleId(Long roleId);
+
+	/**
+	 * 根据角色id，取消它关联的数据权限，即数据权限角色id置为空
+	 * @param roleId 角色ID
+	 */
+	 int cancelRoleDataPermission(Long roleId);
 }

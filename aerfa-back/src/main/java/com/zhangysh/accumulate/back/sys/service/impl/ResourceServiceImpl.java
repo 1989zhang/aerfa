@@ -3,10 +3,12 @@ package com.zhangysh.accumulate.back.sys.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zhangysh.accumulate.back.sys.service.IRoleResourceService;
 import com.zhangysh.accumulate.back.sys.service.IRoleService;
 import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysRole;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysRoleResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
@@ -28,6 +30,8 @@ public class ResourceServiceImpl implements IResourceService{
 	private IRoleService roleService;
 	@Autowired
 	private ResourceDao resourceDao;
+	@Autowired
+	private IRoleResourceService roleResourceService;
 	
 	@Override
     public AefsysResource getResourceById(Long id) {
@@ -182,7 +186,21 @@ public class ResourceServiceImpl implements IResourceService{
 		return directResources;
 	}
 
-
+	@Override
+	public List<AefsysResourceVo> getResourceListByRoleId(Long roleId){
+		List<AefsysResourceVo> allResourceList=listAllResourceWithParentResource();
+		AefsysRoleResource searchRoleResource=new AefsysRoleResource();
+		searchRoleResource.setRoleId(roleId);
+		List<AefsysRoleResource> roleResourceList=roleResourceService.listRoleResource(searchRoleResource);
+		for(AefsysResourceVo resourceVo:allResourceList){
+			for(AefsysRoleResource roleResource:roleResourceList){
+				if(resourceVo.getId().equals(roleResource.getResourceId())){
+					resourceVo.setRoleGrant(1L);
+				}
+			}
+		}
+		return allResourceList;
+	}
 
 	/**
 	 *根据父资源ID，迭代获取子资源树形列表-树

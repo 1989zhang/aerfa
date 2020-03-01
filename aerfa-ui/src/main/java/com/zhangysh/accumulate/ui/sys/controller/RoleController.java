@@ -2,6 +2,8 @@ package com.zhangysh.accumulate.ui.sys.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.zhangysh.accumulate.pojo.sys.transobj.AefsysRoleDataPermissionDto;
+import com.zhangysh.accumulate.pojo.sys.transobj.AefsysRoleResourceDto;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSON;
-
-import com.zhangysh.accumulate.common.constant.CacheConstant;
 import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
 import com.zhangysh.accumulate.common.util.HttpStorageUtil;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysRole;
@@ -102,8 +102,6 @@ public class RoleController {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		return roleService.checkRoleUnique(aerfatoken,role);
 	}
-
-
 	
 	/****
 	 *修改角色，先获取角色信息
@@ -147,8 +145,10 @@ public class RoleController {
 	@RequestMapping(value="/to_role_resource/{roleId}")
 	public String toRoleResource(HttpServletRequest request, ModelMap modelMap,@PathVariable("roleId") Long roleId) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
-		modelMap.addAttribute("roleId", roleId);
+		String retRoleStr=roleService.getSingle(aerfatoken, roleId);
+		AefsysRole role=JSON.parseObject(retRoleStr,AefsysRole.class);
 		modelMap.addAttribute("prefix", prefix);
+		modelMap.addAttribute("role", role);
 		return prefix+"/role_resource";
 	}
 
@@ -163,8 +163,65 @@ public class RoleController {
 	@RequestMapping(value="/to_role_data_permission/{roleId}")
 	public String toRoleDataPermission(HttpServletRequest request, ModelMap modelMap,@PathVariable("roleId") Long roleId) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
-		modelMap.addAttribute("roleId", roleId);
+		String retRoleStr=roleService.getSingle(aerfatoken, roleId);
+		AefsysRole role=JSON.parseObject(retRoleStr,AefsysRole.class);
 		modelMap.addAttribute("prefix", prefix);
+		modelMap.addAttribute("role", role);
 		return prefix+"/role_data_permission";
 	}
+
+	/****
+	 * 展示所有资源且带父子结构,且根据角色是否被授权打上标签
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param roleId 角色id
+	 * @return 所有打标签被授权资源集合
+	 ***/
+	@RequestMapping(value="/role_resource/{roleId}")
+	@ResponseBody
+	public String getRoleResource(HttpServletRequest request, ModelMap modelMap,@PathVariable("roleId") Long roleId) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return roleService.getRoleResource(aerfatoken, roleId);
+	}
+
+	/****
+	 * 根据角色获取对应的数据权限对象
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param roleId 角色id
+	 * @return 角色对应的数据权限集合
+	 ***/
+	@RequestMapping(value="/role_data_permission/{roleId}")
+	@ResponseBody
+	public String getRoleDataPermission(HttpServletRequest request, ModelMap modelMap,@PathVariable("roleId") Long roleId) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return roleService.getRoleDataPermission(aerfatoken, roleId);
+	}
+
+	/***
+	 * 保存角色对应的资源
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param roleResourceDto 保存的对象
+	 **/
+	@RequestMapping(value="/save_role_resource")
+	@ResponseBody
+	public String saveRoleResource(HttpServletRequest request, ModelMap modelMap, AefsysRoleResourceDto roleResourceDto) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return roleService.saveRoleResource(aerfatoken, roleResourceDto);
+	}
+
+	/***
+	 * 保存角色对应的单个数据权限
+	 * @param request 请求对象
+	 * @param modelMap spring的mvc返回对象
+	 * @param roleDataPermissionDto 保存的角色数据权限对象
+	 **/
+	@RequestMapping(value="/save_role_data_permission")
+	@ResponseBody
+	public String saveRoleDataPermission(HttpServletRequest request, ModelMap modelMap, AefsysRoleDataPermissionDto roleDataPermissionDto) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		return roleService.saveRoleDataPermission(aerfatoken, roleDataPermissionDto);
+	}
+
 }
