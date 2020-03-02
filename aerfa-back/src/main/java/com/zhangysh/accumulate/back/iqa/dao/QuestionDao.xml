@@ -64,6 +64,30 @@
         </where>
     </select>
 
+    <!--根据条件匹配到问题内容-->
+    <select id="listMatchContentQuestion" parameterType="AefiqaQuestion" resultMap="questionResult">
+        <include refid="selectQuestion"/>
+        <where>
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="belongOrgId != null  "> and belong_org_id = #{belongOrgId}</if>
+            <if test="categoryId != null  "> and category_id = #{categoryId}</if>
+            <if test="answerId != null  "> and answer_id = #{answerId}</if>
+            <if test="content != null  and content != ''  "> and content = #{content} </if>
+            <if test="standard != null  "> and standard = #{standard}</if>
+            <if test="hitCounts != null  "> and hit_counts = #{hitCounts}</if>
+            <if test="helpCounts != null  "> and help_counts = #{helpCounts}</if>
+            <if test="noHelpCounts != null  "> and no_help_counts = #{noHelpCounts}</if>
+            <if test="status != null  "> and status = #{status}</if>
+            <if test="orderNo != null  "> and order_no = #{orderNo}</if>
+            <if test="params != null and params.reply != 0">
+                and answer_id is not null
+            </if>
+            <if test="params != null and params.reply != 1">
+                and answer_id is null
+            </if>
+        </where>
+    </select>
+
     <!--根据主键查询多个对象-->
 	<select id="listBypksQuestion" parameterType="String" resultMap="questionResult">
         <include refid="selectQuestion"/>

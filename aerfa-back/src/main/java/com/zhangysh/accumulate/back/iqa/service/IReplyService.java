@@ -1,5 +1,6 @@
 package com.zhangysh.accumulate.back.iqa.service;
 
+import com.zhangysh.accumulate.pojo.iqa.dataobj.AefiqaQuestion;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
 
 /*****
@@ -23,4 +24,11 @@ public interface IReplyService {
 	 * @return 获取到的用户结果
 	 ****/
 	AefsysPersonVo getPerson(String iqaToken);
+
+	/**
+	 * 根据标记处理命中或非命中的问题
+	 * @param hitTar 是否命中标记
+	 * @param question 问题hitTar为true时候question要有id
+	 */
+	boolean dealWithQuestionHit(boolean hitTar, AefiqaQuestion question);
 }

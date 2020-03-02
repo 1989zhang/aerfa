@@ -55,6 +55,14 @@ public interface IQuestionService {
      * @return 提问问题条件下结果集合
      */
 	 List<AefiqaQuestion> listQuestion(AefiqaQuestion question);
+
+	/**
+	 * 根据条件匹配到问题内容，不分页列表,不包含回答和分类
+	 *
+	 * @param question 条件提问问题对象
+	 * @return 提问问题条件下结果集合
+	 */
+	List<AefiqaQuestion> listMatchContentQuestion(AefiqaQuestion question);
 	 
 	/**
      * 新增提问问题

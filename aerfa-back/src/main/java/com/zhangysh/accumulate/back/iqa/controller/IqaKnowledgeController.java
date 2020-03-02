@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +71,7 @@ public class IqaKnowledgeController extends BaseController{
     @ResponseBody
 	public String getSingleCategory(HttpServletRequest request,@RequestBody Long id) {
 		logger.info("getSingleCategory知识类别主键信息:{}",id);
-		return JSON.toJSONStringWithDateFormat(categoryService.getCategoryById(id),UtilConstant.NORMAL_MIDDLE_DATE);
+		return JSON.toJSONString(categoryService.getCategoryById(id),SerializerFeature.WriteMapNullValue,SerializerFeature.WriteDateUseDateFormat);
 	}
 	
 	/****

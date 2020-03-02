@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.zhangysh.accumulate.common.constant.SysDefineConstant;
+import com.zhangysh.accumulate.common.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.BeanUtils;
@@ -46,8 +47,8 @@ public class QuestionServiceImpl implements IQuestionService {
 	
     @Override
 	public AefiqaKnowledgeVo getQuestionById(Long id){
+    	if(StringUtil.isNull(id)){return null;}
     	AefiqaQuestion sourceQuestion=questionDao.getQuestionById(id);
-    	
     	AefiqaKnowledgeVo knowledge=new AefiqaKnowledgeVo();
 		BeanUtils.copyProperties(sourceQuestion, knowledge);
 		knowledge.setQuestionContent(sourceQuestion.getContent());
@@ -61,11 +62,15 @@ public class QuestionServiceImpl implements IQuestionService {
     @Override
    	public AefiqaKnowledgeVo getQuestionTogetherById(Long id) {
     	AefiqaKnowledgeVo knowledge=getQuestionById(id);
-    	AefiqaQuestion searchQuestion=new AefiqaQuestion();
-    	searchQuestion.setAnswerId(knowledge.getAnswerId());
-    	searchQuestion.setStandard(SysDefineConstant.DIC_COMMON_STATUS_NO);
-    	List<AefiqaQuestion> nonstandard=listQuestion(searchQuestion);
-    	knowledge.setNonstandard(nonstandard);
+		List<AefiqaQuestion> nonstandard=new ArrayList<AefiqaQuestion>();
+    	//有回答才有非标准问法，没有回答肯定没非标准回答
+		if(StringUtil.isNotNull(knowledge.getAnswerId())){
+			AefiqaQuestion searchQuestion=new AefiqaQuestion();
+			searchQuestion.setAnswerId(knowledge.getAnswerId());
+			searchQuestion.setStandard(SysDefineConstant.DIC_COMMON_STATUS_NO);
+			nonstandard=listQuestion(searchQuestion);
+		}
+		knowledge.setNonstandard(nonstandard);
     	return knowledge;
     }
     
@@ -114,6 +119,10 @@ public class QuestionServiceImpl implements IQuestionService {
 	public List<AefiqaQuestion> listQuestion(AefiqaQuestion question){
 		return questionDao.listQuestion(question);
 	}
+	@Override
+	public List<AefiqaQuestion> listMatchContentQuestion(AefiqaQuestion question){
+    	return questionDao.listMatchContentQuestion(question);
+	}
 
 	@Override
 	public int insertQuestion(AefiqaQuestion question){
@@ -143,6 +152,8 @@ public class QuestionServiceImpl implements IQuestionService {
 			Long questionId=Long.parseLong(idArr[i]);
 			AefiqaQuestion sourceQuestion=questionDao.getQuestionById(questionId);
 			Long answerId=sourceQuestion.getAnswerId();
+			//没有回答的问题也要删除
+			questionDao.deleteQuestionById(questionId);
 			//先删除回答
 			answerService.deleteAnswerById(answerId);
 			//再删除标准问题和非标准问题
@@ -156,36 +167,13 @@ public class QuestionServiceImpl implements IQuestionService {
 	@Transactional
 	public int insertKnowledgeInfo(AefsysPerson operPerson,AefiqaKnowledgeDto knowledgeDto) {
 		//新增答案并获取出答案id
-		AefiqaAnswer answer=new AefiqaAnswer();
-		answer.setCreateTime(DateOperate.getCurrentUtilDate());
-		answer.setCreateBy(operPerson.getPersonName());
-		answer.setContent(knowledgeDto.getAnswerContent());
-		answer.setCategoryId(knowledgeDto.getCategoryId());
-		answer.setBelongOrgId(operPerson.getOrgId());
-		answerService.insertAnswer(answer);
-		Long answerId=answer.getId();
+		Long answerId=dealWithAnswerByKnowledgeDto(operPerson,knowledgeDto);
 		//新增标准问法
-		AefiqaQuestion standardQuestion=new AefiqaQuestion();
-		standardQuestion.setAnswerId(answerId);
-		standardQuestion.setBelongOrgId(operPerson.getOrgId());
-		standardQuestion.setCategoryId(knowledgeDto.getCategoryId());
-		standardQuestion.setContent(knowledgeDto.getQuestionContent());
-		standardQuestion.setCreateTime(DateOperate.getCurrentUtilDate());
-		standardQuestion.setCreateBy(operPerson.getPersonName());
-		standardQuestion.setStandard(SysDefineConstant.DIC_COMMON_STATUS_YES);
-		questionDao.insertQuestion(standardQuestion);
+		dealWithQuestionByKnowledgeDto(operPerson,knowledgeDto,answerId,knowledgeDto.getQuestionContent(),SysDefineConstant.DIC_COMMON_STATUS_YES);
 		//新增非标准问法
 		for(int i=0;i<knowledgeDto.getUnStandardQuestionContent().length;i++) {
 			//新增标准问法
-			AefiqaQuestion unStandardQuestion=new AefiqaQuestion();
-			unStandardQuestion.setAnswerId(answerId);
-			unStandardQuestion.setBelongOrgId(operPerson.getOrgId());
-			unStandardQuestion.setCategoryId(knowledgeDto.getCategoryId());
-			unStandardQuestion.setContent(knowledgeDto.getUnStandardQuestionContent()[i]);
-			unStandardQuestion.setCreateTime(DateOperate.getCurrentUtilDate());
-			unStandardQuestion.setCreateBy(operPerson.getPersonName());
-			unStandardQuestion.setStandard(SysDefineConstant.DIC_COMMON_STATUS_NO);
-			questionDao.insertQuestion(unStandardQuestion);
+			dealWithQuestionByKnowledgeDto(operPerson,knowledgeDto,answerId,knowledgeDto.getUnStandardQuestionContent()[i],SysDefineConstant.DIC_COMMON_STATUS_NO);
 		}
 		return knowledgeDto.getUnStandardQuestionContent().length+1;
 	}
@@ -194,20 +182,11 @@ public class QuestionServiceImpl implements IQuestionService {
 	@Transactional
 	public int updateKnowledgeInfo(AefsysPerson operPerson,AefiqaKnowledgeDto knowledgeDto) {
 		Long questionId=knowledgeDto.getId();
-		AefiqaKnowledgeVo knowledgeVo=getQuestionById(questionId);
-    	//先修改答案，
-		Long answerId=knowledgeVo.getAnswerId();
-		AefiqaAnswer answer=new AefiqaAnswer();
-		answer.setId(answerId);
-		answer.setCategoryId(knowledgeDto.getCategoryId());
-		answer.setBelongOrgId(operPerson.getOrgId());
-		answer.setContent(knowledgeDto.getAnswerContent());
-		answer.setUpdateTime(DateOperate.getCurrentUtilDate());
-		answer.setUpdateBy(operPerson.getPersonName());
-		answerService.updateAnswer(answer);
+		Long answerId=dealWithAnswerByKnowledgeDto(operPerson,knowledgeDto);
 		//再修改标准问法，
 		AefiqaQuestion standardQuestion=new AefiqaQuestion();
 		standardQuestion.setId(questionId);
+		standardQuestion.setAnswerId(answerId);
 		standardQuestion.setCategoryId(knowledgeDto.getCategoryId());
 		standardQuestion.setBelongOrgId(operPerson.getOrgId());
 		standardQuestion.setContent(knowledgeDto.getQuestionContent());
@@ -219,17 +198,54 @@ public class QuestionServiceImpl implements IQuestionService {
 		baseMybatisDao.deleteBySql(deleteQuestionSql);
 		//新增非标准问法
 		for(int i=0;i<knowledgeDto.getUnStandardQuestionContent().length;i++) {
-			//新增标准问法
-			AefiqaQuestion unStandardQuestion=new AefiqaQuestion();
-			unStandardQuestion.setAnswerId(answerId);
-			unStandardQuestion.setBelongOrgId(operPerson.getOrgId());
-			unStandardQuestion.setCategoryId(knowledgeDto.getCategoryId());
-			unStandardQuestion.setContent(knowledgeDto.getUnStandardQuestionContent()[i]);
-			unStandardQuestion.setCreateTime(DateOperate.getCurrentUtilDate());
-			unStandardQuestion.setCreateBy(operPerson.getPersonName());
-			unStandardQuestion.setStandard(SysDefineConstant.DIC_COMMON_STATUS_NO);
-			questionDao.insertQuestion(unStandardQuestion);
+			dealWithQuestionByKnowledgeDto(operPerson,knowledgeDto,answerId,knowledgeDto.getUnStandardQuestionContent()[i],SysDefineConstant.DIC_COMMON_STATUS_NO);
 		}
 		return knowledgeDto.getUnStandardQuestionContent().length+1;
+	}
+
+	/**
+	 * 根据传入参数处理答案对象，并返回答案的ID
+	 * @param knowledgeDto 包含各种的知识传输对象
+	 * @param operPerson 操作者对象
+	 * @return
+	 ***/
+	public Long dealWithAnswerByKnowledgeDto(AefsysPerson operPerson,AefiqaKnowledgeDto knowledgeDto){
+		Long questionId=knowledgeDto.getId();
+		AefiqaKnowledgeVo knowledgeVo=getQuestionById(questionId);
+		//此处可能是修改答案，也可能是新增答案，
+		Long answerId=knowledgeVo==null?null:knowledgeVo.getAnswerId();
+		AefiqaAnswer answer=new AefiqaAnswer();
+		answer.setCategoryId(knowledgeDto.getCategoryId());
+		answer.setBelongOrgId(operPerson.getOrgId());
+		answer.setContent(knowledgeDto.getAnswerContent());
+		if(StringUtil.isNotNull(answerId)){
+			answer.setId(answerId);
+			answer.setUpdateTime(DateOperate.getCurrentUtilDate());
+			answer.setUpdateBy(operPerson.getPersonName());
+			answerService.updateAnswer(answer);
+		}else{
+			answer.setCreateTime(DateOperate.getCurrentUtilDate());
+			answer.setCreateBy(operPerson.getPersonName());
+			answerService.insertAnswer(answer);
+			answerId=answer.getId();
+		}
+		return answerId;
+	}
+
+	/**
+	 * 根据传入参数处理问题对象
+	 */
+	public Long dealWithQuestionByKnowledgeDto(AefsysPerson operPerson,AefiqaKnowledgeDto knowledgeDto,Long answerId,String questionContent,Long standardTar){
+		//新增标准问法
+		AefiqaQuestion question=new AefiqaQuestion();
+		question.setAnswerId(answerId);
+		question.setBelongOrgId(operPerson.getOrgId());
+		question.setCategoryId(knowledgeDto.getCategoryId());
+		question.setContent(questionContent);
+		question.setCreateTime(DateOperate.getCurrentUtilDate());
+		question.setCreateBy(operPerson.getPersonName());
+		question.setStandard(standardTar);
+		questionDao.insertQuestion(question);
+		return question.getId();
 	}
 }

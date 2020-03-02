@@ -27,7 +27,15 @@ public interface QuestionDao {
      * @return 提问问题条件下的集合
      */
 	 List<AefiqaQuestion> listQuestion(AefiqaQuestion question);
-	 
+
+	/**
+	 * 根据条件匹配到问题内容
+	 *
+	 * @param question 条件对象,内容是匹配的
+	 * @return 提问问题条件下的集合
+	 */
+	List<AefiqaQuestion> listMatchContentQuestion(AefiqaQuestion question);
+
 	/**
      * 根据主键ids查询提问问题
      * 
