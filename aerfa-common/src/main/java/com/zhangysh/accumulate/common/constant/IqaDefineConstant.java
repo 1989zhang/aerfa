@@ -7,8 +7,6 @@ package com.zhangysh.accumulate.common.constant;
  *****/
 public class IqaDefineConstant {
 
-	/**********数据库定义相关常量**********/
-
 	/**问题回答标记字段**/
 	public static final String QUESTION_MARK_REPLY="reply";
 	

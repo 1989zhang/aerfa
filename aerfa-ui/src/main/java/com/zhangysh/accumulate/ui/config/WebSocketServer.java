@@ -4,25 +4,22 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.servlet.http.HttpSession;
+import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import com.zhangysh.accumulate.common.constant.MarkConstant;
-import com.zhangysh.accumulate.common.constant.SysDefineConstant;
+import com.zhangysh.accumulate.common.constant.*;
+import com.zhangysh.accumulate.pojo.iqa.transobj.AefiqaMessageDto;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
 import com.zhangysh.accumulate.ui.iqa.service.IqaReplyService;
+import com.zhangysh.accumulate.ui.sys.util.ServletUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.zhangysh.accumulate.common.constant.WebimDefineConstant;
 import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.iqa.transobj.AefiqaAskDto;
 import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimMessageDto;
@@ -32,7 +29,7 @@ import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimMessageDto;
  * @author 创建者：zhangysh
  * @date 2018年9月3日
  */
-@ServerEndpoint("/websocket/{sid}")
+@ServerEndpoint(value ="/websocket/{sid}", configurator = WebSocketConfig.class)
 @Component
 public class WebSocketServer {
 			
@@ -225,7 +222,14 @@ public class WebSocketServer {
 	 * 初始化,人工客服连接成功回复
 	 ***/
 	private void sendMessageManual(JSONObject fromJson,JSONObject toJson) throws IOException {
-		AefwebimMessageDto manualMessage=new AefwebimMessageDto();
+		//连接客户端操作环境参数组装
+		HttpSession httpSession =(HttpSession) session.getUserProperties().get(UnitConstant.HTTP_SESSION_NAME);
+		Map<String,Object> connectInfo=new HashMap<String,Object>(8);
+		connectInfo.put(UnitConstant.HTTP_SESSION_CLIENT_IP_ADDR,httpSession.getAttribute(UnitConstant.HTTP_SESSION_CLIENT_IP_ADDR));
+		connectInfo.put(UnitConstant.HTTP_SESSION_CLIENT_OPERATING_SYSTEM,httpSession.getAttribute(UnitConstant.HTTP_SESSION_CLIENT_OPERATING_SYSTEM));
+		connectInfo.put(UnitConstant.HTTP_SESSION_CLIENT_BROWSER,httpSession.getAttribute(UnitConstant.HTTP_SESSION_CLIENT_BROWSER));
+
+		AefiqaMessageDto manualMessage=new AefiqaMessageDto();
 		manualMessage.setId(fromJson.getString("id"));
 		manualMessage.setUsername(fromJson.getString("username"));
 		manualMessage.setType(WebimDefineConstant.WEBSOCKET_MESSAGE_TYPE_MANUAL);
@@ -234,6 +238,7 @@ public class WebSocketServer {
 		manualMessage.setMine(false);
 		manualMessage.setFromid(fromJson.getString("id"));
 		manualMessage.setTimestamp(System.currentTimeMillis());
+		manualMessage.setConnectInfo(connectInfo);
 		sendMessageText(toJson.getString("id"),JSON.toJSONString(manualMessage));
 	}
 	/**

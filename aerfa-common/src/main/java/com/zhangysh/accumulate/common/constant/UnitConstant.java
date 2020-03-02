@@ -7,6 +7,17 @@ package com.zhangysh.accumulate.common.constant;
  *****/
 public class UnitConstant {
 
+	/**********定义名称相关常量**********/
+	/**http的session的名称标识**/
+	public static final String HTTP_SESSION_NAME="httpSession";
+	/**httpSession的内含的参数名称:客户端IP**/
+	public static final String HTTP_SESSION_CLIENT_IP_ADDR="clientIpAddr";
+	/**httpSession的内含的参数名称:客户端操作系统**/
+	public static final String HTTP_SESSION_CLIENT_OPERATING_SYSTEM="clientOperatingSystem";
+	/**httpSession的内含的参数名称:客户端浏览器**/
+	public static final String HTTP_SESSION_CLIENT_BROWSER="clientBrowser";
+
+
 	/**********常用时间单位**********/
 	/**时间单位年**/
 	public static final String TIME_UNIT_YEARS="YEARS";

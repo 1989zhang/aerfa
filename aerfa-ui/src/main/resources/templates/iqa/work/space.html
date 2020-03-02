@@ -56,17 +56,19 @@
             <div class="col-sm-2">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>客户信息</h5>
+                        <h5>客户端连接信息</h5>
                     </div>
                     <div class="ibox-content">
-                        <p><i class="fa fa-send-o"></i> 接入方式：<a href="javascript:;" target="_blank">http://www.zi-han.net</a>
+                        <p>
+                            <i class="fa fa-twitch"></i> IP地址：<a href="javascript:;" id="clientIpAddr"></a>
                         </p>
-                        <p><i class="fa fa-qq"></i> 浏览器：<a href="javascript:;">516477188</a>
+                        <p>
+                            <i class="fa fa-firefox"></i> 浏览器：<a href="javascript:;" id="clientBrowser"></a>
                         </p>
-                        <p><i class="fa fa-weixin"></i> 操作系统：<a href="javascript:;">zheng-zihan</a>
+                        <p>
+                            <i class="fa fa-desktop"></i> 操作系统：<a href="javascript:;" id="clientOperatingSystem"></a>
                         </p>
-                        <p><i class="fa fa-credit-card"></i> IP地址：<a href="javascript:;">zheng-zihan@qq.com </a>
-                        </p>
+
                     </div>
                 </div>
             </div>
@@ -163,7 +165,14 @@
         var username=$("#username"+dataId+"").text();
         if($.common.isEmpty(username)){
             var dateStr=$.common.parseFullDate(data.timestamp);
-            var appendContent="<div class='feed-element' onclick='dealWithQuestion(&apos;"+dataId+"&apos;)'><div id='"+dataId+"'><strong id='username"+dataId+"'>"+data.username+"</strong><small class='pull-right' id='date"+dataId+"'>"+dateStr+"</small><div id='content"+dataId+"'>"+data.content+"</div></div> </div>";
+            var appendContent="<div class='feed-element' onclick='dealWithQuestion(&apos;"+dataId+"&apos;)'><div id='"+dataId+"'>" +
+                "<strong id='username"+dataId+"'>"+data.username+"</strong>" +
+                "<small class='pull-right' id='date"+dataId+"'>"+dateStr+"</small>" +
+                "<div id='content" +dataId+"'>"+data.content+"</div>" +
+                "<input type='hidden' id='clientIpAddr" +dataId+"' value='"+data.connectInfo.clientIpAddr+"'>" +
+                "<input type='hidden' id='clientOperatingSystem" +dataId+"' value='"+data.connectInfo.clientOperatingSystem+"'>" +
+                "<input type='hidden' id='clientBrowser" +dataId+"' value='"+data.connectInfo.clientBrowser+"'>" +
+                "</div></div>";
             $("#activityList").append(appendContent);
         }else{
             updateActivityList(data);
@@ -186,10 +195,16 @@
             var username=$("#username"+fromSid+"").text();
             var dateStr=$("#date"+fromSid+"").text();
             var content=$("#content"+fromSid+"").text();
+            var clientIpAddr=$("#clientIpAddr"+fromSid+"").val();
+            var clientOperatingSystem=$("#clientOperatingSystem"+fromSid+"").val();
+            var clientBrowser=$("#clientBrowser"+fromSid+"").val();
             $('#customerChat').html("与 "+username+" 聊天中");
             $('#customerId').val(fromSid);
             $('#customerUsername').val(username);
             $("#content").empty();
+            $('#clientIpAddr').html(clientIpAddr);
+            $('#clientOperatingSystem').html(clientOperatingSystem);
+            $('#clientBrowser').html(clientBrowser);
             appendMessage("content","left",username,dateStr,content);
         }
     }
