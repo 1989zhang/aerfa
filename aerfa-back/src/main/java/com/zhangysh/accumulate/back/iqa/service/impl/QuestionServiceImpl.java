@@ -2,6 +2,7 @@ package com.zhangysh.accumulate.back.iqa.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.BeanUtils;
@@ -62,7 +63,7 @@ public class QuestionServiceImpl implements IQuestionService {
     	AefiqaKnowledgeVo knowledge=getQuestionById(id);
     	AefiqaQuestion searchQuestion=new AefiqaQuestion();
     	searchQuestion.setAnswerId(knowledge.getAnswerId());
-    	searchQuestion.setStandard(IqaDefineConstant.QUESTION_STANDARD_NO);
+    	searchQuestion.setStandard(SysDefineConstant.DIC_COMMON_STATUS_NO);
     	List<AefiqaQuestion> nonstandard=listQuestion(searchQuestion);
     	knowledge.setNonstandard(nonstandard);
     	return knowledge;
@@ -171,7 +172,7 @@ public class QuestionServiceImpl implements IQuestionService {
 		standardQuestion.setContent(knowledgeDto.getQuestionContent());
 		standardQuestion.setCreateTime(DateOperate.getCurrentUtilDate());
 		standardQuestion.setCreateBy(operPerson.getPersonName());
-		standardQuestion.setStandard(IqaDefineConstant.QUESTION_STANDARD_YES);
+		standardQuestion.setStandard(SysDefineConstant.DIC_COMMON_STATUS_YES);
 		questionDao.insertQuestion(standardQuestion);
 		//新增非标准问法
 		for(int i=0;i<knowledgeDto.getUnStandardQuestionContent().length;i++) {
@@ -183,7 +184,7 @@ public class QuestionServiceImpl implements IQuestionService {
 			unStandardQuestion.setContent(knowledgeDto.getUnStandardQuestionContent()[i]);
 			unStandardQuestion.setCreateTime(DateOperate.getCurrentUtilDate());
 			unStandardQuestion.setCreateBy(operPerson.getPersonName());
-			unStandardQuestion.setStandard(IqaDefineConstant.QUESTION_STANDARD_NO);
+			unStandardQuestion.setStandard(SysDefineConstant.DIC_COMMON_STATUS_NO);
 			questionDao.insertQuestion(unStandardQuestion);
 		}
 		return knowledgeDto.getUnStandardQuestionContent().length+1;
@@ -192,6 +193,43 @@ public class QuestionServiceImpl implements IQuestionService {
 	@Override
 	@Transactional
 	public int updateKnowledgeInfo(AefsysPerson operPerson,AefiqaKnowledgeDto knowledgeDto) {
-		return 1;
+		Long questionId=knowledgeDto.getId();
+		AefiqaKnowledgeVo knowledgeVo=getQuestionById(questionId);
+    	//先修改答案，
+		Long answerId=knowledgeVo.getAnswerId();
+		AefiqaAnswer answer=new AefiqaAnswer();
+		answer.setId(answerId);
+		answer.setCategoryId(knowledgeDto.getCategoryId());
+		answer.setBelongOrgId(operPerson.getOrgId());
+		answer.setContent(knowledgeDto.getAnswerContent());
+		answer.setUpdateTime(DateOperate.getCurrentUtilDate());
+		answer.setUpdateBy(operPerson.getPersonName());
+		answerService.updateAnswer(answer);
+		//再修改标准问法，
+		AefiqaQuestion standardQuestion=new AefiqaQuestion();
+		standardQuestion.setId(questionId);
+		standardQuestion.setCategoryId(knowledgeDto.getCategoryId());
+		standardQuestion.setBelongOrgId(operPerson.getOrgId());
+		standardQuestion.setContent(knowledgeDto.getQuestionContent());
+		standardQuestion.setUpdateTime(DateOperate.getCurrentUtilDate());
+		standardQuestion.setUpdateBy(operPerson.getPersonName());
+		questionDao.updateQuestion(standardQuestion);
+		//再删除非标准问法新增非标准问法
+		String deleteQuestionSql="delete from aefiqa_question where answer_id="+answerId +" and standard="+SysDefineConstant.DIC_COMMON_STATUS_NO;
+		baseMybatisDao.deleteBySql(deleteQuestionSql);
+		//新增非标准问法
+		for(int i=0;i<knowledgeDto.getUnStandardQuestionContent().length;i++) {
+			//新增标准问法
+			AefiqaQuestion unStandardQuestion=new AefiqaQuestion();
+			unStandardQuestion.setAnswerId(answerId);
+			unStandardQuestion.setBelongOrgId(operPerson.getOrgId());
+			unStandardQuestion.setCategoryId(knowledgeDto.getCategoryId());
+			unStandardQuestion.setContent(knowledgeDto.getUnStandardQuestionContent()[i]);
+			unStandardQuestion.setCreateTime(DateOperate.getCurrentUtilDate());
+			unStandardQuestion.setCreateBy(operPerson.getPersonName());
+			unStandardQuestion.setStandard(SysDefineConstant.DIC_COMMON_STATUS_NO);
+			questionDao.insertQuestion(unStandardQuestion);
+		}
+		return knowledgeDto.getUnStandardQuestionContent().length+1;
 	}
 }

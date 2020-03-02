@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+<th:block th:include="sys/include :: treeview-css"/>
+
+<body class="hold-transition box box-main">
+    <div class="ibox float-e-margins">
+    	<input id="treeId"   name="treeId"    type="hidden"/>
+        <input id="treeName" name="treeName"  type="hidden"/>
+		<div class="ibox-content">
+        	<label for="keyword">关键字：</label><input type="text" class="empty" id="keyword" maxlength="50">
+		    <button class="btn" id="btn" onclick="searchNode()"> 搜索 </button>
+		    <a class="dropdown-toggle" onclick="expanTreeAll()" id="expan">
+                <i class="fa fa-chevron-down">展开</i>
+            </a>
+            <a class="dropdown-toggle" onclick="collapseTreeAll()" id="collapse">
+                <i class="fa fa-chevron-up">折叠</i>
+            </a>
+            
+			<div id="treeview" class="test"></div>
+						
+			<div class="layui-layer-btn">
+				<a class="layui-layer-btn0" th:onclick="'javascript:loadTreeToParent()'"><i class="fa fa-check"></i> 确定</a>
+				<a class="layui-layer-btn1" onclick="$.modal.close()"><i class="fa fa-close"></i> 关闭</a>
+			</div>
+        </div>
+    </div>
+
+    <div th:include="sys/include :: footer"></div>
+    <th:block th:include="sys/include :: treeview-js"/>
+	<script th:inline="javascript">
+        //初始化选择部门树形数据
+        $(function() {
+            var defaultData;
+            $.ajax({
+                type: "post",
+                url: prefix+"/category_tree",
+                dataType: "json",
+                success: function (result) {
+                    defaultData=result;
+                    $('#treeview').treeview({
+                        data: defaultData
+                    });
+                    $("#collapse").hide();
+                }
+            });
+        });
+        //树的查询显示高亮的方法
+        function searchNode(){
+            var keyword = $.common.trim($('#keyword').val());
+            var ret=$('#treeview').treeview('search', [ keyword, {
+                ignoreCase: true,     // 忽略大小写
+                exactMatch: false,    // 完全匹配
+                revealResults: true,  // 展现展开匹配的数据
+            }]);
+        }
+
+        //把选中树节点的名称和id传回到父界面
+        function loadTreeToParent(){
+            var treeObj=$('#treeview').treeview('getSelected');
+            if(treeObj.length==0){
+                $.modal.alertWarning("请先选中一个节点！");
+                return ;
+            }
+            var treeId = treeObj[0].id;
+            var treeName = treeObj[0].text;
+            parent.$("#treeId").val(treeId);
+            parent.$("#treeName").val(treeName);
+            var index = parent.layer.getFrameIndex(window.name); // 获取窗口索引
+            parent.layer.close(index);
+        }
+
+        //展开树
+        function expanTreeAll(){
+            $('#treeview').treeview('expandAll', { silent: true });
+            $("#expan").hide();
+            $("#collapse").show();
+        }
+        //折叠树
+        function collapseTreeAll(){
+            $('#treeview').treeview('collapseAll', { silent: true });
+            $("#collapse").hide();
+            $("#expan").show();
+        }
+    </script>
+</body>
+</html>

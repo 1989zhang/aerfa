@@ -97,7 +97,7 @@ public interface IQuestionService {
 	 int deleteTogetherStandardByIds(String ids);
 	
 	 /**
-	  * 新增知识相关信息包括：标准问法、非标准问法、答案
+	  * 新增知识相关信息包括：答案、标准问法、非标准问法
 	  * 操作逻辑：先新增答案，再新增标准问法，再新增非标准问法
 	  * 
 	  * @param operPerson 操作人员
@@ -106,8 +106,8 @@ public interface IQuestionService {
 	 int insertKnowledgeInfo(AefsysPerson operPerson,AefiqaKnowledgeDto knowledgeDto);
 	 
 	 /**
-	  * 修改知识相关信息包括：标准问法、非标准问法、答案
-	  * 操作逻辑：先修改标准问法，再修改答案，再删除非标准问法新增非标准问法
+	  * 修改知识相关信息包括：答案、标准问法、非标准问法
+	  * 操作逻辑：先修改答案，再修改标准问法，再删除非标准问法新增非标准问法
 	  * @param operPerson 操作人员
 	  * @param knowledgeDto 保存的知识对象
 	  ***/

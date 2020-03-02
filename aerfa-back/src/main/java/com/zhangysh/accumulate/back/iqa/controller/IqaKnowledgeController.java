@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class IqaKnowledgeController extends BaseController{
 	
 	/****
 	 * 展示知识分类的树形结构
-	 * @param aerfatoken token对象
+	 * @param request 请求对象
 	 ***/
 	@RequestMapping(value = "/category_tree",method = RequestMethod.POST)
     @ResponseBody
@@ -116,9 +117,9 @@ public class IqaKnowledgeController extends BaseController{
 	@ResponseBody
 	public String getListStandard(HttpServletRequest request,@RequestBody AefiqaKnowledgeDto knowledgeDto) {
 		AefiqaQuestion question=knowledgeDto.getQuestion();
-		question.setStandard(IqaDefineConstant.QUESTION_STANDARD_YES);//只展示标准问题，非标准点击编辑显示
+		question.setStandard(SysDefineConstant.DIC_COMMON_STATUS_YES);//只展示标准问题，非标准点击编辑显示
 		Map<String, Object> params=new HashMap<String, Object>();
-		params.put(IqaDefineConstant.QUESTION_MARK_REPLY, IqaDefineConstant.QUESTION_MARK_REPLY_YES);
+		params.put(IqaDefineConstant.QUESTION_MARK_REPLY, SysDefineConstant.DIC_COMMON_STATUS_YES);
 		question.setParams(params);
 		BsTableDataInfo tableInfo=questionService.listPageQuestion(knowledgeDto.getPageInfo(), question);
 		return JSON.toJSONStringWithDateFormat(tableInfo,UtilConstant.NORMAL_MIDDLE_DATE);
@@ -133,9 +134,9 @@ public class IqaKnowledgeController extends BaseController{
 	@ResponseBody
 	public String getListUnknown(HttpServletRequest request,@RequestBody AefiqaKnowledgeDto knowledgeDto) {
 		AefiqaQuestion question=knowledgeDto.getQuestion();
-		question.setStandard(IqaDefineConstant.QUESTION_STANDARD_YES);//只展示标准问题，非标准点击编辑显示
+		question.setStandard(SysDefineConstant.DIC_COMMON_STATUS_YES);//只展示标准问题，非标准点击编辑显示
 		Map<String, Object> params=new HashMap<String, Object>();
-		params.put(IqaDefineConstant.QUESTION_MARK_REPLY, IqaDefineConstant.QUESTION_MARK_REPLY_NO);
+		params.put(IqaDefineConstant.QUESTION_MARK_REPLY, SysDefineConstant.DIC_COMMON_STATUS_NO);
 		question.setParams(params);
 		BsTableDataInfo tableInfo=questionService.listPageQuestion(knowledgeDto.getPageInfo(), question);
 		return JSON.toJSONStringWithDateFormat(tableInfo,UtilConstant.NORMAL_MIDDLE_DATE);
@@ -169,8 +170,8 @@ public class IqaKnowledgeController extends BaseController{
 	
 	/****
 	 * 保存填写的标准知识库提问回答内容
-	 * @param aerfatoken token对象
-	 * @param Category 要保存的知识类别对象
+	 * @param request token对象
+	 * @param knowledgeDto 要保存的知识传输对象
 	 ***/
 	@RequestMapping(value="/save_standard",method = RequestMethod.POST)
     @ResponseBody

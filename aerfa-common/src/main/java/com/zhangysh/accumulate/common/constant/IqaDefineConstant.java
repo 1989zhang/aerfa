@@ -8,17 +8,9 @@ package com.zhangysh.accumulate.common.constant;
 public class IqaDefineConstant {
 
 	/**********数据库定义相关常量**********/
-	/**标准问法标记：是**/
-	public static final Long QUESTION_STANDARD_YES=1L;
-	/**标准问法标记：否**/
-	public static final Long QUESTION_STANDARD_NO=0L;
-	
+
 	/**问题回答标记字段**/
 	public static final String QUESTION_MARK_REPLY="reply";
-	/**问题回答标记字段值：已回答**/
-	public static final Long QUESTION_MARK_REPLY_YES=1L;
-	/**问题回答标记字段值：未回答**/
-	public static final Long QUESTION_MARK_REPLY_NO=0L;
 	
 	/**没有获取到问题和答案的提示信息**/
 	public static final String ASK_NO_QUESTION_ANSWER="未查询到相关问题答案。";
