@@ -23,9 +23,9 @@
                     sortStable: true,                                   // 设置为 true 将获得稳定的排序
                     sortName: _sortName,                                // 默认初始的排序列名称
                     sortOrder: _sortOrder,                              // 默认初始的排序方式  asc 或者 desc
-                    pagination: $.common.defaultTrue(options.pagination),   // 是否显示分页，默认分页
+                    pagination: $.common.defaultTrue(options.pagination), // 是否显示分页，默认分页
                     pageNumber: 1,                                      // 初始化加载第一页，默认第一页
-                    pageSize: 10,                                       // 每页的记录行数
+                    pageSize: $.common.defaultTen(options.pageSize),    // 每页的记录行数
                     pageList: [10, 25, 50,'All'],                       // 可供选择的每页的行数，All为显示所有为了导出
                     iconSize: 'outline',                                // 图标大小：undefined默认的按钮尺寸 xs超小按钮sm小按钮lg大按钮
         	        toolbar: $.common.defaultToolbarId(options.toolbarId),//不带'#'指定toolbar的id,即把新增、修改、删除等按钮用一行放到'导出'按钮前
@@ -528,6 +528,13 @@
 			defaultZero:function (value) {
 				if (value == null || this.trim(value) == "") {
 					return 0;
+				}
+				return value;
+			},
+			// 默认为10值返回,用于分页
+			defaultTen:function (value) {
+				if (value == null || this.trim(value) == "") {
+					return 10;
 				}
 				return value;
 			},

@@ -74,7 +74,7 @@ public class IqaWorkController {
 	@ResponseBody
 	public String getListWorker(HttpServletRequest request, ModelMap modelMap, BsTablePageInfo pageInfo){
 		List<AefsysPersonVo> workerList=new ArrayList<AefsysPersonVo>();
-		for (int i=1;i<=10;i++){
+		for (int i=1;i<=15;i++){
 			AefsysPersonVo vo1=new AefsysPersonVo();
 			vo1.setId(Long.valueOf(i+""));
 			vo1.setPersonName("客服"+(i)+"号");
@@ -84,7 +84,7 @@ public class IqaWorkController {
 			workerList.add(vo1);
 		}
 		BsTableDataInfo tableInfo=new BsTableDataInfo();
-		tableInfo.setTotal(10);
+		tableInfo.setTotal(15);
 		tableInfo.setRows(workerList);
 		return JSON.toJSONString(tableInfo);
 	}
