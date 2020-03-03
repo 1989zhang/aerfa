@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.alibaba.fastjson.JSON;
 import com.zhangysh.accumulate.common.constant.CacheConstant;
 import com.zhangysh.accumulate.common.constant.WebimDefineConstant;
+import com.zhangysh.accumulate.common.pojo.BsTableDataInfo;
+import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
 import com.zhangysh.accumulate.common.pojo.TokenModel;
 import com.zhangysh.accumulate.common.util.HttpStorageUtil;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
@@ -13,6 +15,10 @@ import com.zhangysh.accumulate.ui.sys.service.ILoginService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*****
  * 智能问答，工作台相关方法
@@ -59,6 +65,28 @@ public class IqaWorkController {
 	public String toWorker(HttpServletRequest request, ModelMap modelMap) {
 		modelMap.addAttribute("prefix",prefix);
 		return prefix+"/worker";
+	}
+
+	/***
+	 * 获取客服人员列表
+	 **/
+	@RequestMapping(value="/list_worker")
+	@ResponseBody
+	public String getListWorker(HttpServletRequest request, ModelMap modelMap, BsTablePageInfo pageInfo){
+		List<AefsysPersonVo> workerList=new ArrayList<AefsysPersonVo>();
+		for (int i=1;i<=10;i++){
+			AefsysPersonVo vo1=new AefsysPersonVo();
+			vo1.setId(Long.valueOf(i+""));
+			vo1.setPersonName("客服"+(i)+"号");
+			vo1.setEmail("8603145"+i+"@soft.com");
+			vo1.setPersonSex("0");
+			vo1.setPhoneNo("8603145"+i);
+			workerList.add(vo1);
+		}
+		BsTableDataInfo tableInfo=new BsTableDataInfo();
+		tableInfo.setTotal(10);
+		tableInfo.setRows(workerList);
+		return JSON.toJSONString(tableInfo);
 	}
 	
 }
