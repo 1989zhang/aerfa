@@ -8,10 +8,10 @@
         <div class="col-sm-7">
             <div class="ibox float-e-margins">
             	<div class="ibox-title">
-                    <h5>客服列表</h5>
+                    <h5>客服人员列表</h5>
                     <div class="ibox-tools pull-right">
-		                <a class="dropdown-toggle" onclick="addCategory()" id="addCategory">
-                           <i class="fa fa-plus">刷新</i>
+		                <a class="dropdown-toggle" onclick="refreshWorker()" id="addCategory">
+                           <i class="fa fa-refresh">刷新</i>
                         </a>
                      </div>
                 </div>
@@ -23,7 +23,7 @@
         <div class="col-sm-5">
          	<div class="ibox float-e-margins">
             	<div class="ibox-title">
-                    <h5>工作概览</h5>
+                    <h5>人员工作概览</h5>
                 </div>
          	    <div class="ibox-content">
                    <div class="row">
@@ -56,67 +56,52 @@
 	<div th:include="sys/include :: footer"></div>
 	<script th:inline="javascript">
 	//初始化
-$(function() {
-	var options = {
-		      url: prefix+"/list",
-		      modalName: "知识库",
-		      createUrl: prefix+"/to_add/{id}",//传的是orgid，因为替换原有必须为{id}
-		      updateUrl: prefix+"/to_edit/{id}",
-		      removeUrl: prefix+"/remove/{id}",
-		      id:'id',//id字段
-		      sortOrder:'desc',//默认排序规则设置
-		      showRefresh:false,
-		      showColumns:false,
-		      showToggle:false,
-		      showExport:false,
-		      columns: [{
-		      	checkbox: false
-		      },{
-		      	title: '标准问法',
-		        field: 'content',
-		        width: '25%',
-		        align: "center"
-		      },{
-		      	field: 'cardNo',
-		        title: '标准答案',
-		        width: '25%',
-		        align: "center"
-		      },{
-		      	field: 'cardNo',
-		        title: '知识分类',
-		        width: '15%',
-		        align: "center"
-			  },{
-		      	field: 'phoneNo',
-		        title: '命中次数',
-		        width: '5%',
-		        align: "center"
-			  },{
-		      	field: 'phoneNo',
-		        title: '有帮助',
-		        width: '5%',
-		        align: "center"
-			  },{
-		      	field: 'phoneNo',
-		        title: '没有帮助',
-		        width: '5%',
-		        align: "center"
-			  },{
-	          	field: 'status',
-	            title: '状态',
-	            width: '5%',
-	            align: "center",
-	            formatter: function(value,row,index) {
-	            	if(row.status==1){
-	            		return "启用";
-	            	}else if(row.status==0){
-	            		return "关闭";
-	            	}
-	            }
-	          }]
-		};
-		$.table.init(options);
-});
+    $(function() {
+        var options = {
+                  url: prefix+"/list_worker",
+                  modalName: "客服人员",
+                  showRefresh:false,
+                  showColumns:false,
+                  showToggle:false,
+                  showExport:false,
+                  columns: [{
+                    checkbox: false
+                  },{
+                    title: '客服名称',
+                    field: 'personName',
+                    width: '25%',
+                    align: "center"
+                  },{
+                    field: 'phoneNo',
+                    title: '联系电话',
+                    width: '30%',
+                    align: "center"
+                  },{
+                      field: 'email',
+                      title: '联系邮箱',
+                      width: '25%',
+                      align: "center"
+                  },{
+                    field: 'personSex',
+                    title: '性别',
+                    width: '15%',
+                    align: "center",
+                    formatter: function(value,row,index) {
+                        if(row.personSex==1){
+                            return "男";
+                        }else if(row.personSex==0){
+                            return "女";
+                        }
+                    }
+                  }]
+            };
+            $.table.init(options);
+    });
+
+    /** 刷新人员列表 **/
+    function refreshWorker(){
+        $("#bootstrap-table").bootstrapTable('refresh');
+    }
 	</script>
 </body>
 </html>
