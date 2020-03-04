@@ -190,7 +190,7 @@ public class ExcelUtil {
      * @return
      * @throws IOException
      */
-    private static int getMergerCellRegionRow(Sheet sheet, int cellRow, int cellCol) throws IOException {
+    public static int getMergerCellRegionRow(Sheet sheet, int cellRow, int cellCol) throws IOException {
         int retVal = 0;
         for (CellRangeAddress cra : sheet.getMergedRegions()) {
             int firstRow = cra.getFirstRow();  // 合并单元格CELL起始行
@@ -208,4 +208,105 @@ public class ExcelUtil {
         }
         return retVal;
     }
+
+	/**
+	 * excel插入行，指定行作为源然后复制到下一行
+	 *
+	 * @param sheet 工作区
+	 * @param sourceRowIndex 开始插入行的位置
+	 * @param rowNum 插入的数据量
+	 */
+	public static void insertRows(Sheet sheet, int sourceRowIndex, int rowNum) {
+		List<CellRangeAddress> oldRanges = new ArrayList<CellRangeAddress>();
+		for (int i = 0; i < sheet.getNumMergedRegions(); i++) {
+			oldRanges.add(sheet.getMergedRegion(i));
+		}
+		Row sourceRow = sheet.getRow(sourceRowIndex);
+		if (sourceRow != null) {
+			sheet.shiftRows(sourceRowIndex+1, sheet.getLastRowNum(), rowNum, true, false);
+			for (int x = 0; x < rowNum; x++) {
+				copyRow(sheet,oldRanges,sheet.getRow(sourceRowIndex),sheet.createRow(sourceRowIndex  + x +1));
+			}
+		}
+	}
+
+	/**
+	 * 功能：拷贝row
+	 * @param sheet 工作表单
+	 * @param oldRanges sheet中合并单元格信息
+	 * @param sourceRow 源行
+	 * @param targetRow 目标行
+
+	 */
+	private static void copyRow(Sheet sheet,List<CellRangeAddress> oldRanges, Row sourceRow,Row targetRow) {
+		//设置行高
+		targetRow.setHeight(sourceRow.getHeight());
+		int rowNum = sourceRow.getRowNum();
+		List<CellRangeAddress> rowCra =new ArrayList<CellRangeAddress>();
+		for (CellRangeAddress cra : oldRanges) {
+			if (cra.getFirstRow()==rowNum) {
+				rowCra.add(cra);
+			}
+		}
+		//拷贝合并单元格
+		for (int i = sourceRow.getFirstCellNum(); i <= sourceRow.getLastCellNum(); i++) {
+			for (CellRangeAddress cra : rowCra) {
+				if (cra.getFirstColumn() == i) {
+					CellRangeAddress newRange = new CellRangeAddress(targetRow.getRowNum(), targetRow.getRowNum(),
+							cra.getFirstColumn(), cra.getLastColumn());
+					sheet.addMergedRegion(newRange);
+				}
+			}
+		}
+		for (int i = sourceRow.getFirstCellNum(); i <= sourceRow.getLastCellNum(); i++) {
+			Cell sourceCell = sourceRow.getCell(i);
+			Cell targetCell = targetRow.getCell(i);
+
+			if (sourceCell != null) {
+				if (targetCell == null) {
+					targetCell = targetRow.createCell(i);
+				}
+				//拷贝单元格，包括内容和样式
+				copyCell(sourceCell,targetCell);
+			}
+		}
+	}
+
+
+	/**
+	 * 功能：拷贝cell，依据styleMap是否为空判断是否拷贝单元格样式
+	 *
+	 * @param sourceCell 源单元格不能为空
+	 * @param targetCell 目标单元格不能为空
+	 */
+	private static void copyCell(Cell sourceCell,Cell targetCell) {
+		//处理单元格样式
+		targetCell.setCellStyle(sourceCell.getCellStyle());
+		//处理注释
+		targetCell.setCellComment(sourceCell.getCellComment());
+		//处理单元格内容
+		switch (sourceCell.getCellType()) {
+			case Cell.CELL_TYPE_STRING:
+				targetCell.setCellValue(sourceCell.getRichStringCellValue());
+				break;
+			case Cell.CELL_TYPE_NUMERIC:
+				targetCell.setCellValue(sourceCell.getNumericCellValue());
+				break;
+			case Cell.CELL_TYPE_BLANK:
+				targetCell.setCellType(Cell.CELL_TYPE_BLANK);
+				break;
+			case Cell.CELL_TYPE_BOOLEAN:
+				targetCell.setCellValue(sourceCell.getBooleanCellValue());
+				break;
+			case Cell.CELL_TYPE_ERROR:
+				targetCell.setCellErrorValue(sourceCell.getErrorCellValue());
+				break;
+			case Cell.CELL_TYPE_FORMULA:
+				targetCell.setCellFormula(sourceCell.getCellFormula());
+				break;
+			default:
+				break;
+		}
+
+	}
 }

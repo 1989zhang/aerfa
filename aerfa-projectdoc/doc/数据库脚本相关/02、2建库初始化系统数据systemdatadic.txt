@@ -108,4 +108,8 @@ insert into aefsys_data_dic values (191, 'data_permission_type', '数据权限�
 insert into aefsys_data_dic values (192, 'data_permission_type', '数据权限类型', '2', '自定义权限', null, 2, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (193, 'data_permission_type', '数据权限类型', '3', '本单位数据', null, 3, 0, null, 1, null, null, null, null, null);
 insert into aefsys_data_dic values (194, 'data_permission_type', '数据权限类型', '4', '本人的数据', null, 4, 0, null, 1, null, null, null, null, null);
+/*报表和展示相关数据字典*/
+insert into aefsys_data_dic values (196, 'data_fill_type', '数据填充方式', null, null, null, 1, 1, null, 1, '数据填充方式字典', null, null, null, null);
+insert into aefsys_data_dic values (197, 'data_fill_type', '数据填充方式', 'fillFree', '填充不需拓展', null, 1, 0, null, 1, null, null, null, null, null);
+insert into aefsys_data_dic values (198, 'data_fill_type', '数据填充方式', 'fillExpand', '填充自动拓展', null, 2, 0, null, 1, null, null, null, null, null);
 

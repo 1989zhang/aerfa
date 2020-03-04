@@ -58,7 +58,21 @@ public class FileUtil {
 		if(bos != null){bos.close(); }
 		if(fos != null){fos.close();}
 	}
-	
+
+	/**
+	 * 创建文件夹
+	 * @param dirPath 文件夹路径，以‘/’结尾
+	 * @throws IOException
+	 **/
+	public static void createDirectory(String dirPath) throws IOException {
+		File savePath  = new File(dirPath);
+		if (!savePath.exists()) {
+			if (!savePath.mkdirs()) {
+				throw new IOException("创建文件夹异常:" + savePath);
+			}
+		}
+	}
+
 	/***
 	 * 保存文件到磁盘
 	 * @param fileBase64Str 文件内容64编码
@@ -146,7 +160,7 @@ public class FileUtil {
 	 * @param delPath  要删除的目录或文件 
 	 * @return 删除成功返回 true，否则返回 false。 
 	 */  
-	public static boolean DeleteFolderFile(String delPath) {  
+	public static boolean deleteFolderFile(String delPath) {
 		boolean flag = false;  
 	    File file = new File(delPath);  
 	    // 判断目录或文件是否存在  

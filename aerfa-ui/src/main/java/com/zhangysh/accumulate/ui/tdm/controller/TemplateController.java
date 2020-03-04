@@ -185,8 +185,8 @@ public class TemplateController {
 	/***
 	 * 报表表单pdf展示预览数据
 	 ***/
-	@RequestMapping(value="/to_view_data/{templateId}/{requireParm}")
-	public String toViewData(HttpServletRequest request, ModelMap modelMap,@PathVariable("templateId") Long templateId,@PathVariable("requireParm") String requireParm) {
+	@RequestMapping(value={"/to_view_data/{templateId}/{requireParm}","/to_view_data/{templateId}/"})
+	public String toViewData(HttpServletRequest request, ModelMap modelMap,@PathVariable("templateId") Long templateId,@PathVariable(value = "requireParm",required = false) String requireParm) {
 		modelMap.addAttribute("prefix",prefix);
 		modelMap.addAttribute("templateId",templateId);
 		modelMap.addAttribute("requireParm",requireParm);

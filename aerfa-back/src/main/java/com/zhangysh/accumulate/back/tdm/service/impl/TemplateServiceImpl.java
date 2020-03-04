@@ -164,7 +164,10 @@ public class TemplateServiceImpl implements ITemplateService {
 	public String getViewData(AeftdmTemplateParmDto templateParmDto) throws Exception{
 		AefsysConfigData templateConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_TEMPLATE_FOLDER_PATH);
 		String templateFolderPath=templateConfigData.getDataValue();
-		
+		//输出文件夹创建
+		String outFileDir=templateFolderPath+SysDefineConstant.TEMPLATE_FOLDER_PATH_EXPORT_FILE+File.separator;
+		FileUtil.createDirectory(outFileDir);
+
 		AeftdmTemplate template=templateDao.getTemplateById(templateParmDto.getTemplateId());
 		//模板文件
 		String templateFileFullPath=templateFolderPath+SysDefineConstant.TEMPLATE_FOLDER_PATH_TEMPLATE_FILE+File.separator+template.getSaveName();

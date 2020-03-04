@@ -11,7 +11,15 @@
 				<div class="col-sm-9">
 					<input class="form-control" type="text" id="explainName" name="explainName" th:field="*{explainName}"/>
 				</div>
-			</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">填充方式：</label>
+				<div class="col-sm-9">
+					<select class="form-control m-b" name="fillType" th:with="retDicList=${@dic.getDic('data_fill_type')}">
+						<option th:each="dic:${retDicList}" th:text="${dic.fullName}" th:value="${dic.code}" th:field="*{fillType}"></option>
+					</select>
+				</div>
+			</div>
 			<div class="form-group">
 				<label class="col-sm-2 control-label ">定义sql内容：</label>
 				<div class="col-sm-9">

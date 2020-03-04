@@ -33,7 +33,12 @@ public class UtilConstant {
     public static final String HORIZONTAL_ALIGN_RIGHT="right";
     /** 数据显示类型:字符 **/
     public static final String SHOW_TYPE_STRING="string";
-    
+    /** 数据显示类型:图片 **/
+    public static final String SHOW_TYPE_IMAGE="image";
+    /** 数据显示类型:二维码 **/
+    public static final String SHOW_TYPE_RQCODE="rqcode";
+    /** 数据显示类型:条形码 **/
+    public static final String SHOW_TYPE_BARCODE="barcode";
     
     /**********文件类型相关常量**********/
     /** excel文件类型xls常量 **/
