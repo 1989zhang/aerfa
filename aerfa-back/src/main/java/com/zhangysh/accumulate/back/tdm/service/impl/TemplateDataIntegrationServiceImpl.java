@@ -3,11 +3,13 @@ package com.zhangysh.accumulate.back.tdm.service.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.zxing.WriterException;
 import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import com.zhangysh.accumulate.common.constant.TdmDefineConstant;
 import com.zhangysh.accumulate.common.util.QRCodeUtil;
@@ -172,111 +174,15 @@ public class TemplateDataIntegrationServiceImpl implements ITemplateDataIntegrat
 				int y = Integer.parseInt(fillRule.getFillColNumber()+"")-1;
 				Row row = sheet.getRow(x) == null ? sheet.createRow(x) : sheet.getRow(x);
 				Cell cell = row.getCell(y) == null ? row.createCell(y) : row.getCell(y);
-				CellStyle cellStyle = cell.getCellStyle();
-
-				Font font = sheet.getWorkbook().getFontAt(cellStyle.getFontIndex());
-				//设置字体样式
-				if (StringUtil.isNotEmpty(fillRule.getFontName())) {
-					font.setFontName(fillRule.getFontName());
-				}
-				//设置加粗
-				if (SysDefineConstant.DIC_COMMON_STATUS_YES.equals(fillRule.getIsBlock())) {
-					font.setBold(true);
-				} else if (SysDefineConstant.DIC_COMMON_STATUS_NO.equals(fillRule.getIsBlock())) {
-					font.setBold(false);
-				}
-				//设置字体大小
-				if(StringUtil.isNotNull(fillRule.getFontSize())){
-					//当有字体大小设置的时候需要从新生成新的空的格式，不然excel全部都是这个字体了,默认样式要继承
-					CellStyle cellStyle2 = sheet.getWorkbook().createCellStyle();
-					Font font2 = sheet.getWorkbook().createFont();
-					font2.setFontHeightInPoints(Short.valueOf(fillRule.getFontSize().toString()));
-					cellStyle2.setFont(font2);
-					cellStyle2.setBorderLeft(cellStyle.getBorderLeftEnum());
-					cellStyle2.setBorderBottom(cellStyle.getBorderBottomEnum());
-					cellStyle2.setBorderRight(cellStyle.getBorderRightEnum());
-					cellStyle2.setBorderTop(cellStyle.getBorderTopEnum());
-					cell.setCellStyle(cellStyle2);
-				}
-				// 设置居中样式
-				if(StringUtil.isNotEmpty(fillRule.getHorizontalAlign())){
-					if (UtilConstant.HORIZONTAL_ALIGN_LEFT.equals(fillRule.getHorizontalAlign())) {
-						cellStyle.setAlignment(HorizontalAlignment.LEFT);
-					}
-					else if (UtilConstant.HORIZONTAL_ALIGN_CENTER.equals(fillRule.getHorizontalAlign())) {
-						cellStyle.setAlignment(HorizontalAlignment.CENTER);
-					}
-					else if (UtilConstant.HORIZONTAL_ALIGN_RIGHT.equals(fillRule.getHorizontalAlign())) {
-						cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-					}
-				}
-
 
 				// 按格式填充数据
 				if (UtilConstant.SHOW_TYPE_STRING.equals(fillRule.getShowType())) {
-					String fillDataStr = String.valueOf(fillData);
-					cell.setCellValue(fillDataStr);
-					//设置行高,根据内容长度和cell宽度作比较，确定行高
-					int mergerCellRegionCol = 0;
-					int columnWidth = 0;
-					//此处判断cell是否有合并列，如果有返回合并的列数，用于计算合并后的列宽（合并单元格列宽=所合并的那几列的列宽之和）
-					mergerCellRegionCol = ExcelUtil.getMergerCellRegionCol(sheet,cell.getRow().getRowNum(),cell.getColumnIndex());
-
-					if(mergerCellRegionCol > 1) {//有合并列
-						for(int i=cell.getColumnIndex();i<cell.getColumnIndex()+mergerCellRegionCol;i++) {
-							columnWidth += sheet.getColumnWidth(i);
-						}
-					}else {
-						columnWidth = sheet.getColumnWidth(cell.getColumnIndex()); //单位不是像素，1/256个字符宽度
-					}
-					int zfs = 0;//字符数
-					zfs = fillDataStr.getBytes(UtilConstant.CHARSET_GBK).length;
-					double dataLength = (zfs * (8 - 1) + 5) / (8 - 1);//字符宽度
-					int bs = 0;
-					bs = (int) Math.ceil(dataLength / ((columnWidth / 256 ) == 0 ? dataLength : (columnWidth / 256 )));
-					if(bs > 1) {
-						row.setHeight((short)(bs * 300));//行高按15*20算
-					}
-					//处理字符串本身有换行的行高计算(换了几行，就设置几行的高度+行内字符串换行的高度)
-					if(fillDataStr != null && (fillDataStr.contains("\r") || fillDataStr.contains("\n"))) {
-						int zbs = 0;
-						String[] len = null;
-						if(fillDataStr.contains("\r")) {
-							len = fillDataStr.split("\r");
-						}else {
-							len = fillDataStr.split("\n");
-						}
-						for (String string : len) {
-							dataLength = (string.getBytes(UtilConstant.CHARSET_GBK).length * (8 - 1) + 5) / (8 - 1);
-							bs = (int) Math.ceil(dataLength / ((columnWidth / 256 ) == 0 ? dataLength : (columnWidth / 256 )));
-							if(bs >= 2) {//行内字符串过长，换行了，总行高自然增加
-								zbs += bs;
-							}else {
-								zbs += 1;
-							}
-						}
-						//最终的换行数zbs=单行字符串的换行数之和
-						row.setHeight((short)(zbs * 220));//行高按11*20算
-					}
+					// 字符类型要设置样式
+					setTypeStringCellStyle(workbook,sheet,row,cell,fillRule,fillData);
+					//字符类型设置值
+					setTypeStringValue(workbook,sheet,row,cell,fillRule,fillData);
 				}else if (UtilConstant.SHOW_TYPE_RQCODE.equals(fillRule.getShowType())){
-					try {
-						if(fillData != null && !"".equals(fillData.toString().trim())) {//内容为空，则不生成二维码
-							byte[] imageBytes = QRCodeUtil.createDefaultQRCode(String.valueOf(fillData));
-							int pictureIdx = workbook.addPicture(imageBytes, workbook.PICTURE_TYPE_PNG);
-							// 创建一个顶级容器
-							Drawing drawing = sheet.createDrawingPatriarch();
-							CreationHelper helper = workbook.getCreationHelper();
-							ClientAnchor anchor = helper.createClientAnchor();
-							anchor.setRow1(Integer.parseInt(fillRule.getFillRowNumber()+"")-1);
-							anchor.setCol1(Integer.parseInt(fillRule.getFillColNumber()+"")-1);
-							Picture pict = drawing.createPicture(anchor, pictureIdx);
-							// auto-size picture relative to its top-left corner
-							pict.resize();// 该方法只支持JPEG 和 PNG后缀文件
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-						throw new Exception(UtilConstant.SHOW_TYPE_RQCODE+"生成图片失败！");
-					}
+					setTypeRqCodeValue(workbook,sheet,row,cell,fillRule,fillData);
 				}
 
 			}
@@ -329,5 +235,117 @@ public class TemplateDataIntegrationServiceImpl implements ITemplateDataIntegrat
 			ExcelUtil.insertRows(sheet,startRow,dataSize-1);
 		}
 		return dataSize>1?dataSize-1:0;
+	}
+
+	/**
+	 * 设置填充值为字符串的表格样式
+	 */
+	private void setTypeStringCellStyle(Workbook workbook,Sheet sheet,Row row,Cell cell,AeftdmFillRule fillRule,Object fillData){
+		CellStyle cellStyle = cell.getCellStyle();
+		//当有字体大小设置的时候需要从新生成新的空的格式，不然excel全部都是这个字体了,默认样式要继承
+		Font font2 = sheet.getWorkbook().createFont();
+		CellStyle cellStyle2 = sheet.getWorkbook().createCellStyle();
+		//设置字体样式
+		if (StringUtil.isNotEmpty(fillRule.getFontName())) {
+			font2.setFontName(fillRule.getFontName());
+		}
+		//设置加粗
+		if (SysDefineConstant.DIC_COMMON_STATUS_YES.equals(fillRule.getIsBlock())) {
+			font2.setBold(true);
+		} else if (SysDefineConstant.DIC_COMMON_STATUS_NO.equals(fillRule.getIsBlock())) {
+			font2.setBold(false);
+		}
+		//设置字体大小
+		if(StringUtil.isNotNull(fillRule.getFontSize())){
+			font2.setFontHeightInPoints(Short.valueOf(fillRule.getFontSize().toString()));
+			cellStyle2.setFont(font2);
+			cellStyle2.setBorderLeft(cellStyle.getBorderLeftEnum());
+			cellStyle2.setBorderBottom(cellStyle.getBorderBottomEnum());
+			cellStyle2.setBorderRight(cellStyle.getBorderRightEnum());
+			cellStyle2.setBorderTop(cellStyle.getBorderTopEnum());
+
+		}
+		// 设置居中样式
+		if(StringUtil.isNotEmpty(fillRule.getHorizontalAlign())){
+			if (UtilConstant.HORIZONTAL_ALIGN_LEFT.equals(fillRule.getHorizontalAlign())) {
+				cellStyle2.setAlignment(HorizontalAlignment.LEFT);
+			}
+			else if (UtilConstant.HORIZONTAL_ALIGN_CENTER.equals(fillRule.getHorizontalAlign())) {
+				cellStyle2.setAlignment(HorizontalAlignment.CENTER);
+			}
+			else if (UtilConstant.HORIZONTAL_ALIGN_RIGHT.equals(fillRule.getHorizontalAlign())) {
+				cellStyle2.setAlignment(HorizontalAlignment.RIGHT);
+			}
+		}
+		cell.setCellStyle(cellStyle2);
+	}
+
+	/**
+	 * 设置填充值为字符串的表格值
+	 * **/
+	private void setTypeStringValue(Workbook workbook,Sheet sheet,Row row,Cell cell,AeftdmFillRule fillRule,Object fillData) throws IOException {
+		String fillDataStr = String.valueOf(fillData);
+		cell.setCellValue(fillDataStr);
+		//设置行高,根据内容长度和cell宽度作比较，确定行高
+		int mergerCellRegionCol = 0;
+		int columnWidth = 0;
+		//此处判断cell是否有合并列，如果有返回合并的列数，用于计算合并后的列宽（合并单元格列宽=所合并的那几列的列宽之和）
+		mergerCellRegionCol = ExcelUtil.getMergerCellRegionCol(sheet,cell.getRow().getRowNum(),cell.getColumnIndex());
+
+		if(mergerCellRegionCol > 1) {//有合并列
+			for(int i=cell.getColumnIndex();i<cell.getColumnIndex()+mergerCellRegionCol;i++) {
+				columnWidth += sheet.getColumnWidth(i);
+			}
+		}else {
+			columnWidth = sheet.getColumnWidth(cell.getColumnIndex()); //单位不是像素，1/256个字符宽度
+		}
+		int zfs = 0;//字符数
+		zfs = fillDataStr.getBytes(UtilConstant.CHARSET_GBK).length;
+		double dataLength = (zfs * (8 - 1) + 5) / (8 - 1);//字符宽度
+		int bs = 0;
+		bs = (int) Math.ceil(dataLength / ((columnWidth / 256 ) == 0 ? dataLength : (columnWidth / 256 )));
+		if(bs > 1) {
+			row.setHeight((short)(bs * 300));//行高按15*20算
+		}
+		//处理字符串本身有换行的行高计算(换了几行，就设置几行的高度+行内字符串换行的高度)
+		if(fillDataStr != null && (fillDataStr.contains("\r") || fillDataStr.contains("\n"))) {
+			int zbs = 0;
+			String[] len = null;
+			if(fillDataStr.contains("\r")) {
+				len = fillDataStr.split("\r");
+			}else {
+				len = fillDataStr.split("\n");
+			}
+			for (String string : len) {
+				dataLength = (string.getBytes(UtilConstant.CHARSET_GBK).length * (8 - 1) + 5) / (8 - 1);
+				bs = (int) Math.ceil(dataLength / ((columnWidth / 256 ) == 0 ? dataLength : (columnWidth / 256 )));
+				if(bs >= 2) {//行内字符串过长，换行了，总行高自然增加
+					zbs += bs;
+				}else {
+					zbs += 1;
+				}
+			}
+			//最终的换行数zbs=单行字符串的换行数之和
+			row.setHeight((short)(zbs * 220));//行高按11*20算
+		}
+	}
+
+	/**
+	 * 设置填充值为二维码的表格值
+	 * **/
+	private void setTypeRqCodeValue(Workbook workbook,Sheet sheet,Row row,Cell cell,AeftdmFillRule fillRule,Object fillData) throws WriterException, IOException{
+		if(fillData != null && !"".equals(fillData.toString().trim())) {//内容为空，则不生成二维码
+			byte[] imageBytes = QRCodeUtil.createDefaultQRCode(String.valueOf(fillData));
+			int pictureIdx = workbook.addPicture(imageBytes, workbook.PICTURE_TYPE_PNG);
+			// 创建一个顶级容器
+			Drawing drawing = sheet.createDrawingPatriarch();
+			CreationHelper helper = workbook.getCreationHelper();
+			ClientAnchor anchor = helper.createClientAnchor();
+			anchor.setRow1(Integer.parseInt(fillRule.getFillRowNumber()+"")-1);
+			anchor.setCol1(Integer.parseInt(fillRule.getFillColNumber()+"")-1);
+			Picture pict = drawing.createPicture(anchor, pictureIdx);
+			// auto-size picture relative to its top-left corner
+			pict.resize();// 该方法只支持JPEG 和 PNG后缀文件
+		}
 	}
 }
