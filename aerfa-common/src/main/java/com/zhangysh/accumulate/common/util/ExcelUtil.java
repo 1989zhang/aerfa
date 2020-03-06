@@ -142,8 +142,6 @@ public class ExcelUtil {
 			}
 		} catch (EncryptedDocumentException e) {
 			e.printStackTrace();
-		} catch (InvalidFormatException e) {
-			e.printStackTrace();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -286,22 +284,22 @@ public class ExcelUtil {
 		targetCell.setCellComment(sourceCell.getCellComment());
 		//处理单元格内容
 		switch (sourceCell.getCellType()) {
-			case Cell.CELL_TYPE_STRING:
+			case STRING:
 				targetCell.setCellValue(sourceCell.getRichStringCellValue());
 				break;
-			case Cell.CELL_TYPE_NUMERIC:
+			case NUMERIC:
 				targetCell.setCellValue(sourceCell.getNumericCellValue());
 				break;
-			case Cell.CELL_TYPE_BLANK:
-				targetCell.setCellType(Cell.CELL_TYPE_BLANK);
+			case BLANK:
+				targetCell.setCellValue(sourceCell.getStringCellValue());
 				break;
-			case Cell.CELL_TYPE_BOOLEAN:
+			case BOOLEAN:
 				targetCell.setCellValue(sourceCell.getBooleanCellValue());
 				break;
-			case Cell.CELL_TYPE_ERROR:
+			case ERROR:
 				targetCell.setCellErrorValue(sourceCell.getErrorCellValue());
 				break;
-			case Cell.CELL_TYPE_FORMULA:
+			case FORMULA:
 				targetCell.setCellFormula(sourceCell.getCellFormula());
 				break;
 			default:
