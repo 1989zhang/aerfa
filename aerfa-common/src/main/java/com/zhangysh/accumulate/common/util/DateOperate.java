@@ -268,17 +268,17 @@ public class DateOperate {
 	 * 将字符串转String类型换成需要的String字符串类型
 	 * @param str
 	 *           要转换的字符串对象,格式: <li>2004-05-08 21:07:08</li> 
-	 * @param strinpattern
+	 * @param strInPattern
 	 *           要转换的字符串对象的格式,和字符串保持一致: <li>yyyy-MM-dd HH:mm:ss</li> 
-	 * @param stroutpattern
+	 * @param strOutPattern
 	 *           要转出来的字符串格式: <li>yyyy年yy月dd日 hh时mm分ss秒</li> 
 	 * @return String字符串
 	 */
-	public static String StringdatetoStringYMD(String str,String strinPattern,String stroutPattern) {
+	public static String StringdatetoStringYMD(String str,String strInPattern,String strOutPattern) {
 	    java.util.Date date=null;
         String strdate=null;
-        SimpleDateFormat format1 = new SimpleDateFormat(strinPattern);	
-        SimpleDateFormat format2 = new SimpleDateFormat(stroutPattern);	
+        SimpleDateFormat format1 = new SimpleDateFormat(strInPattern);
+        SimpleDateFormat format2 = new SimpleDateFormat(strOutPattern);
 	    try {
 		    date=format1.parse(str);
 		    strdate=format2.format(date);

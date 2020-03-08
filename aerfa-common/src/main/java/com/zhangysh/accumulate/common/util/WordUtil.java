@@ -11,10 +11,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLConverter;
+
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.w3c.dom.Document;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.converter.WordToHtmlConverter;
-
 
 /**
  *word文档doc工具类
@@ -26,8 +28,9 @@ public class WordUtil {
      * @param path 文件路径 
      * @return 获取到的转化为html的内容
      */
-	public static String readWordContent(String path){
+	public static String readWordContentToHtml(String path){
 		InputStream stream = null;
+		ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 		String content = null;
 		try {
 			if ( path.endsWith(".doc") ) {
@@ -37,7 +40,6 @@ public class WordUtil {
 	    		wordToHtmlConverter.processDocument(wordDocument);
 	    		 //创建html页面并将文档中内容写入页面
 	   		  	Document htmlDocument = wordToHtmlConverter.getDocument();
-	   		  	ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 	   		  	DOMSource domSource = new DOMSource(htmlDocument);
 	   		  	StreamResult streamResult = new StreamResult(outStream);
 	   		  	TransformerFactory tf = TransformerFactory.newInstance();
@@ -46,23 +48,25 @@ public class WordUtil {
 	   		  	serializer.setOutputProperty(OutputKeys.INDENT, "yes");
 	   		  	serializer.setOutputProperty(OutputKeys.METHOD, "html");
 	   		  	serializer.transform(domSource, streamResult);
-	   		  	outStream.close();
-	   		  	content = new String(outStream.toString("UTF-8"));
+				content = new String(outStream.toString("UTF-8"));
 			} else if (path.endsWith(".docx")) {
-	            
+				stream = new FileInputStream(path);
+				XWPFDocument document = new XWPFDocument(stream);
+				XHTMLConverter.getInstance().convert(document, outStream, null );
+				content = new String(outStream.toString("UTF-8"));
 	        } else {
 	            System.out.println("此文件不是word文件"+ path);
 	        }
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (null != stream) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			try {
+				stream.close();
+				outStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+
 		}
 		return content;
 	}

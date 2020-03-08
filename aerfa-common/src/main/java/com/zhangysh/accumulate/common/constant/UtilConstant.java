@@ -33,18 +33,26 @@ public class UtilConstant {
     public static final String HORIZONTAL_ALIGN_RIGHT="right";
     /** 数据显示类型:字符 **/
     public static final String SHOW_TYPE_STRING="string";
-    /** 数据显示类型:图片 **/
-    public static final String SHOW_TYPE_IMAGE="image";
     /** 数据显示类型:二维码 **/
     public static final String SHOW_TYPE_RQCODE="rqcode";
     /** 数据显示类型:条形码 **/
     public static final String SHOW_TYPE_BARCODE="barcode";
+    /** 数据显示类型:url地址指向图片，nginx的图片访问地址拼装 **/
+    public static final String SHOW_TYPE_IMAGE_URL_FILE="imageUrlFile";
+    /** 数据显示类型:ftp图片 **/
+    public static final String SHOW_TYPE_IMAGE_FTP_FILE="imageFtpFile";
+    /** 数据显示类型:本地文件dir图片 **/
+    public static final String SHOW_TYPE_IMAGE_DIR_FILE="imageDirFile";
+
+
     
     /**********文件类型相关常量**********/
     /** excel文件类型xls常量 **/
     public static final String FILE_TYPE_EXCEL_XLS="xls";
     /** word文件类型doc常量 **/
-    public static final String FILE_TYPE_WORD_DOC="doc";
+    /*public static final String FILE_TYPE_WORD_DOC="doc";*/
+    /** word文件类型docx常量 **/
+    public static final String FILE_TYPE_WORD_DOCX="docx";
     /** pdf文件类型常量 **/
     public static final String FILE_TYPE_PDF="pdf";
 	/** 图片文件类型png:png是无损压缩 **/
