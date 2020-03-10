@@ -52,6 +52,7 @@ public class FillRuleServiceImpl implements IFillRuleService {
 			fillRuleVo.setFontName("SimSun");//默认字体宋体SimSun
 			fillRuleVo.setFontSize(12L);//默认字体大小12
 			fillRuleVo.setIsBlock(0L);//默认不加粗
+			fillRuleVo.setFormatParam("");//不然无此属性
 			retFillRuleList.add(fillRuleVo);
 		}
 		tableInfo.setRows(retFillRuleList);
@@ -81,7 +82,7 @@ public class FillRuleServiceImpl implements IFillRuleService {
 				fillRuleDao.insertFillRule(fillRule);
 			}
 		}//word内容替换规则处理
-		else if(UtilConstant.FILE_TYPE_WORD_DOC.equals(template.getFileType())) {
+		else if(UtilConstant.FILE_TYPE_WORD_DOCX.equals(template.getFileType())) {
 			for(AeftdmFillRuleVo fillRuleVo:fillRuleVoList) {
 				AeftdmFillRule fillRule=new AeftdmFillRule();
 				BeanUtils.copyProperties(fillRuleVo, fillRule);

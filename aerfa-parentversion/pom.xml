@@ -62,9 +62,12 @@
         <apache.commons-lang3.version>3.7</apache.commons-lang3.version>
 
         <!-- excel和word读取操作包版本号，最好要相同 -->
-        <apache.poi.poi.version>3.17</apache.poi.poi.version>
-        <apache.poi.ooxml.version>3.17</apache.poi.ooxml.version>
-        <apache.poi.scratchpad.version>3.17</apache.poi.scratchpad.version>
+        <apache.poi.poi.version>4.1.2</apache.poi.poi.version>
+        <apache.poi.ooxml.version>4.1.2</apache.poi.ooxml.version>
+        <apache.poi.scratchpad.version>4.1.2</apache.poi.scratchpad.version>
+        <!-- wordx格式转换html需要的包-->
+        <apache.poi.fr.xdocreport.version>2.0.2</apache.poi.fr.xdocreport.version>
+
 
         <!-- excel和word转pdf工具包 -->
         <com.aspose.cells.version>8.5.2</com.aspose.cells.version>
@@ -217,6 +220,13 @@
                 <artifactId>poi-scratchpad</artifactId>
                 <version>${apache.poi.scratchpad.version}</version>
             </dependency>
+            <!-- wordx格式转换html需要的包-->
+            <dependency>
+                <groupId>fr.opensagres.xdocreport</groupId>
+                <artifactId>fr.opensagres.poi.xwpf.converter.xhtml</artifactId>
+                <version>${apache.poi.fr.xdocreport.version}</version>
+            </dependency>
+
             <!-- excel和word转pdf工具包 -->
             <dependency>
                 <groupId>com.aspose</groupId>

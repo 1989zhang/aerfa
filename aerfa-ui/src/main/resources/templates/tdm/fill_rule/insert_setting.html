@@ -60,21 +60,27 @@
 			},{
 				field : 'fontName', 
 				title : '字体',
-				width: '15%',
+				width: '10%',
 				align: 'center',
                 editable: createEditTable('select','字体','data_font_name')
 			},{
 				field : 'fontSize', 
 				title : '字号',
-				width: '15%',
+				width: '10%',
 				align: 'center',
                 editable: createEditTable('select','字号','data_font_size')
 			},{
 				field : 'isBlock', 
 				title : '是否加粗',
-				width: '15%',
+				width: '10%',
 				align: 'center',
 				editable: createEditTable('select','是否加粗','common_status')
+			},{
+				field : 'formatParam',
+				title : '格式化参数',
+				width: '15%',
+				align: 'center',
+				editable: createEditTable('text','格式化参数','')
 			}]
         };
         $.table.init(options);

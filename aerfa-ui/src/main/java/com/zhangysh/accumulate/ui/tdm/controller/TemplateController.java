@@ -152,7 +152,7 @@ public class TemplateController {
 			modelMap.put("templateId",templateId);
 			modelMap.addAttribute("prefix",prefix);
 			return prefix + "/excel_content";
-		}else if(UtilConstant.FILE_TYPE_WORD_DOC.equals(templateVo.getFileType())) {
+		}else if(UtilConstant.FILE_TYPE_WORD_DOCX.equals(templateVo.getFileType())) {
 			modelMap.put("templateId",templateId);
 			modelMap.addAttribute("prefix",prefix);
 			return prefix + "/word_content";

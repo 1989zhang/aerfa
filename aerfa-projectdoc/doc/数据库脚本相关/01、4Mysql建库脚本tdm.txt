@@ -65,6 +65,7 @@ create table aeftdm_fill_rule (
   font_name        varchar(16)                           comment '字体',
   font_size        int(11)                               comment '字体大小',
   is_block         int(11)                               comment '是否加粗',
+  format_param     varchar(256)                          comment '格式化参数json',
   create_by        varchar(64)                           comment '创建人员名称',
   create_time      timestamp                             comment '创建时间',
   update_by        varchar(64)                           comment '更新人员名称',

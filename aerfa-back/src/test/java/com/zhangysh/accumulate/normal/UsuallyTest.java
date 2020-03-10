@@ -26,7 +26,7 @@ public class UsuallyTest {
 		try {
 			//word模板转换测试建议保留
 			/*String templateFileFullPath="D://testaerfa//template//exportFile//11.doc";
-			String outFileFullPath="D://testaerfa//template//exportFile//22.doc";
+			String outFileFullPath="D://testaerfa//template//exportFile//1583459171799276.doc";
 			String pdfFileFullPath="D://testaerfa//template//exportFile//22.pdf";
 			FileOutputStream fos=new FileOutputStream(outFileFullPath);
 			FileInputStream fis=new FileInputStream(new File(templateFileFullPath));
@@ -36,8 +36,11 @@ public class UsuallyTest {
 			wordDocument.write(fos);
 			wordDocument.close();
 			fis.close();
-			fos.close();
-			AsposeWordUtil.wordToPdf(outFileFullPath, pdfFileFullPath);*/
+			fos.close();*/
+
+			String outFileFullPath="D://testaerfa//template//exportFile//22.doc";
+			String pdfFileFullPath="D://testaerfa//template//exportFile//22.pdf";
+			AsposeWordUtil.wordToPdf(outFileFullPath, pdfFileFullPath);
 			
 			
 		} catch (Exception e) {

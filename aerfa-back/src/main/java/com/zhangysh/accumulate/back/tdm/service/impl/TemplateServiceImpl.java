@@ -124,8 +124,8 @@ public class TemplateServiceImpl implements ITemplateService {
 		 String templateFileFullPath=templateFolderPath+SysDefineConstant.TEMPLATE_FOLDER_PATH_TEMPLATE_FILE+File.separator+template.getSaveName();;
 		 if(UtilConstant.FILE_TYPE_EXCEL_XLS.equals(template.getFileType())){
 			 return ExcelUtil.readExcelContent(templateFileFullPath);
-		 }else if(UtilConstant.FILE_TYPE_WORD_DOC.equals(template.getFileType())) {
-			 return WordUtil.readWordContent(templateFileFullPath);
+		 }else if(UtilConstant.FILE_TYPE_WORD_DOCX.equals(template.getFileType())) {
+			 return WordUtil.readWordContentToHtml(templateFileFullPath);
 		 }else {
 			 throw new RuntimeException("");
 		 }
@@ -183,8 +183,8 @@ public class TemplateServiceImpl implements ITemplateService {
 			AsposeExcelUtil.excelToPdf(outFileFullPath, pdfFileFullPath);
 			FileInputStream fileis=new FileInputStream(new File(pdfFileFullPath));
 			return InputStreamUtil.InputStreamToBase64(fileis);
-		}else if( UtilConstant.FILE_TYPE_WORD_DOC.equals(template.getFileType()) ) {
-			outFileFullPath=templateFolderPath+SysDefineConstant.TEMPLATE_FOLDER_PATH_EXPORT_FILE+File.separator+UuidUtil.getUMID()+"."+UtilConstant.FILE_TYPE_WORD_DOC;
+		}else if( UtilConstant.FILE_TYPE_WORD_DOCX.equals(template.getFileType()) ) {
+			outFileFullPath=templateFolderPath+SysDefineConstant.TEMPLATE_FOLDER_PATH_EXPORT_FILE+File.separator+UuidUtil.getUMID()+"."+UtilConstant.FILE_TYPE_WORD_DOCX;
 			templateDataIntegrationService.wordDataIntegration(
 					templateParmDto.getTemplateId(), templateParmDto.getRequireParm(),templateFileFullPath, outFileFullPath);
 		    //word转pdf

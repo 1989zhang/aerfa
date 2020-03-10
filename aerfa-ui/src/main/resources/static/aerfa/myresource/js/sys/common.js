@@ -115,7 +115,10 @@ function createEditTable(type,title,dicType) {
 	if(type !="select" || $.common.isEmpty(dicType)){
     	return {
     		type:type,
-    		title:title
+    		title:title,
+			emptytext:"空",
+			emptyclass:"",
+			placeholder:"用json格式"
     	};
 	}else{
 		return {

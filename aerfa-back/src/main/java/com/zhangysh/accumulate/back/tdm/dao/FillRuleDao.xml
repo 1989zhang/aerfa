@@ -18,6 +18,7 @@
         <result property="fontName"    column="font_name"    />
         <result property="fontSize"    column="font_size"    />
         <result property="isBlock"    column="is_block"    />
+        <result property="formatParam"    column="format_param"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -25,8 +26,8 @@
     </resultMap>
 	
 	<!--查询对象语句拼装-->
-	<sql id="selectFillRule">
-        select id, template_id, sql_id, field_id, fill_row_number, fill_col_number, replace_char, show_type, horizontal_align, font_name, font_size, is_block, create_by, create_time, update_by, update_time from aeftdm_fill_rule
+    <sql id="selectFillRule">
+        select id, template_id, sql_id, field_id, fill_row_number, fill_col_number, replace_char, show_type, horizontal_align, font_name, font_size, is_block, format_param, create_by, create_time, update_by, update_time from aeftdm_fill_rule
     </sql>
 
     <!--根据ID查询单个对象-->
@@ -51,6 +52,7 @@
             <if test="fontName != null  and fontName != ''  "> and font_name = #{fontName}</if>
             <if test="fontSize != null  "> and font_size = #{fontSize}</if>
             <if test="isBlock != null  "> and is_block = #{isBlock}</if>
+            <if test="formatParam != null  and formatParam != ''  "> and format_param = #{formatParam}</if>
             <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
             <if test="createTime != null  "> and create_time = #{createTime}</if>
             <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
@@ -74,6 +76,7 @@
 			<if test="fontName != null  and fontName != ''  ">font_name,</if>
 			<if test="fontSize != null  ">font_size,</if>
 			<if test="isBlock != null  ">is_block,</if>
+            <if test="formatParam != null  and formatParam != ''  ">format_param,</if>
 			<if test="createBy != null  and createBy != ''  ">create_by,</if>
 			<if test="createTime != null  ">create_time,</if>
 			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
@@ -91,6 +94,7 @@
 			<if test="fontName != null  and fontName != ''  ">#{fontName},</if>
 			<if test="fontSize != null  ">#{fontSize},</if>
 			<if test="isBlock != null  ">#{isBlock},</if>
+            <if test="formatParam != null  and formatParam != ''  ">#{formatParam},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
 			<if test="createTime != null  ">#{createTime},</if>
 			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
@@ -113,6 +117,7 @@
             <if test="fontName != null  and fontName != ''  ">font_name = #{fontName},</if>
             <if test="fontSize != null  ">font_size = #{fontSize},</if>
             <if test="isBlock != null  ">is_block = #{isBlock},</if>
+            <if test="formatParam != null  and formatParam != ''  ">format_param = #{formatParam},</if>
             <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
             <if test="createTime != null  ">create_time = #{createTime},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>

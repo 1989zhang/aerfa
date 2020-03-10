@@ -1,9 +1,13 @@
 package com.zhangysh.accumulate.back.iqa.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.zhangysh.accumulate.back.sys.service.IPersonService;
+import com.zhangysh.accumulate.common.constant.IqaDefineConstant;
 import com.zhangysh.accumulate.common.constant.SysDefineConstant;
+import com.zhangysh.accumulate.common.util.NumberUtil;
 import com.zhangysh.accumulate.pojo.iqa.viewobj.AefiqaKnowledgeVo;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
 import org.springframework.beans.BeanUtils;
@@ -39,20 +43,23 @@ public class ReplyServiceImpl implements IReplyService{
 		AefiqaQuestion searchQuestion=new AefiqaQuestion();
 		searchQuestion.setBelongOrgId(orgId);
 		searchQuestion.setContent(askContent);
+		Map<String, Object> params=new HashMap<String, Object>();
+		params.put(IqaDefineConstant.QUESTION_MARK_REPLY, SysDefineConstant.DIC_COMMON_STATUS_YES);
+		searchQuestion.setParams(params);
+
 		List<AefiqaQuestion> listQuestion=questionService.listMatchContentQuestion(searchQuestion);
 		boolean hitTar=false;//命中标记
 		String replyStr="";//返回的回答内容
 		AefiqaQuestion hitQuestion=new AefiqaQuestion();//后续命中或没命中处理
-		for(int i=0;i<listQuestion.size();i++) {
-			AefiqaQuestion question=listQuestion.get(i);
-			//有答案的才算命中
-			if(StringUtil.isNotNull(question.getAnswerId())) {
-				hitTar=true;
-				replyStr=answerService.getAnswerById(question.getAnswerId()).getContent();
-				hitQuestion=question;
-				break;
-			}
+
+		if(listQuestion.size()>0){//有命中的情况
+			int retQuestionCur=NumberUtil.getRangeInt(0,listQuestion.size()-1);
+			AefiqaQuestion question=listQuestion.get(retQuestionCur);
+			hitTar=true;
+			replyStr=answerService.getAnswerById(question.getAnswerId()).getContent();
+			hitQuestion=question;
 		}
+
 		if(!hitTar){
 			hitQuestion.setContent(askContent);
 			hitQuestion.setStandard(SysDefineConstant.DIC_COMMON_STATUS_YES);

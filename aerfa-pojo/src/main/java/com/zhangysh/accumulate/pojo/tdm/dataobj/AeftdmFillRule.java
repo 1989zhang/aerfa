@@ -34,6 +34,8 @@ public class AeftdmFillRule extends BaseDataObj{
 	private Long fontSize;
 	/** 是否加粗:1加粗，默认0不加粗 **/
 	private Long isBlock;
+	/** 格式化参数json **/
+	private String formatParam;
 
 	public Long getTemplateId() {
 		return templateId;
@@ -101,10 +103,15 @@ public class AeftdmFillRule extends BaseDataObj{
 	public void setIsBlock(Long isBlock) {
 		this.isBlock = isBlock;
 	}
-	
+	public String getFormatParam() {
+		return formatParam;
+	}
+	public void setFormatParam(String formatParam) {
+		this.formatParam = formatParam;
+	}
 
 	@Override
 	public String toString() {
-		return "AeftdmFillRule [id=" + id + ",templateId=" + templateId + ",sqlId=" + sqlId + ",fieldId=" + fieldId + ",fillRowNumber=" + fillRowNumber + ",fillColNumber=" + fillColNumber + ",replaceChar=" + replaceChar + ",showType=" + showType + ",horizontalAlign=" + horizontalAlign + ",fontName=" + fontName + ",fontSize=" + fontSize + ",isBlock=" + isBlock + ",createBy=" + createBy + ",createTime=" + createTime + ",updateBy=" + updateBy + ",updateTime=" + updateTime + ",]";
-    }
+		return "AeftdmFillRule [id=" + id + ",templateId=" + templateId + ",sqlId=" + sqlId + ",fieldId=" + fieldId + ",fillRowNumber=" + fillRowNumber + ",fillColNumber=" + fillColNumber + ",replaceChar=" + replaceChar + ",showType=" + showType + ",horizontalAlign=" + horizontalAlign + ",fontName=" + fontName + ",fontSize=" + fontSize + ",isBlock=" + isBlock + ",formatParam=" + formatParam + ",createBy=" + createBy + ",createTime=" + createTime + ",updateBy=" + updateBy + ",updateTime=" + updateTime + ",]";
+	}
 }

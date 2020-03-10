@@ -50,6 +50,13 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-scratchpad</artifactId>
         </dependency>
+        <!-- wordx格式转换html需要的包-->
+        <dependency>
+            <groupId>fr.opensagres.xdocreport</groupId>
+            <artifactId>fr.opensagres.poi.xwpf.converter.xhtml</artifactId>
+        </dependency>
+
+
         <!-- excel和word转pdf工具包 -->
         <dependency>
             <groupId>com.aspose</groupId>

@@ -1,21 +1,28 @@
 package com.zhangysh.accumulate.back.tdm.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.zxing.WriterException;
-import com.zhangysh.accumulate.common.constant.SysDefineConstant;
-import com.zhangysh.accumulate.common.constant.TdmDefineConstant;
-import com.zhangysh.accumulate.common.util.QRCodeUtil;
+import org.apache.poi.hwpf.usermodel.Paragraph;
+import org.apache.poi.hwpf.usermodel.TableIterator;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.usermodel.Range;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.zxing.WriterException;
+import com.zhangysh.accumulate.back.sys.service.IConfigDataService;
+import com.zhangysh.accumulate.common.constant.SysDefineConstant;
+import com.zhangysh.accumulate.common.constant.TdmDefineConstant;
+import com.zhangysh.accumulate.common.util.*;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysConfigData;
+import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.zhangysh.accumulate.back.adi.dydatasource.DynamicSqlRepository;
@@ -25,9 +32,6 @@ import com.zhangysh.accumulate.back.tdm.service.IFillRuleService;
 import com.zhangysh.accumulate.back.tdm.service.ITemplateDataIntegrationService;
 import com.zhangysh.accumulate.common.constant.MarkConstant;
 import com.zhangysh.accumulate.common.constant.UtilConstant;
-import com.zhangysh.accumulate.common.util.ExcelUtil;
-import com.zhangysh.accumulate.common.util.NativeSqlUtil;
-import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.tdm.dataobj.AeftdmDataSourceField;
 import com.zhangysh.accumulate.pojo.tdm.dataobj.AeftdmDataSourceSql;
 import com.zhangysh.accumulate.pojo.tdm.dataobj.AeftdmFillRule;
@@ -43,7 +47,9 @@ public class TemplateDataIntegrationServiceImpl implements ITemplateDataIntegrat
 	private DynamicSqlRepository dynamicSqlRepository;
 	@Autowired
     private IDataSourceFieldService dataSourceFieldService;
-    
+	@Autowired
+	private IConfigDataService configDataService;
+
 	@Override
 	public void excelDataIntegration(Long templateId,String requireParm,String templateFileFullPath,String outFileFullPath) throws Exception{
 		FileOutputStream fos=new FileOutputStream(outFileFullPath);
@@ -86,18 +92,26 @@ public class TemplateDataIntegrationServiceImpl implements ITemplateDataIntegrat
 	public void wordDataIntegration(Long templateId,String requireParm,String templateFileFullPath,String outFileFullPath) throws Exception{
 		FileOutputStream fos=new FileOutputStream(outFileFullPath);
 		FileInputStream fis=new FileInputStream(new File(templateFileFullPath));
-		HWPFDocument wordDocument = new HWPFDocument(fis);
+		XWPFDocument wordDocument = new XWPFDocument(fis);
 		//首先获取模板id下的所有数据源。
 		AeftdmDataSourceSql searchDataSourceSql =new AeftdmDataSourceSql();
 		searchDataSourceSql.setTemplateId(templateId);
 		List<AeftdmDataSourceSql> dataSourceSqlList= dataSourceSqlService.listDataSourceSql(searchDataSourceSql);
+		//格式(参数名1:参数值1,参数名2:参数值2)
+		List<String> paramList=StringUtil.getStrListBySplit(requireParm,MarkConstant.MARK_SPLIT_EN_COMMA);
+
 		for(AeftdmDataSourceSql dataSourceSql:dataSourceSqlList) {
-			Map<String, Object> params=new HashMap<String, Object>(); 
+			Map<String, Object> params=new HashMap<String, Object>();
 			String sqlText=dataSourceSql.getSqlText();
 			List<String> requestStrList=NativeSqlUtil.getRequestStr(sqlText);
 			for(String requestStr:requestStrList) {
 				String paramName=NativeSqlUtil.getParamName(requestStr);
-				params.put(paramName, requireParm);
+				for(int i=0;i<paramList.size();i++) {
+					String[] paramStrArr=paramList.get(i).split(MarkConstant.MARK_SPLIT_EN_COLON);
+					if(paramName.equals(paramStrArr[0])) {
+						params.put(paramName, paramStrArr[1]);
+					}
+				}
 				sqlText=sqlText.replaceAll(requestStr, ":"+paramName);
 			}
 			List<Map<String, Object>> resultMapList=dynamicSqlRepository.doSelect(null, sqlText, params);
@@ -183,6 +197,12 @@ public class TemplateDataIntegrationServiceImpl implements ITemplateDataIntegrat
 					setTypeStringValue(workbook,sheet,row,cell,fillRule,fillData);
 				}else if (UtilConstant.SHOW_TYPE_RQCODE.equals(fillRule.getShowType())){
 					setTypeRqCodeValue(workbook,sheet,row,cell,fillRule,fillData);
+				}else if (UtilConstant.SHOW_TYPE_BARCODE.equals(fillRule.getShowType())){
+					setTypeBarCodeValue(workbook,sheet,row,cell,fillRule,fillData);
+				}else if (UtilConstant.SHOW_TYPE_IMAGE_URL_FILE.equals(fillRule.getShowType())
+						||UtilConstant.SHOW_TYPE_IMAGE_FTP_FILE.equals(fillRule.getShowType())
+						||UtilConstant.SHOW_TYPE_IMAGE_DIR_FILE.equals(fillRule.getShowType())){
+					setTypeImageValueByUfs(workbook,sheet,row,cell,fillRule,fillData,fillRule.getShowType());
 				}
 
 			}
@@ -193,37 +213,8 @@ public class TemplateDataIntegrationServiceImpl implements ITemplateDataIntegrat
 	/***
 	 * 根据sql定义填充word数据
 	 ****/
-	private void wordFillData(HWPFDocument doc,AeftdmDataSourceSql dataSourceSql,List<Map<String, Object>> resultMapList) throws Exception{
-		AeftdmDataSourceField searchDataSourceField =new AeftdmDataSourceField();
-		searchDataSourceField.setSqlId(dataSourceSql.getId());
-		List<AeftdmDataSourceField> dataSourceFieldList=dataSourceFieldService.listDataSourceField(searchDataSourceField);
-		int dataSourceFieldSize=dataSourceFieldList.size();
-		for(int filedSize=0;filedSize<dataSourceFieldSize;filedSize++) {
-			AeftdmDataSourceField dataSourceField=dataSourceFieldList.get(filedSize);
-			AeftdmFillRule searchFillRule=new AeftdmFillRule();
-			searchFillRule.setFieldId(dataSourceField.getId());
-			List<AeftdmFillRule> fillRuleList=fillRuleService.listFillRule(searchFillRule);
+	private void wordFillData(XWPFDocument doc,AeftdmDataSourceSql dataSourceSql,List<Map<String, Object>> resultMapList) throws Exception{
 
-			if (fillRuleList == null || fillRuleList.size()==0) {
-				continue;//sql查询的多余字段，先不管填充规则
-			}
-			
-			Map<String, String> replaceMap=new HashMap<String, String>();
-			for(int i=0;i<fillRuleList.size();i++) {
-				// 数据,后面考虑多条数据填充情况
-				String fieldName=dataSourceField.getFieldName();
-				AeftdmFillRule fillRule=fillRuleList.get(i);
-				String replaceChar=MarkConstant.MARK_SPLIT_EN_DOLLAR+MarkConstant.MARK_SPLIT_EN_BRACE_LEFT+fillRule.getReplaceChar()+MarkConstant.MARK_SPLIT_EN_BRACE_RIGHT;
-				Object fillData =resultMapList.get(0).get(fieldName);
-				String fillDataStr = String.valueOf(fillData);
-				replaceMap.put(replaceChar, fillDataStr);
-			}
-			
-			Range range = doc.getRange(); 
-			for (Map.Entry<String, String> entry : replaceMap.entrySet()) {  
-                range.replaceText(entry.getKey(), entry.getValue());  
-            }  
-		}
 	}
 
 	/***
@@ -263,7 +254,6 @@ public class TemplateDataIntegrationServiceImpl implements ITemplateDataIntegrat
 			cellStyle2.setBorderBottom(cellStyle.getBorderBottomEnum());
 			cellStyle2.setBorderRight(cellStyle.getBorderRightEnum());
 			cellStyle2.setBorderTop(cellStyle.getBorderTopEnum());
-
 		}
 		// 设置居中样式
 		if(StringUtil.isNotEmpty(fillRule.getHorizontalAlign())){
@@ -335,17 +325,89 @@ public class TemplateDataIntegrationServiceImpl implements ITemplateDataIntegrat
 	 * **/
 	private void setTypeRqCodeValue(Workbook workbook,Sheet sheet,Row row,Cell cell,AeftdmFillRule fillRule,Object fillData) throws WriterException, IOException{
 		if(fillData != null && !"".equals(fillData.toString().trim())) {//内容为空，则不生成二维码
-			byte[] imageBytes = QRCodeUtil.createDefaultQRCode(String.valueOf(fillData));
-			int pictureIdx = workbook.addPicture(imageBytes, workbook.PICTURE_TYPE_PNG);
-			// 创建一个顶级容器
-			Drawing drawing = sheet.createDrawingPatriarch();
-			CreationHelper helper = workbook.getCreationHelper();
-			ClientAnchor anchor = helper.createClientAnchor();
-			anchor.setRow1(Integer.parseInt(fillRule.getFillRowNumber()+"")-1);
-			anchor.setCol1(Integer.parseInt(fillRule.getFillColNumber()+"")-1);
-			Picture pict = drawing.createPicture(anchor, pictureIdx);
-			// auto-size picture relative to its top-left corner
-			pict.resize();// 该方法只支持JPEG 和 PNG后缀文件
+			byte[] imageBytes;
+			if(StringUtil.isNotEmpty(fillRule.getFormatParam())){
+				JSONObject formatParamJson=JSON.parseObject(fillRule.getFormatParam());
+				int width=formatParamJson.getInteger(TdmDefineConstant.FORMAT_PARAM_WIDTH);
+				int height=formatParamJson.getInteger(TdmDefineConstant.FORMAT_PARAM_HEIGHT);
+				imageBytes = QRCodeUtil.createQRCodeByParam(String.valueOf(fillData),width,height,0,"M");
+			}else{
+				imageBytes = QRCodeUtil.createDefaultQRCode(String.valueOf(fillData));
+			}
+			addPictureToWorkBook(imageBytes,workbook,sheet,Integer.parseInt(fillRule.getFillRowNumber()+""),Integer.parseInt(fillRule.getFillColNumber()+""));
 		}
 	}
+
+	/**
+	 * 设置填充值为条形码的表格值
+	 * **/
+	private void setTypeBarCodeValue(Workbook workbook,Sheet sheet,Row row,Cell cell,AeftdmFillRule fillRule,Object fillData) throws WriterException, IOException{
+		if(fillData != null && !"".equals(fillData.toString().trim())) {//内容为空，则不生成条形码
+			byte[] imageBytes;
+			if(StringUtil.isNotEmpty(fillRule.getFormatParam())){
+				JSONObject formatParamJson=JSON.parseObject(fillRule.getFormatParam());
+				int width=formatParamJson.getInteger(TdmDefineConstant.FORMAT_PARAM_WIDTH);
+				int height=formatParamJson.getInteger(TdmDefineConstant.FORMAT_PARAM_HEIGHT);
+				imageBytes = BarCodeUtil.createBarCodeByParam(String.valueOf(fillData),width,height,"M");
+			}else{
+				imageBytes = BarCodeUtil.createDefaultBarCode(String.valueOf(fillData));
+			}
+			addPictureToWorkBook(imageBytes,workbook,sheet,Integer.parseInt(fillRule.getFillRowNumber()+""),Integer.parseInt(fillRule.getFillColNumber()+""));
+		}
+	}
+
+	/***
+	 * 通过ufs uploadFileSystem不同实现方式获取并生成图片
+	 * @param workbook excel文件
+	 * @param sheet excel工作区
+	 * @param row 要填充数据所在行
+	 * @param cell 要填充数据所在单元
+	 * @param fillRule 填充规则对象
+	 * @param fillData 要填充的数据值
+	 * @param showType 数据来源或展示类型
+	 **/
+	private void setTypeImageValueByUfs(Workbook workbook,Sheet sheet,Row row,Cell cell,AeftdmFillRule fillRule,Object fillData,String showType) throws IOException{
+		byte[] imageBytes = null;
+		//把imageUrlFile从nginx取也归到ufs,毕竟是从ufs上传的
+		if(UtilConstant.SHOW_TYPE_IMAGE_URL_FILE.equals(showType)){
+			AefsysConfigData picIpAddressConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_SYS_PIC_IP_ADDRESS);
+			String fullPicUrl=picIpAddressConfigData.getDataValue()+fillData;
+			String picBase64File=HttpClientUtil.getBase64FileByHttpUrl(fullPicUrl,false);
+			byte[] picByteImg=InputStreamUtil.Base64ToByte(picBase64File);
+			if(StringUtil.isNotEmpty(fillRule.getFormatParam())){
+				JSONObject formatParamJson=JSON.parseObject(fillRule.getFormatParam());
+				int width=formatParamJson.getInteger(TdmDefineConstant.FORMAT_PARAM_WIDTH);
+				int height=formatParamJson.getInteger(TdmDefineConstant.FORMAT_PARAM_HEIGHT);
+				BufferedImage picBufferedImg=ImageUtil.byte2BufferedImage(picByteImg);
+				imageBytes = ImageUtil.zoomImage(picBufferedImg,width,height);
+			}else{
+				imageBytes=picByteImg;
+			}
+		}else{//其他的ufs系统Action里面取
+
+		}
+		addPictureToWorkBook(imageBytes,workbook,sheet,Integer.parseInt(fillRule.getFillRowNumber()+""),Integer.parseInt(fillRule.getFillColNumber()+""));
+	}
+
+	/**
+	 * 把图片填充到表单工作区
+	 * @param imageBytes 图片内容字节
+	 * @param workbook excel文件
+	 * @param sheet excel工作区
+	 * @param rowNumber 填充的行序号，此方法按exce算内会减一
+	 * @param colNumber 填充的列序号，此方法按exce算内会减一
+	 ***/
+	private void addPictureToWorkBook(byte[] imageBytes,Workbook workbook,Sheet sheet,int rowNumber,int colNumber){
+		int pictureIdx = workbook.addPicture(imageBytes, workbook.PICTURE_TYPE_PNG);
+		// 创建一个顶级容器
+		Drawing drawing = sheet.createDrawingPatriarch();
+		CreationHelper helper = workbook.getCreationHelper();
+		ClientAnchor anchor = helper.createClientAnchor();
+		anchor.setRow1(rowNumber-1);
+		anchor.setCol1(colNumber-1);
+		Picture pict = drawing.createPicture(anchor, pictureIdx);
+		// auto-size picture relative to its top-left corner
+		pict.resize();// 该方法只支持JPEG 和 PNG后缀文件
+	}
+
 }

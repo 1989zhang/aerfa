@@ -41,7 +41,7 @@ public class IqaReplyController extends BaseController{
 	public String getReply(@RequestBody AefiqaAskDto askDto) {
 		logger.info("getReply:"+askDto);
 		Long orgId=1L;
-		String replyStr=replyService.getReply(orgId, askDto.getAskContent());
+		String replyStr=replyService.getReply(orgId, askDto.getAskContent().trim());
 		if(StringUtil.isNotEmpty(replyStr)) {
 			return toHandlerResultStr(true, replyStr, null, null);
 		}
