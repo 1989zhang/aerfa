@@ -1,6 +1,8 @@
 package com.zhangysh.accumulate.back.tdm.service.impl;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
@@ -115,5 +117,15 @@ public class FillRuleServiceImpl implements IFillRuleService {
 			fillRuleDao.deleteFillRuleById(fillRuleList.get(i).getId());
 		}
 		return fillRuleList.size();
+	}
+
+	@Override
+	public Map<String,AeftdmFillRule> getFillRuleMap(AeftdmFillRule fillRule){
+		Map<String,AeftdmFillRule> retFillRuleMap=new HashMap<String,AeftdmFillRule>();
+		List<AeftdmFillRule> fillRullList=listFillRule(fillRule);
+		for(AeftdmFillRule myFillRule:fillRullList){
+			retFillRuleMap.put(myFillRule.getReplaceChar(),myFillRule);
+		}
+		return retFillRuleMap;
 	}
 }

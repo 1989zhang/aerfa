@@ -24,10 +24,13 @@ public class MarkConstant {
 	/**********其他标记**********/
 	/**字符常量：英文$号**/
 	public static final String MARK_SPLIT_EN_DOLLAR ="$";
+	public static final String MARK_SPLIT_EN_DOLLAR_TRANS ="\\$";
 	/**字符常量：左括号英文{**/
 	public static final String MARK_SPLIT_EN_BRACE_LEFT ="{";
+	public static final String MARK_SPLIT_EN_BRACE_LEFT_TRANS ="\\{";
 	/**字符常量：右括号英文}**/
 	public static final String MARK_SPLIT_EN_BRACE_RIGHT ="}";
+	public static final String MARK_SPLIT_EN_BRACE_RIGHT_TRANS ="\\}";
 	/**分割字符标记常量：英文逗号,**/
 	public static final String MARK_SPLIT_EN_COMMA =",";
 	/**分割字符标记常量：英文冒号:**/

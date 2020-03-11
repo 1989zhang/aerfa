@@ -1,6 +1,7 @@
 package com.zhangysh.accumulate.back.tdm.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.zhangysh.accumulate.common.pojo.BsTableDataInfo;
 import com.zhangysh.accumulate.pojo.tdm.dataobj.AeftdmFillRule;
@@ -22,7 +23,7 @@ public interface IFillRuleService {
 	
 	/***
 	 * 保存填写的模板填充规则对象
-	 * @param tableData bootstrap表格对象json字符
+	 * @param tableDataDto bootstrap表格对象json字符
 	 * @return 是否保存成功
 	 */
 	boolean saveTableData(AeftdmFillRuleDataDto tableDataDto);
@@ -40,4 +41,10 @@ public interface IFillRuleService {
 	 * @param tableDataDto 参数对象
 	 ****/
 	int deleteFillRuleByMark(AeftdmFillRuleDataDto tableDataDto);
+
+	/**
+	 * 获取填充规则Map集合,key为填充规则的replaceChar
+	 * @param fillRule 查询条件填充规则对象
+	 */
+	Map<String,AeftdmFillRule> getFillRuleMap(AeftdmFillRule fillRule);
 }

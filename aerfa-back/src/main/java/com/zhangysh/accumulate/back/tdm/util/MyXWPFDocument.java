@@ -34,34 +34,6 @@ public class MyXWPFDocument extends XWPFDocument {
         super(opcPackage);
     }
 
-    public void createPicture(int id, String blipId, int width, int height) {
-        final int emu = 9525;
-        width = emu*width;
-        height = emu*height;
-        CTInline inline = createParagraph().createRun().getCTR().addNewDrawing().addNewInline();
-        String picXml = getFormatPicXml(id,blipId,width, height);
-        XmlToken xmlToken = null;
-        try {
-            xmlToken = XmlToken.Factory.parse(picXml);
-        } catch (XmlException xe) {
-            LOGGER.error(xe.getMessage(), xe);
-        }
-        inline.set(xmlToken);
-
-        inline.setDistT(0);
-        inline.setDistB(0);
-        inline.setDistL(0);
-        inline.setDistR(0);
-
-        CTPositiveSize2D extent = inline.addNewExtent();
-        extent.setCx(width);
-        extent.setCy(height);
-
-        CTNonVisualDrawingProps docPr = inline.addNewDocPr();
-        docPr.setId(id);
-        docPr.setName("Picture " + id);
-        docPr.setDescr("Generated");
-    }
 
     /**
      * 创建图片
@@ -97,7 +69,7 @@ public class MyXWPFDocument extends XWPFDocument {
     }
 
 
-    /***
+    /**
      * 组装图片xml
      **/
     private static String getFormatPicXml(int id, String blipId, int width, int height){
