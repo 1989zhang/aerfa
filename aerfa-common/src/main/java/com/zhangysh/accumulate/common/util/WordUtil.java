@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import javax.xml.transform.Transformer;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -13,23 +12,15 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLConverter;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.*;
-
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlToken;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTNonVisualDrawingProps;
-import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
-import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.w3c.dom.Document;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.converter.WordToHtmlConverter;
 
 /**
  *word文档doc工具类
+ * @author zhangysh
+ * @date 2020年03月10日
  */
 public class WordUtil {
 	

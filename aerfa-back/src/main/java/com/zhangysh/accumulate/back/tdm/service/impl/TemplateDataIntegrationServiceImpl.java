@@ -7,13 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.hwpf.usermodel.Paragraph;
-import org.apache.poi.hwpf.usermodel.TableIterator;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import com.zhangysh.accumulate.back.tdm.util.MyWordUtil;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.hwpf.usermodel.Range;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.zxing.WriterException;
@@ -214,7 +209,97 @@ public class TemplateDataIntegrationServiceImpl implements ITemplateDataIntegrat
 	 * 根据sql定义填充word数据
 	 ****/
 	private void wordFillData(XWPFDocument doc,AeftdmDataSourceSql dataSourceSql,List<Map<String, Object>> resultMapList) throws Exception{
+		//查询出列的基本数据
+		AeftdmDataSourceField searchDataSourceField =new AeftdmDataSourceField();
+		searchDataSourceField.setSqlId(dataSourceSql.getId());
+		List<AeftdmDataSourceField> dataSourceFieldList=dataSourceFieldService.listDataSourceField(searchDataSourceField);
+		int dataSourceFieldSize=dataSourceFieldList.size();
 
+		//只需替换单个字符有可能含表格的
+		if(TdmDefineConstant.DATA_FILL_TYPE_FREE.equals(dataSourceSql.getFillType())){
+			Map<String, Object> resultMap=resultMapList.get(0);
+			List<XWPFParagraph> list=doc.getParagraphs();
+			// 遍历段落
+			for (XWPFParagraph paragraph : list) {
+				List<XWPFRun> runs = paragraph.getRuns();
+				for (XWPFRun run : runs) {
+					String text = run.getText(0);
+					for(int filedSize=0;filedSize<dataSourceFieldSize;filedSize++) {
+						AeftdmDataSourceField dataSourceField=dataSourceFieldList.get(filedSize);
+						AeftdmFillRule searchFillRule=new AeftdmFillRule();
+						searchFillRule.setFieldId(dataSourceField.getId());
+						List<AeftdmFillRule> fillRuleList=fillRuleService.listFillRule(searchFillRule);
+
+						AeftdmFillRule fillRule;
+						if (fillRuleList == null || fillRuleList.size()==0) {
+							continue;//sql查询的多余字段，先不管填充规则
+						}else {
+							fillRule=fillRuleList.get(0);
+						}
+						//匹配到要替换的字符了
+						String replaceAllChar=MarkConstant.MARK_SPLIT_EN_DOLLAR+MarkConstant.MARK_SPLIT_EN_BRACE_LEFT+fillRule.getReplaceChar()+MarkConstant.MARK_SPLIT_EN_BRACE_RIGHT;
+						if(replaceAllChar.equals(text)){
+							Object fillData = resultMap.get(dataSourceField.getFieldName());
+							MyWordUtil.changeValue(paragraph,run,replaceAllChar,fillRule,fillData);
+						}
+					}
+				}
+			}
+
+			// 遍历表
+			for (XWPFTable table : doc.getTables()) {
+				for (XWPFTableRow row : table.getRows()) {
+					for (XWPFTableCell cell : row.getTableCells()) {
+						for (XWPFParagraph paragraph : cell.getParagraphs()) {
+							List<XWPFRun> runs = paragraph.getRuns();
+							for (XWPFRun run : runs) {
+								String text = run.getText(0);
+								for(int filedSize=0;filedSize<dataSourceFieldSize;filedSize++) {
+									AeftdmDataSourceField dataSourceField=dataSourceFieldList.get(filedSize);
+									AeftdmFillRule searchFillRule=new AeftdmFillRule();
+									searchFillRule.setFieldId(dataSourceField.getId());
+									List<AeftdmFillRule> fillRuleList=fillRuleService.listFillRule(searchFillRule);
+
+									AeftdmFillRule fillRule;
+									if (fillRuleList == null || fillRuleList.size()==0) {
+										continue;//sql查询的多余字段，先不管填充规则
+									}else {
+										fillRule=fillRuleList.get(0);
+									}
+									//匹配到要替换的字符了
+									String replaceAllChar=MarkConstant.MARK_SPLIT_EN_DOLLAR+MarkConstant.MARK_SPLIT_EN_BRACE_LEFT+fillRule.getReplaceChar()+MarkConstant.MARK_SPLIT_EN_BRACE_RIGHT;
+									if(replaceAllChar.equals(text)){
+										Object fillData = resultMap.get(dataSourceField.getFieldName());
+										MyWordUtil.changeValue(paragraph,run,replaceAllChar,fillRule,fillData);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		//要拓展填充表格的
+		}else if (TdmDefineConstant.DATA_FILL_TYPE_EXPAND.equals(dataSourceSql.getFillType())){
+			//要填充扩展的一定是表格
+			// 遍历表
+			for (XWPFTable table : doc.getTables()) {
+				boolean ret=false;
+				for (XWPFTableRow row : table.getRows()) {
+					for (XWPFTableCell cell : row.getTableCells()) {
+						if("${xh}".equals(cell.getText())){
+							ret=true;
+							break;
+						}
+					}
+					if(ret){
+						break;
+					}
+				}
+				if(ret){
+					MyWordUtil.insertRows(table,1,resultMapList);
+				}
+			}
+		}
 	}
 
 	/***
