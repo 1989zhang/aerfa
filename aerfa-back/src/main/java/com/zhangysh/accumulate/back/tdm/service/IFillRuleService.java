@@ -37,7 +37,7 @@ public interface IFillRuleService {
 	List<AeftdmFillRule> listFillRule(AeftdmFillRule fillRule);
 	
 	/***
-	 * 根据模板和位置信息删除填充规则
+	 * 根据模板和位置信息,或者替换字符标记,删除填充规则
 	 * @param tableDataDto 参数对象
 	 ****/
 	int deleteFillRuleByMark(AeftdmFillRuleDataDto tableDataDto);
@@ -47,4 +47,10 @@ public interface IFillRuleService {
 	 * @param fillRule 查询条件填充规则对象
 	 */
 	Map<String,AeftdmFillRule> getFillRuleMap(AeftdmFillRule fillRule);
+
+	/**
+	 * 根据模板ID获取里面已绑定的替换字符
+	 * @param templateId 模板ID
+	 ***/
+	String getReplaceCharArr(Long templateId);
 }

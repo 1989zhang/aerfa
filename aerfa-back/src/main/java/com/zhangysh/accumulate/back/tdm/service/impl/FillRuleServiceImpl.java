@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zhangysh.accumulate.common.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,13 +106,20 @@ public class FillRuleServiceImpl implements IFillRuleService {
 	
 	@Override
 	public int deleteFillRuleByMark(AeftdmFillRuleDataDto tableDataDto) {
-		String[] locationMarkArr=tableDataDto.getLocationMark().split(MarkConstant.MARK_SPLIT_EN_COMMA);
-		Long rowNumber=Long.parseLong(locationMarkArr[0]);
-		Long colNumber=Long.parseLong(locationMarkArr[1]);
+		String markStr=tableDataDto.getLocationMark();
 		AeftdmFillRule fillRule=new AeftdmFillRule();
 		fillRule.setTemplateId(tableDataDto.getTemplateId());
-		fillRule.setFillRowNumber(rowNumber);
-		fillRule.setFillColNumber(colNumber);
+		//excel的删除查询条件
+		if(markStr.contains(MarkConstant.MARK_SPLIT_EN_COMMA)){
+			String[] locationMarkArr=markStr.split(MarkConstant.MARK_SPLIT_EN_COMMA);
+			Long rowNumber=Long.parseLong(locationMarkArr[0]);
+			Long colNumber=Long.parseLong(locationMarkArr[1]);
+			fillRule.setFillRowNumber(rowNumber);
+			fillRule.setFillColNumber(colNumber);
+		//word的删除查询条件
+		}else{
+			fillRule.setReplaceChar(markStr);
+		}
 		List<AeftdmFillRule> fillRuleList=fillRuleDao.listFillRule(fillRule);
 		for(int i=0;i<fillRuleList.size();i++) {
 			fillRuleDao.deleteFillRuleById(fillRuleList.get(i).getId());
@@ -127,5 +135,20 @@ public class FillRuleServiceImpl implements IFillRuleService {
 			retFillRuleMap.put(myFillRule.getReplaceChar(),myFillRule);
 		}
 		return retFillRuleMap;
+	}
+
+	@Override
+	public String getReplaceCharArr(Long templateId){
+		String retStr="";
+		AeftdmFillRule searchFillRule=new AeftdmFillRule();
+		searchFillRule.setTemplateId(templateId);
+		List<AeftdmFillRule> fillRuleList=listFillRule(searchFillRule);
+		for(AeftdmFillRule fillRule:fillRuleList){
+			retStr+=fillRule.getReplaceChar()+MarkConstant.MARK_SPLIT_EN_COMMA;
+		}
+		if(StringUtil.isNotEmpty(retStr)){
+			retStr=retStr.substring(0,retStr.length()-1);
+		}
+		return retStr;
 	}
 }

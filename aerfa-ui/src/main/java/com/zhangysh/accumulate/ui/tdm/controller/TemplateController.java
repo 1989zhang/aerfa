@@ -8,6 +8,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.zhangysh.accumulate.ui.tdm.service.IFillRuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -46,7 +47,9 @@ public class TemplateController {
 
 	@Autowired
 	private ITemplateService templateService;
-	
+	@Autowired
+	private IFillRuleService fillRuleService;
+
 	/**
 	 * 跳转到tdm模板定义页面
 	 * @param request 请求对象
@@ -90,7 +93,7 @@ public class TemplateController {
 	 * 保存填写的模板定义对象
 	 * @param request 请求对象
 	 * @param modelMap spring的mvc返回对象 
-	 * @param template 保存的对象
+	 * @param templateFileDto 保存的对象
 	 ******/
 	@RequestMapping(value="/save_add")
     @ResponseBody
@@ -153,6 +156,12 @@ public class TemplateController {
 			modelMap.addAttribute("prefix",prefix);
 			return prefix + "/excel_content";
 		}else if(UtilConstant.FILE_TYPE_WORD_DOCX.equals(templateVo.getFileType())) {
+			String replaceCharJsonStr=fillRuleService.getReplaceCharArr(aerfatoken,templateId);
+			JSONObject replaceCharJson=JSON.parseObject(replaceCharJsonStr);
+			if(MarkConstant.MARK_RESULT_VO_SUCESS.equals(replaceCharJson.getInteger(MarkConstant.MARK_RESULT_VO_CODE))) {
+				String replaceChar = replaceCharJson.getString(MarkConstant.MARK_RESULT_VO_DATA);
+				modelMap.put("replaceChar",replaceChar);
+			}
 			modelMap.put("templateId",templateId);
 			modelMap.addAttribute("prefix",prefix);
 			return prefix + "/word_content";

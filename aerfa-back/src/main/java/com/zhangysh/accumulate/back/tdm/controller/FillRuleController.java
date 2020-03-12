@@ -53,7 +53,7 @@ public class FillRuleController extends BaseController{
 	
     /***
 	 * 保存填写的模板填充规则对象
-	 * @param tableData bootstrap表格对象json字符
+	 * @param tableDataDto bootstrap表格对象json字符
 	 */
 	@RequestMapping(value="/save_table_data")
     @ResponseBody
@@ -71,6 +71,19 @@ public class FillRuleController extends BaseController{
 	public String deleteFillRuleByMark(HttpServletRequest request,@RequestBody AeftdmFillRuleDataDto tableDataDto) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		return toHandlerResultStr(fillRuleService.deleteFillRuleByMark(tableDataDto));
+	}
+
+
+	/**
+	 * 根据模板ID获取里面已绑定的替换字符
+	 * @param request 请求对象
+	 * @param templateId 模板ID
+	 */
+	@RequestMapping(value = "/replace_char_arr",method = RequestMethod.POST)
+	@ResponseBody
+	public String getReplaceCharArr(HttpServletRequest request,@RequestBody Long templateId){
+		String replaceCharStr= fillRuleService.getReplaceCharArr(templateId);
+		return toHandlerResultStr(true,replaceCharStr,null,null);
 	}
 
 }

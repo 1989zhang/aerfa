@@ -25,16 +25,24 @@ public interface IFillRuleService {
 
     /***
 	 * 保存填写的模板填充规则对象
-	 * @param tableData bootstrap表格对象json字符
+	 * @param tableDataDto bootstrap表格对象json字符
 	 */
 	@RequestMapping(value = "/tdm/fill_rule/save_table_data",method = RequestMethod.POST)
 	public String saveTableData(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AeftdmFillRuleDataDto tableDataDto);
 	
    /***
 	* 根据模板和位置信息删除填充规则
+	* @param aerfatoken token对象
 	* @param tableDataDto 参数对象
 	*/
 	@RequestMapping(value = "/tdm/fill_rule/delete_by_mark",method = RequestMethod.POST)
 	public String deleteFillRuleByMark(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AeftdmFillRuleDataDto tableDataDto);
 
+	/**
+	 * 根据模板ID获取里面已绑定的替换字符
+	 * @param aerfatoken token对象
+	 * @param templateId 模板ID
+	 */
+	@RequestMapping(value = "/tdm/fill_rule/replace_char_arr",method = RequestMethod.POST)
+	public String getReplaceCharArr(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody Long templateId);
 }

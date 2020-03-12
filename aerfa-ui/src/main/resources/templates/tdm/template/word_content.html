@@ -9,25 +9,25 @@
 		    overflow: scroll;
 		    overflow-x: scroll;
 		}
-		
+
 		.cellClick {
 		    background-color: #e6e6e6;
 		    border-color: #8c8c8c
 		}
-		
+
 		.excelMenuAction {
 		    font-size: 14px;
 		}
-		
+
 		.selectedTreeNodeShown {
 		    border: 0px;
 		    padding: 3px;
 		}
-		
+
 		.afterCellSetting{
-		
+
 		}
-		
+
 		.afterCellZoneSetting{
 		    background-color: #a8b8e6;
 		}
@@ -42,7 +42,7 @@
 		}
 		
 		.afterWordSetting {
-		
+			color: #ed5565 !important;
 		}
 	    .contentdivsplit{
 		    width:100%;
@@ -74,9 +74,35 @@
     <th:block th:include="sys/include :: bootstrapmenu-js" />
     <script th:inline="javascript">
     var templateId = [[${templateId}]];
+	var replaceChar = [[${replaceChar}]];
     </script>
         
     <script type="text/javascript">
+
+	//正则表达式获取替换字符
+	function getMatchedStrs (str) {
+		var reg = /\$\{(.+?)\}/
+		var reg_g = /\$\{(.+?)\}/g
+		var result = str.match(reg_g)
+		var list = []
+		for (var i = 0; i < result.length; i++) {
+			var item = result[i]
+			list.push(item.match(reg)[1])
+		}
+		return list[0]
+	}
+
+	//判断替换字符是否在已有填充规则里面
+	function judgeInReplaceChar(htmlChar){
+		var replaceCharArr=replaceChar.split(",")
+		for(var i=0;i<replaceCharArr.length;i++){
+			if(getMatchedStrs(htmlChar)==replaceCharArr[i]){
+				return true;
+			}
+		}
+		return false;
+	}
+
     //其他非通用方法
     $(document).ready(function () {
     	//显示word预览内容
@@ -93,7 +119,11 @@
 	            var spanVal = $OneSpan.html();
 	            var reg = new RegExp(selectValue);
 	            if (reg.test(spanVal)) {
-	                $OneSpan.addClass('replaceTarget');
+					$OneSpan.addClass('replaceTarget');
+	            	if(judgeInReplaceChar(spanVal)){
+						//已填充规则添加判断样式
+						$OneSpan.addClass('afterWordSetting');
+					}
 	            }
 	        }
 	        $(".replaceTarget").click(function () {
@@ -126,8 +156,7 @@
 	                    name: '删除配置',
 	                    classNames: 'excelMenuAction',
 	                    onClick: function ($elem) {
-	                        removeSetting($elem);
-	                        showReplaceTargetChar(selectValue,$ContentDiv,content);
+							removeOneSetting($elem);
 	                    },
 	                    isEnabled: function ($elem) {
 	                        return $elem.hasClass('afterWordSetting');
@@ -171,7 +200,20 @@
         var url =  "/tdm/fill_rule" + '/to_fill_rule?templateId=' + templateId +"&locationMark="+replaceStr;
         createMenuItem(url, "内容替换规则");
     }
- 
+
+
+	// 删除某个填充规则
+	function removeOneSetting($elem) {
+		var replaceStr=$elem.html();
+		replaceStr = replaceStr.replace('$', '');
+		replaceStr = replaceStr.replace('{', '');
+		replaceStr = replaceStr.replace('}', '');
+		var url =  "/tdm/fill_rule" + '/remove?templateId=' + templateId + "&locationMark="+replaceStr;
+		var refreshDataUrl="/tdm/template/to_template_content/"+templateId;
+
+		$.operate.manage(url,'','确认要删除配置吗?',refreshDataUrl);
+	}
+
     </script>
 
 </body>
