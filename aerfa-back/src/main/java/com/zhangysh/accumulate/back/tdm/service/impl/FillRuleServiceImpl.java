@@ -71,7 +71,7 @@ public class FillRuleServiceImpl implements IFillRuleService {
 		AeftdmDataSourceField dataSourceField=dataSourceFieldService.getDataSourceFieldById(firstFillRuleVo.getFieldId());
 		AeftdmTemplate template=templateService.getTemplateById(dataSourceField.getTemplateId());
 		//excel模板填充规则处理
-		if(UtilConstant.FILE_TYPE_EXCEL_XLS.equals(template.getFileType())) {
+		if(UtilConstant.FILE_TYPE_EXCEL_XLSX.equals(template.getFileType())) {
 			String[] locationMarkArr=locationMark.split(MarkConstant.MARK_SPLIT_EN_COMMA);
 			Long rowNumber=Long.parseLong(locationMarkArr[0]);
 			Long colNumber=Long.parseLong(locationMarkArr[1]);

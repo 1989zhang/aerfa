@@ -48,7 +48,9 @@ public class UtilConstant {
     
     /**********文件类型相关常量**********/
     /** excel文件类型xls常量 **/
-    public static final String FILE_TYPE_EXCEL_XLS="xls";
+    /*public static final String FILE_TYPE_EXCEL_XLS="xls";*/
+    /** excel文件类型xlsx常量 **/
+    public static final String FILE_TYPE_EXCEL_XLSX="xlsx";
     /** word文件类型doc常量 **/
     /*public static final String FILE_TYPE_WORD_DOC="doc";*/
     /** word文件类型docx常量 **/

@@ -151,7 +151,7 @@ public class TemplateController {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		String retTemplateStr=templateService.getSingle(aerfatoken, templateId);
 		AeftdmTemplateVo templateVo=JSON.parseObject(retTemplateStr,AeftdmTemplateVo.class);
-		if(UtilConstant.FILE_TYPE_EXCEL_XLS.equals(templateVo.getFileType())){
+		if(UtilConstant.FILE_TYPE_EXCEL_XLSX.equals(templateVo.getFileType())){
 			modelMap.put("templateId",templateId);
 			modelMap.addAttribute("prefix",prefix);
 			return prefix + "/excel_content";
