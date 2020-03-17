@@ -73,7 +73,7 @@ public class ReplyServiceImpl implements IReplyService{
 	@Override
 	public AefsysPersonVo getPerson(String iqaToken){
 		Long personId=Long.valueOf(iqaToken.substring(32,iqaToken.length()));
-		AefsysPersonVo personVo=personService.getPersonWithOrgNameById(personId);
+		AefsysPersonVo personVo=personService.getPersonWithExpandInfoById(personId);
 		return personVo;
 	}
 

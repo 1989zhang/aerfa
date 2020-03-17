@@ -1,14 +1,12 @@
 package com.zhangysh.accumulate.back.webim.controller;
 
+import com.zhangysh.accumulate.common.constant.CacheConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.alibaba.fastjson.JSON;
 
 import com.zhangysh.accumulate.common.constant.UtilConstant;
@@ -40,11 +38,45 @@ public class TipsInfoController extends BaseController{
 	private ITipsInfoService tipsInfoService;
 	@Autowired
     private IRedisRelatedService redisRelatedService;
-    
+
+	/****
+	 * 分页显示人员的消息提醒列表
+	 * @param request 请求对象
+	 * @param tipsInfoDto 查询条件
+	 ***/
+	@RequestMapping(value = "/msg_box",method = RequestMethod.POST)
+	@ResponseBody
+	public String getWebimMsgbox(HttpServletRequest request,@RequestBody AefwebimTipsInfoDto tipsInfoDto){
+		return tipsInfoService.getWebimMsgbox(tipsInfoDto);
+	}
+
+	/****
+	 * 处理提示消息,接收邀请信息
+	 * @param request 请求对象
+	 * @param tipsInfo 保存的对象
+	 ****/
+	@RequestMapping(value="/accept_invite",method = RequestMethod.POST)
+	@ResponseBody
+	public String acceptInvite(HttpServletRequest request,@RequestBody AefwebimTipsInfo tipsInfo) {
+		return toHandlerResultStr(tipsInfoService.acceptInvite(tipsInfo));
+	}
+
+	/****
+	 * 处理提示消息,拒绝邀请信息
+	 * @param request 请求对象
+	 * @param tipsInfo 保存的对象
+	 ****/
+	@RequestMapping(value="/refuse_invite",method = RequestMethod.POST)
+	@ResponseBody
+	public String refuseInvite(HttpServletRequest request,@RequestBody AefwebimTipsInfo tipsInfo) {
+		return toHandlerResultStr(tipsInfoService.refuseInvite(tipsInfo));
+	}
+
+
 	/****
 	 * 获取展示提示消息信息列表
 	 * @param request 请求对象
-	 * @param AefwebimTipsInfoDto 分页和查询对象
+	 * @param tipsInfoDto 分页和查询对象
 	 * @return 获取到的提示消息对象集合JSON
 	 ****/
 	@RequestMapping(value="/list",method = RequestMethod.POST)

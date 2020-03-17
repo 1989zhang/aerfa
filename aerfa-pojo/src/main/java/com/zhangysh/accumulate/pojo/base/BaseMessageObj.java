@@ -11,26 +11,26 @@ public class BaseMessageObj extends BaseDataObj{
 
 	private static final long serialVersionUID = 1L;
 
-	/** 消息来源 **/
-	protected Long fromPersonId;
+	/** 消息来源,来源于个人或群主 **/
+	protected Long fromId;
 	/** 消息目标 **/
 	protected Long toPersonId;
 	/** 消息类型 **/
 	protected String type;
 	/** 消息内容 **/
 	protected String content;
-	/** 消息状态1已处理0未处理 **/
+	/** 消息状态0未处理1已同意或处理2已拒绝 **/
 	protected Long status;
 	/** 消息发送时间 **/
 	protected Date sendTime;
 	/** 消息处理时间 **/
 	protected Date handleTime;
 	
-	public Long getFromPersonId() {
-		return fromPersonId;
+	public Long getFromId() {
+		return fromId;
 	}
-	public void setFromPersonId(Long fromPersonId) {
-		this.fromPersonId = fromPersonId;
+	public void setFromId(Long fromId) {
+		this.fromId = fromId;
 	}
 	public Long getToPersonId() {
 		return toPersonId;

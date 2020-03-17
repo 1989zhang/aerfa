@@ -20,35 +20,27 @@ import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimTipsInfoDto;
 public interface ITipsInfoService {
 
 	/****
-	 * 分页显示提示消息信息
+	 * 分页显示人员的消息提醒列表
 	 * @param aerfatoken token对象
-	 * @param TipsInfoDto 查询条件
+	 * @param tipsInfoDto 查询条件
 	 ***/
-	@RequestMapping(value = "/sys/tips_info/list",method = RequestMethod.POST)
-	public String getList(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefwebimTipsInfoDto TipsInfoDto);
+	@RequestMapping(value = "/webim/tips_info/msg_box",method = RequestMethod.POST)
+	public String getWebimMsgbox(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefwebimTipsInfoDto tipsInfoDto);
 
 	/****
-	 * 获取单个提示消息信息
+	 * 处理提示消息,接收邀请信息
 	 * @param aerfatoken token对象
-	 * @param id 提示消息的id
+	 * @param tipsInfo 要保存的提示消息对象
 	 ***/
-	@RequestMapping(value = "/sys/tips_info/single",method = RequestMethod.POST)
-	public String getSingle(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody Long id);
+	@RequestMapping(value = "/webim/tips_info/accept_invite",method = RequestMethod.POST)
+	public String acceptInvite(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefwebimTipsInfo tipsInfo);
 
 	/****
-	 * 保存新增的提示消息信息 
+	 * 处理提示消息,拒绝邀请信息
 	 * @param aerfatoken token对象
-	 * @param TipsInfo 要保存的提示消息对象
+	 * @param tipsInfo 要保存的提示消息对象
 	 ***/
-	@RequestMapping(value = "/sys/tips_info/save",method = RequestMethod.POST)
-	public String saveAdd(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefwebimTipsInfo tipsInfo);
-
-	/****
-	 * 删除提示消息对象，可以删除多个，中间英文,隔开
-	 * @param aerfatoken token对象
-	 * @param ids 要删除的提示消息ids集合，是路径获取参数
-	 ***/
-	@RequestMapping(value = "/sys/tips_info/delete",method = RequestMethod.POST)
-	public String deleteTipsInfoByIds(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody String ids);
+	@RequestMapping(value = "/webim/tips_info/refuse_invite",method = RequestMethod.POST)
+	public String refuseInvite(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefwebimTipsInfo tipsInfo);
 
 }

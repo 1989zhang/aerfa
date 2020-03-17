@@ -13,7 +13,7 @@ public class ResultVo<T> {
 	private Integer code;
 	private String msg;
 	private T data;
-	
+
 	/**
 	 * 成功时候的调用,code为0
 	 * @param data 成功信息对象
@@ -30,7 +30,7 @@ public class ResultVo<T> {
 	}
 	/**
 	 * 失败时候的调用，传入CodeMsg对象
-	 * @param data 错误信息codeMsg
+	 * @param codeMsg 错误信息codeMsg
 	 * */
 	public static  <T> ResultVo<T> error(CodeMsg codeMsg){
 		return new ResultVo<T>(codeMsg);

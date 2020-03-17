@@ -26,6 +26,11 @@ public class SysDefineConstant {
 
 
 
+	/** 系统默认个人头像路径 **/
+	public static final String SYS_PERSON_DEFAULT_HEAD_PIC="/aerfa/myresource/images/default_personal.jpg";
+
+
+
 	/**********系统数据库参数配置常量**********/
 	/** 系统定时任务相关定义变量：job执行名称 **/
 	public static final String JOB_EXECUTE_NAME="JOB_EXECUTE_NAME";
@@ -58,7 +63,6 @@ public class SysDefineConstant {
 
 
 
-
 	/**********系统数据字典参数配置常量**********/
 	/** 数据字典通过状态是1 **/
 	public static final Long DIC_COMMON_STATUS_YES=1L;
@@ -88,5 +92,7 @@ public class SysDefineConstant {
 	public static final String DIC_PUBLISH_INFO_TYPE_TZXX ="tzxx";
 	/** 数据字典信息发布类型工作动态gzdt**/
 	public static final String DIC_PUBLISH_INFO_TYPE_GZDT ="gzdt";
+
+
 
 }

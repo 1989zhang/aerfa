@@ -25,7 +25,7 @@ public class AefwebimTipsInfo extends BaseMessageObj{
 	
 	@Override
 	public String toString() {
-		return "AefwebimTipsInfo [id=" + id + ", remark=" + remark + ", fromPersonId=" + fromPersonId + ", toPersonId="
+		return "AefwebimTipsInfo [id=" + id + ", remark=" + remark + ", fromId=" + fromId + ", toPersonId="
 				+ toPersonId + ", type=" + type + ", content=" + content + ", status=" + status + ", sendTime="
 				+ sendTime + ", handleTime=" + handleTime + ", createBy=" + createBy + ", createTime=" + createTime
 				+ ", updateBy=" + updateBy + ", updateTime=" + updateTime + "]";

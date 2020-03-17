@@ -49,7 +49,15 @@ public interface IFriendService {
      * @return 好友条件下结果集合
      */
 	 List<AefwebimFriend> listFriend(AefwebimFriend friend);
-	 
+
+	/**
+	 * 根据人员id获取系统推荐的好友，目前逻辑如下：
+	 * 推荐本单位下不是本人好友的人
+	 * @param personId 人员id
+	 * @return 推荐好友AefwebimFriendVo的list
+	 ***/
+	List<AefwebimFriendVo> listRecommendFriend(Long personId);
+
 	/**
      * 新增好友
      * 
@@ -61,7 +69,7 @@ public interface IFriendService {
 	/**
      * 新增好友并生成提示信息，因为信息复杂所以返回string
      * 
-     * @param friend 好友对象信息
+     * @param operPerson 好友对象信息
      * @return 新增结果条数
      */
 	 String insertFriendAndAddTipsInfo(AefwebimApplyDto apply,AefsysPerson operPerson);
@@ -89,14 +97,6 @@ public interface IFriendService {
      * @return 删除结果条数
      */
 	 int deleteFriendByIds(String ids);
-	
-	 /**
-	  * 根据人员id获取系统推荐的好友，目前逻辑如下：
-	  * 推荐本单位下不是本人好友的人
-	  * @param personId 人员id
-	  * @return 推荐好友AefwebimFriendVo的list
-	  ***/
-	 List<AefwebimFriendVo> listRecommendFriend(Long personId);
 	 
 	/**
 	 * 获取查找信息，包括查找好友条数
@@ -121,5 +121,15 @@ public interface IFriendService {
 	  * @return 前台webim显示AefwebimFriendVo对象
 	  ****/
 	 AefwebimFriendVo changeToWebimFriendVoBySysPerson(AefsysPerson sysPerson);
+
+	/**
+	 * 处理不带ID参数的好友信息，用于提示信息拓展处理好友申请：
+	 * 如果是同意则修改好友状态且新增一个好友，如果是拒绝则删除原来申请
+	 *
+	 * @param friend 查询条件组装的参数
+	 * @param mark 接受好友或拒绝好友申请标记，同消息提示状态
+	 * @return 处理结果条数
+	 */
+	boolean dealWithFriendByParam(AefwebimFriend friend,Long mark);
 	 
 }

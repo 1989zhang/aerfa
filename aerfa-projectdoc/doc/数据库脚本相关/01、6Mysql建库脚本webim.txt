@@ -59,12 +59,12 @@ create table aefwebim_group (
 /*====================================================================*/
 create table aefwebim_tips_info (
   id               int(11)    not null  auto_increment   comment 'id标识',
-  from_person_id   int(11)                               comment '消息来源',
+  from_id          int(11)                               comment '消息来源',
   to_person_id     int(11)                               comment '消息目标',
   type             varchar(32)                           comment '消息类型',
   content          varchar(256)                          comment '消息内容',
   remark           varchar(128)                          comment '请求备注',
-  status           int(11)                               comment '消息状态1已处理0未处理',
+  status           int(11)                               comment '消息状态0未处理1已同意或处理2已拒绝',
   send_time        timestamp                             comment '消息发送时间',
   handle_time      timestamp                             comment '消息处理时间',
   create_by        varchar(64)                           comment '创建人员名称',

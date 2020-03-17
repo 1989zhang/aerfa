@@ -132,7 +132,7 @@ $(function(){
 		      type: 'group'
 		      ,avatar: "http://tva3.sinaimg.cn/crop.64.106.361.361.50/7181dbb3jw8evfbtem8edj20ci0dpq3a.jpg"
 		      ,groupname: 'Angular开发'
-		      ,id: "12333333"
+		      ,id: "1233333"
 		      ,members: 0
 		    });
 		    layim.addList({

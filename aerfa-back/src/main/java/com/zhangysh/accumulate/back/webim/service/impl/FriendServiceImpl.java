@@ -84,6 +84,11 @@ public class FriendServiceImpl implements IFriendService {
 	}
 
 	@Override
+	public List<AefwebimFriendVo> listRecommendFriend(Long personId){
+		return getTheSameOrgRecommendFriend(personId);
+	}
+
+	@Override
 	public int insertFriend(AefwebimFriend friend){
 	    return friendDao.insertFriend(friend);
 	}
@@ -104,16 +109,16 @@ public class FriendServiceImpl implements IFriendService {
 		}
 		//首先查找是否有未处理的提示信息
 		AefwebimTipsInfo searchTipsInfo=new AefwebimTipsInfo();
-		searchTipsInfo.setFromPersonId(apply.getPersonId());
+		searchTipsInfo.setFromId(apply.getPersonId());
 		searchTipsInfo.setToPersonId(apply.getFriendId());
 		searchTipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND);
 		List<AefwebimTipsInfo> searchTipsInfoList=tipsInfoService.listTipsInfo(searchTipsInfo);
 		if(searchTipsInfoList.size()==0) {
 			AefwebimTipsInfo tipsInfo=new AefwebimTipsInfo();
-			tipsInfo.setFromPersonId(apply.getPersonId());
+			tipsInfo.setFromId(apply.getPersonId());
 			tipsInfo.setToPersonId(apply.getFriendId());
 			tipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND); 
-			tipsInfo.setContent("申请添加你为好友");
+			tipsInfo.setContent(WebimDefineConstant.WEBIM_APPLY_TIPS_FRIEND_ADD);
 			tipsInfo.setRemark(apply.getRemark());
 			tipsInfo.setStatus(WebimDefineConstant.WEBIM_TIPS_STATUS_UNHANDLE);
 			tipsInfo.setCreateTime(DateOperate.getCurrentUtilDate());
@@ -144,11 +149,6 @@ public class FriendServiceImpl implements IFriendService {
 	@Override
 	public int deleteFriendByIds(String ids){
 		return friendDao.deleteFriendByIds(ConvertUtil.toStrArray(ids));
-	}
-	
-	@Override
-	public List<AefwebimFriendVo> listRecommendFriend(Long personId){
-		return getTheSameOrgRecommendFriend(personId);
 	}
 	
 	@Override
@@ -204,11 +204,32 @@ public class FriendServiceImpl implements IFriendService {
 		if(StringUtil.isNotEmpty(sysPerson.getHeadPic())) {
 			retWebimFriendVo.setAvatar(picIpAddressConfigData.getDataValue()+sysPerson.getHeadPic());	
 		}else {
-			retWebimFriendVo.setAvatar(WebimDefineConstant.WEBIM_DEFAULT_PERSONAL_AVATAR);
+			retWebimFriendVo.setAvatar(SysDefineConstant.SYS_PERSON_DEFAULT_HEAD_PIC);
 		}
 		return retWebimFriendVo;
 	}
-	
+
+	@Override
+	public boolean dealWithFriendByParam(AefwebimFriend friend,Long mark){
+		List<AefwebimFriend> searchFriendList=listFriend(friend);
+    	if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_ACCEPT.equals(mark)){
+			//同意的话修改好友
+			for(int i=0;i<searchFriendList.size();i++){
+				AefwebimFriend updateFriend=searchFriendList.get(i);
+				updateFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_CONFIRM);
+				updateFriend.setUpdateTime(DateOperate.getCurrentUtilDate());
+				updateFriend(updateFriend);
+			}
+		}else if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_REFUSE.equals(mark)){
+			//拒绝的话删除好友
+			for(int i=0;i<searchFriendList.size();i++){
+				deleteFriendById(searchFriendList.get(i).getId());
+			}
+		}
+		return true;
+	}
+
+
 	/**
 	 * 获取同一个单位下，不在好友列表的系统推荐好友列表
 	 * @param personId 主人员ID

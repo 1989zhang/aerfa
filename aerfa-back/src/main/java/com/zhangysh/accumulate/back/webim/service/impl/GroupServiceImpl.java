@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zhangysh.accumulate.back.sys.service.IConfigDataService;
+import com.zhangysh.accumulate.common.constant.SysDefineConstant;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysConfigData;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +48,30 @@ public class GroupServiceImpl implements IGroupService {
 	private IFriendService friendService;
 	@Autowired
 	private ITipsInfoService tipsInfoService;
-	
+	@Autowired
+	private IConfigDataService configDataService;
+
     @Override
 	public AefwebimGroup getGroupById(Long id){
 	    return groupDao.getGroupById(id);
 	}
-	
+
+	@Override
+	public AefwebimGroupVo getGroupWithExpandInfoById(Long id){
+		//头像前缀配置路径
+		AefsysConfigData picIpAddressConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_SYS_PIC_IP_ADDRESS);
+		AefwebimGroup group=getGroupById(id);
+		AefwebimGroupVo groupVo=new AefwebimGroupVo();
+		BeanUtils.copyProperties(group,groupVo);
+		//拓展头像地址处理
+		if(StringUtil.isNotEmpty(groupVo.getAvatar())) {
+			groupVo.setAvatar(picIpAddressConfigData.getDataValue()+groupVo.getAvatar());
+		}else{
+			groupVo.setAvatar(WebimDefineConstant.WEBIM_GROUP_DEFAULT_AVATAR);
+		}
+		return groupVo;
+	}
+
 	@Override
 	public BsTableDataInfo listPageGroup(BsTablePageInfo pageInfo,AefwebimGroup group){
 	    //pagehelper方法调用
@@ -154,13 +175,13 @@ public class GroupServiceImpl implements IGroupService {
 		//首先查找是否有未处理的提示信息,发送到的消息为群创建者的id
 		AefwebimGroup webimGroup=getGroupById(apply.getGroupId());
 		AefwebimTipsInfo searchTipsInfo=new AefwebimTipsInfo();
-		searchTipsInfo.setFromPersonId(apply.getPersonId());
+		searchTipsInfo.setFromId(apply.getPersonId());
 		searchTipsInfo.setToPersonId(webimGroup.getOwnerId());
 		searchTipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP);
 		List<AefwebimTipsInfo> searchTipsInfoList=tipsInfoService.listTipsInfo(searchTipsInfo);
 		if(searchTipsInfoList.size()==0) {
 			AefwebimTipsInfo tipsInfo=new AefwebimTipsInfo();
-			tipsInfo.setFromPersonId(apply.getPersonId());
+			tipsInfo.setFromId(apply.getPersonId());
 			tipsInfo.setToPersonId(webimGroup.getOwnerId());
 			tipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP); 
 			tipsInfo.setContent("申请加入群");

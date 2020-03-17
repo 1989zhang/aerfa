@@ -125,7 +125,7 @@ public class LoginServiceImpl implements ILoginService{
 		if(StringUtil.isNotEmpty(sysPerson.getHeadPic())) {
 			sysPersonVo.setHeadPic(picIpAddressConfigData.getDataValue()+sysPerson.getHeadPic());
 		}else {
-			sysPersonVo.setHeadPic(WebimDefineConstant.WEBIM_DEFAULT_PERSONAL_AVATAR);
+			sysPersonVo.setHeadPic(SysDefineConstant.SYS_PERSON_DEFAULT_HEAD_PIC);
 		}
 
 		//查询出人员所在单位
@@ -220,6 +220,7 @@ public class LoginServiceImpl implements ILoginService{
 			AefwebimFriend webimAixfFriend =new AefwebimFriend();
 			webimAixfFriend.setPersonId(personId);
 			webimAixfFriend.setGroupId(defaultGroupId);
+			webimAixfFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_CONFIRM);
 			webimAixfFriend.setFriendId(SysDefineConstant.PERSON_ID_WEBAIXF);
 			friendService.insertFriend(webimAixfFriend);//添加智能小法
 		}

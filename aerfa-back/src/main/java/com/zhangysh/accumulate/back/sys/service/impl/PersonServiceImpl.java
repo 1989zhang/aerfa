@@ -3,6 +3,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zhangysh.accumulate.back.sys.service.IConfigDataService;
+import com.zhangysh.accumulate.common.constant.SysDefineConstant;
+import com.zhangysh.accumulate.common.constant.WebimDefineConstant;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysConfigData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
@@ -31,7 +35,9 @@ public class PersonServiceImpl implements IPersonService{
 
 	@Autowired
 	private IOrgService orgService;
-	
+	@Autowired
+	private IConfigDataService configDataService;
+
 	@Override
 	public AefsysPerson getPersonById(Long personId) {
 		return personDao.getPersonById(personId);
@@ -46,9 +52,19 @@ public class PersonServiceImpl implements IPersonService{
 	}
 	
 	@Override
-	public AefsysPersonVo getPersonWithOrgNameById(Long personId) {
+	public AefsysPersonVo getPersonWithExpandInfoById(Long personId) {
+		//头像前缀配置路径
+		AefsysConfigData picIpAddressConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_SYS_PIC_IP_ADDRESS);
 		AefsysPerson sysPerson=getPersonById(personId);
 		AefsysPersonVo sysPersonVo=JSON.parseObject(JSON.toJSONString(sysPerson), AefsysPersonVo.class);
+
+		//拓展头像地址处理
+		if(StringUtil.isNotEmpty(sysPerson.getHeadPic())) {
+			sysPersonVo.setHeadPic(picIpAddressConfigData.getDataValue()+sysPerson.getHeadPic());
+		}else {
+			sysPersonVo.setHeadPic(SysDefineConstant.SYS_PERSON_DEFAULT_HEAD_PIC);
+		}
+		//拓展单位名称处理
 		sysPersonVo.setOrgName(orgService.getOrgById(sysPerson.getOrgId()).getFullName());
 		return sysPersonVo;
 	}

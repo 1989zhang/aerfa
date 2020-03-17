@@ -14,6 +14,6 @@ public class AefiqaMessage extends BaseMessageObj{
 
 	@Override
 	public String toString() {
-		return "AefiqaMessage [id=" + id + ",fromPersonId=" + fromPersonId + ",toPersonId=" + toPersonId + ",type=" + type + ",content=" + content + ",status=" + status + ",sendTime=" + sendTime + ",handleTime=" + handleTime + ",createBy=" + createBy + ",createTime=" + createTime + ",updateBy=" + updateBy + ",updateTime=" + updateTime + ",]";
+		return "AefiqaMessage [id=" + id + ",fromId=" + fromId + ",toPersonId=" + toPersonId + ",type=" + type + ",content=" + content + ",status=" + status + ",sendTime=" + sendTime + ",handleTime=" + handleTime + ",createBy=" + createBy + ",createTime=" + createTime + ",updateBy=" + updateBy + ",updateTime=" + updateTime + ",]";
     }
 }

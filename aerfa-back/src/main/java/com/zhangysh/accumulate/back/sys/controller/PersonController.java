@@ -75,7 +75,7 @@ public class PersonController extends BaseController{
     @ResponseBody
 	public String getSingle(HttpServletRequest request,@RequestBody Long personId) {
 		logger.info("getSingle人员id信息:{}",personId);
-		return JSON.toJSONStringWithDateFormat(personService.getPersonWithOrgNameById(personId),UtilConstant.NORMAL_MIDDLE_DATE);
+		return JSON.toJSONStringWithDateFormat(personService.getPersonWithExpandInfoById(personId),UtilConstant.NORMAL_MIDDLE_DATE);
 	}
 	
 	/****

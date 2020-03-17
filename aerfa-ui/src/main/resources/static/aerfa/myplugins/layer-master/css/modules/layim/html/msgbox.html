@@ -114,11 +114,9 @@ layui.use(['layim', 'flow'], function(){
   });
 
   //打开页面即把消息标记为已读
-  /*
   $.post('/message/read', {
     type: 1
   });
-  */
 
   //操作
   var active = {
@@ -151,7 +149,6 @@ layui.use(['layim', 'flow'], function(){
         
         
           //实际部署时，请开启下述注释，并改成你的接口地址
-          /*
           $.post('/im/agreeFriend', {
             uid: uid //对方用户ID
             ,from_group: from_group //对方设定的好友分组
@@ -173,7 +170,7 @@ layui.use(['layim', 'flow'], function(){
             parent.layer.close(index);
             othis.parent().html('已同意');
           });
-          */
+
           
         }
       });

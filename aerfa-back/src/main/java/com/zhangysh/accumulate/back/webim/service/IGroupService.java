@@ -24,6 +24,15 @@ public interface IGroupService {
      * @return 群组信息
      */
 	 AefwebimGroup getGroupById(Long id);
+
+	/**
+	 * 根据ID查询单个群组信息,拓展信息包括:
+	 * 处理默认图片
+	 *
+	 * @param id 群组主键ID
+	 * @return 群组信息
+	 */
+	AefwebimGroupVo getGroupWithExpandInfoById(Long id);
 	
 	/**
      * 根据条件查询群组分页列表

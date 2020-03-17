@@ -8,10 +8,8 @@ package com.zhangysh.accumulate.common.constant;
 public class WebimDefineConstant {
 
 	/**********网页即时通讯webim静态配置常量**********/
-	/** 网页即时通讯webim默认个人头像路径 **/
-	public static final String WEBIM_DEFAULT_PERSONAL_AVATAR="/aerfa/myresource/images/default_personal.jpg";
 	/** 网页即时通讯webim默认群组头像路径 **/
-	public static final String WEBIM_DEFAULT_GROUP_AVATAR="/aerfa/myresource/images/default_group.jpg";
+	public static final String WEBIM_GROUP_DEFAULT_AVATAR="/aerfa/myresource/images/default_group.jpg";
 	
 	/**********json数据常量**********/
 	/** 网页即时通讯webim初始化信息id信息标签 **/
@@ -45,14 +43,20 @@ public class WebimDefineConstant {
 	public static final String WEBIM_SEARCH_PAGE_LIMIT="limit";
 	/** 网页即时通讯webim好友或群组搜索返回每页数量 **/
 	public static final Long WEBIM_SEARCH_PAGE_LIMIT_NUMBER=12L;
-	
+	/** 网页即时通讯webim消息下拉框返回每页数量 **/
+	public static final Integer WEBIM_MSGBOX_PAGE_LIMIT_NUMBER=5;
 	
 	/**********普通定义数据常量**********/
 	/** 默认好友群名称:我的好友 **/
 	public static final String WEBIM_DEFAULT_FRIEND_GROUP_NAME="我的好友";
 	/** 默认心情签名:编辑签名 **/
 	public static final String WEBIM_DEFAULT_SIGNATURE="无签名";
-	
+
+	/** 在线状态:在线 **/
+	public static final String WEBIM_STATUS_ONLINE="online";
+	/** 在线状态:隐身 **/
+	public static final String WEBIM_STATUS_HIDE="hide";
+
 	/** 群类型:好友群 **/
 	public static final Long WEBIM_GROUP_TYPE_FRIEND=1L;
 	/** 群类型:普通群 **/
@@ -69,26 +73,32 @@ public class WebimDefineConstant {
 	public static final String WEBIM_TIPS_INFO_TYPE_FRIEND="friend";
 	/** 提示信息：申请加入普通群组 **/
 	public static final String WEBIM_TIPS_INFO_TYPE_GROUP="group";
-	
-	/** 在线状态:在线 **/
-	public static final String WEBIM_STATUS_ONLINE="online";
-	/** 在线状态:隐身 **/
-	public static final String WEBIM_STATUS_HIDE="hide";
-	
+	/** 提示信息：系统提示信息 **/
+	public static final String WEBIM_TIPS_INFO_TYPE_SYSTEM="system";
+
 	/** 提示信息:待处理 **/
 	public static final Long WEBIM_TIPS_STATUS_UNHANDLE=0L;
-	/** 提示信息:已处理 **/
-	public static final Long WEBIM_TIPS_STATUS_HANDLE=1L;
+	/** 提示信息:已处理或同意 **/
+	public static final Long WEBIM_TIPS_STATUS_HANDLE_ACCEPT=1L;
+	/** 提示信息:已拒绝 **/
+	public static final Long WEBIM_TIPS_STATUS_HANDLE_REFUSE=2L;
+
 
 	/**********数据库定义数据常量**********/
 	/** 智能小法:personId **/
 	public static final Long WEBIM_AIXF_PERSON_ID=10L;
 	
 	/**********提示信息数据常量**********/
+	/** 提示信息:好友申请被拒绝，填入名称参数 **/
+	public static final String WEBIM_APPLY_TIPS_FRIEND_REFUSE="拒绝了你的好友申请。";
+	/** 提示信息:好友申请被拒绝，填入名称参数 **/
+	public static final String WEBIM_APPLY_TIPS_FRIEND_ADD="申请添加你为好友。";
+
 	/** 提示信息:申请已发送等待确认，填入名称参数 **/
 	public static final String WEBIM_APPLY_TIPS_CONFIRM="你添加{}的申请已发送,请等待确认";
 	/** 提示信息:申请信息重复，填入名称参数 **/
 	public static final String WEBIM_APPLY_TIPS_REPEAT="你添加{}的申请已存在,请勿重复申请";
+
 
 	/** WebSocket消息类型:webim的friend **/
 	public static final String WEBSOCKET_MESSAGE_TYPE_FRIEND="friend";

@@ -28,11 +28,12 @@ public interface IPersonService {
 	AefsysPerson getPersonByAccountPassword(String account,String password);
 	
     /**
-     * 根据人员id获取人员实体，含单位对象名称信息
+     * 根据人员id获取人员实体和拓展信息含:
+	 * 单位对象名称信息,处理后的人员头像
      * @param personId 人员主键
      * @return 人员用户实体对象
      */
-	AefsysPersonVo getPersonWithOrgNameById(Long personId);
+	AefsysPersonVo getPersonWithExpandInfoById(Long personId);
 
 	/****
 	 *获取分页形式的人员列表，为了效率里面不含单位对象信息，只有单位id

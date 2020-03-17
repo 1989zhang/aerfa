@@ -23,8 +23,8 @@
 
 <textarea title="消息模版" id="LAY_tpl" style="display:none;">
 {{# layui.each(d.data, function(index, item){
-  if(item.from){ }}
-    <li data-uid="{{ item.from }}" data-fromgroup="{{ item.from_group }}">
+  if( item.type == 'friend' || item.type == 'group'){ }}
+    <li data-uid="{{ item.from }}" data-type="{{ item.type }}">
       <a href="/u/{{ item.from }}/" target="_blank">
         <img src="{{ item.user.avatar }}" class="layui-circle layim-msgbox-avatar">
       </a>
@@ -37,13 +37,19 @@
         <span>{{ item.remark ? '附言: '+item.remark : '' }}</span>
       </p>
       <p class="layim-msgbox-btn">
-        <button class="layui-btn layui-btn-small" data-type="agree">同意</button>
-        <button class="layui-btn layui-btn-small layui-btn-primary" data-type="refuse">拒绝</button>
+          {{# if( item.status == 0 ){ }}
+              <button class="layui-btn layui-btn-small" data-type="agree">同意</button>
+              <button class="layui-btn layui-btn-small layui-btn-primary" data-type="refuse">拒绝</button>
+          {{# } else if( item.status == 1 ) { }}
+              已同意
+          {{# } else if( item.status == 2 ) { }}
+              <em>已拒绝</em>
+          {{# } }}
       </p>
     </li>
   {{# } else { }}
     <li class="layim-msgbox-system">
-      <p><em>系统：</em>{{ item.content }}<span>{{ item.time }}</span></p>
+      <p><em>{{ item.remark ? item.remark +'： ': '系统：'}}</em>{{ item.content }}<span>{{ item.time }}</span></p>
     </li>
   {{# }
 }); }}
@@ -112,97 +118,96 @@ layui.use(['layim', 'flow'], function(){
 
   //操作
   var active = {
-    //同意
-    agree: function(othis){
-      var li = othis.parents('li')
-      ,uid = li.data('uid')
-      ,from_group = li.data('fromgroup')
-      ,user = cache[uid];
-      
-      console.log(user.username);
-      console.log(user.id);
-      console.log(from_group);
-      if(from_group==10){
-          layer.confirm('确定加入群聊吗？', function(index){
-              $.post('/im/refuseFriend', {
-                uid: uid //对方用户ID
-              }, function(res){
-                if(res.code != 0){
-                  return layer.msg(res.msg);
-                }
-                layer.close(index);
-                othis.parent().html('<em>已拒绝</em>');
-              });
-            });
-      }else{
-    	//选择分组
-          parent.layui.layim.setFriendGroup({
-            type: 'friend'
-            ,username: user.username
-            ,avatar: user.avatar
-            ,group: parent.layui.layim.cache().friend //获取好友分组数据
-            ,submit: function(group, index){
-              //将好友追加到主面板
-              parent.layui.layim.addList({
-                type: 'friend'
-                ,avatar: user.avatar //好友头像
-                ,username: user.username //好友昵称
-                ,groupid: group //所在的分组id
-                ,id: uid //好友ID
-                ,sign: user.sign //好友签名
-              });
-              parent.layer.close(index);
-              othis.parent().html('已同意');
-            
-            
-              //实际部署时，请开启下述注释，并改成你的接口地址
-              /*
-              $.post('/im/agreeFriend', {
-                uid: uid //对方用户ID
-                ,from_group: from_group //对方设定的好友分组
-                ,group: group //我设定的好友分组
-              }, function(res){
-                if(res.code != 0){
-                  return layer.msg(res.msg);
-                }
+      //同意
+      agree: function(othis){
+          var li = othis.parents('li')
+          ,uid = li.data('uid')
+          ,type = li.data('type')
+          ,user = cache[uid];
 
-                //将好友追加到主面板
-                parent.layui.layim.addList({
-                  type: 'friend'
-                  ,avatar: user.avatar //好友头像
-                  ,username: user.username //好友昵称
-                  ,groupid: group //所在的分组id
-                  ,id: uid //好友ID
-                  ,sign: user.sign //好友签名
+          console.log(user.username);
+          console.log(user.id);
+          console.log(type);
+          if(type=='group'){
+              layer.confirm('确定加入群聊吗？', function(index){
+                  $.post(  prefix + '/accept_invite', {
+                      toPersonId:sid,
+                      fromId: uid, //对方用户ID
+                      type: type //消息类型
+                  }, function(res){
+                      var resJson=$.common.parseJson(res);
+                      if(resJson.code != 0){
+                          return layer.msg(resJson.msg);
+                      }
+                      //将好友追加到主面板
+                      parent.layui.layim.addList({
+                        type: 'group'
+                        ,avatar: user.avatar //好友头像
+                        ,groupname: '小苹果开发' //群组名称
+                        ,id: "12333333" //群组id
+                      });
+
+                      layer.close(index);
+                      othis.parent().html('已同意');
+                  });
                 });
-                parent.layer.close(index);
-                othis.parent().html('已同意');
+          }else if(type=='friend'){
+              //选择分组
+              parent.layui.layim.setFriendGroup({
+                  type: 'friend'
+                  ,username: user.username
+                  ,avatar: user.avatar
+                  ,group: parent.layui.layim.cache().friend //获取好友分组数据
+                  ,submit: function(group, index){
+                      $.post( prefix + '/accept_invite', {
+                           toPersonId:sid,
+                           fromId: uid, //对方用户ID
+                           type: type,
+                           group: group //我设定的好友分组
+                      },function(res){
+                          var resJson=$.common.parseJson(res);
+                          if(resJson.code != 0){
+                              return layer.msg(resJson.msg);
+                          }
+                          //将好友追加到主面板
+                          parent.layui.layim.addList({
+                              type: 'friend'
+                              ,avatar: user.avatar //好友头像
+                              ,username: user.username //好友昵称
+                              ,groupid: group //所在的分组id
+                              ,id: uid //好友ID
+                              ,sign: user.sign //好友签名
+                          });
+                          parent.layer.close(index);
+                          othis.parent().html('已同意');
+                      });
+                  }
               });
-              */
-              
             }
-          });
-        }
-      }
+          }
       
 
-    //拒绝
-    ,refuse: function(othis){
-      var li = othis.parents('li')
-      ,uid = li.data('uid');
+      //拒绝
+      ,refuse: function(othis){
+          var li = othis.parents('li')
+          ,uid = li.data('uid')
+          ,type = li.data('type')
 
-      layer.confirm('确定拒绝吗？', function(index){
-        $.post('/im/refuseFriend', {
-          uid: uid //对方用户ID
-        }, function(res){
-          if(res.code != 0){
-            return layer.msg(res.msg);
-          }
-          layer.close(index);
-          othis.parent().html('<em>已拒绝</em>');
-        });
-      });
-    }
+          layer.confirm('确定拒绝吗？', function(index){
+              $.post( prefix +'/refuse_invite', {
+                  toPersonId:sid,
+                  fromId: uid, //对方用户ID
+                  type: type //消息类型
+              }, function(res){
+                  var resJson=$.common.parseJson(res);
+                  if(resJson.code != 0){
+                      return layer.msg(resJson.msg);
+                  }
+                  layer.close(index);
+                  othis.parent().html('<em>已拒绝</em>');
+              });
+          });
+      }
   };
 
   $('body').on('click', '.layui-btn', function(){

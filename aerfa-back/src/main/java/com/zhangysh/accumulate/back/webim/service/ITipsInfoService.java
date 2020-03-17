@@ -4,6 +4,7 @@ import java.util.List;
 import com.zhangysh.accumulate.pojo.webim.dataobj.AefwebimTipsInfo;
 import com.zhangysh.accumulate.common.pojo.BsTableDataInfo;
 import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
+import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimTipsInfoDto;
 
 /**
  * 提示消息相关服务层接口
@@ -12,6 +13,25 @@ import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
  * @date 2019年10月22日
  */
 public interface ITipsInfoService {
+
+	/****
+	 * 分页显示人员的消息提醒列表
+	 * @param tipsInfoDto 查询条件
+	 ***/
+	String getWebimMsgbox(AefwebimTipsInfoDto tipsInfoDto);
+
+	/**
+	 * 处理提示消息,接收邀请信息.接受逻辑很复杂,详见代码逻辑
+	 * @param tipsInfo 保存的对象
+	 ****/
+	boolean acceptInvite(AefwebimTipsInfo tipsInfo);
+
+	/**
+	 * 处理提示消息,拒绝邀请信息.拒绝逻辑很复杂,详见代码逻辑
+	 * @param tipsInfo 保存的对象
+	 ****/
+	boolean refuseInvite(AefwebimTipsInfo tipsInfo);
+
 	/**
      * 根据ID查询单个提示消息信息
      * 

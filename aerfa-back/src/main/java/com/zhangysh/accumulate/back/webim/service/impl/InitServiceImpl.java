@@ -99,7 +99,7 @@ public class InitServiceImpl implements IInitService{
 			if(StringUtil.isNotNull(retGroupListMap.get(i).get("avatar"))) {
 				normalGroupMap.put(WebimDefineConstant.WEBIM_INIT_GROUP_DATA_AVATAR,picIpAddressConfigData.getDataValue()+retGroupListMap.get(i).get("avatar"));	
 			}else {
-				normalGroupMap.put(WebimDefineConstant.WEBIM_INIT_GROUP_DATA_AVATAR,WebimDefineConstant.WEBIM_DEFAULT_GROUP_AVATAR);
+				normalGroupMap.put(WebimDefineConstant.WEBIM_INIT_GROUP_DATA_AVATAR,WebimDefineConstant.WEBIM_GROUP_DEFAULT_AVATAR);
 			}
 			normalGroupList.add(normalGroupMap);
 		}
