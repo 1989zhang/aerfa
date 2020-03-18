@@ -35,7 +35,7 @@ public class InitController extends BaseController{
 	
 	/**
 	 * 获取初始显示信息:包括个人信息，好友组，群组信息
-	 * @param sid 取sessionid实际为token
+	 * @param id 取sessionid
 	 * @return 返回信息json
 	 ****/
 	@RequestMapping(value="/user_data",method = RequestMethod.POST)

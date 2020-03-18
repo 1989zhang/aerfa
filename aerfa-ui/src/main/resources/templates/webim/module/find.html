@@ -68,7 +68,7 @@
 			<div class="layui-col-xs3 mt15">
 				<input type="radio" name="add" value="friend" title="找人" checked="">
 				<input type="radio" name="add" value="group" title="找群">
-				<button class="layui-btn btncolor createGroup" >我要建群</button>
+				<button class="layui-btn layui-btn-xs btncolor createGroup" >我要建群</button>
 		    </div>
 		</div>  
 		<div id="LAY_view"></div>
@@ -91,7 +91,7 @@
 				{{# }else{ }}
 					{{#  layui.each(d.data, function(index, item){ }}
 					<div class="layui-col-xs3 layui-find-list">
-						<li layim-event="add" data-type="group" data-index="0" data-uid="{{ item.id }}" data-name="{{item.groupName}}">
+						<li layim-event="add" data-type="group" data-index="0" data-uid="{{ item.id }}" data-name="{{item.groupName}}" data-avatar="{{item.avatar}}">
 							<img src="{{item.avatar}} " onerror="javascript:this.src='/aerfa/myresource/images/default_group.jpg'" >
 							<span>{{item.groupName}}({{item.id}})</span>
 							<p> 普通群<!--{{item.des}}  {{#  if(item.des == ''){ }}无{{#  } }}--></p>
@@ -113,9 +113,10 @@
     </script>
     <script th:inline="javascript">
     
-    layui.use(['laypage','laytpl'], function(){
+    layui.use(['form','laypage','laytpl'], function(){
       var layer = layui.layer
       ,laytpl = layui.laytpl
+	  ,form = layui.form
       ,$ = layui.jquery
       ,laypage = layui.laypage;
       
@@ -170,7 +171,7 @@
 		              ,group: group
 		              ,submit: function(group,remark,index){//确认发送添加请求
 		                  if (type == 'friend') {
-		                      $.post(baseUrl +'/webim/friend/save_apply',{personId:sid,friendId:uid,remark:remark,groupId:group}, function (addRes) {
+		                      $.post(baseUrl +'/webim/friend/save_apply',{personId:sid,friendId:uid,remark:remark,groupId:group,type:type}, function (addRes) {
 		                          var addData = eval('(' + addRes + ')');
 		                          if (addData.code == 0) {              
 		                        	  parent.layer.msg(addData.data);
@@ -181,7 +182,7 @@
 		                          }
 		                      });
 		                  }else{
-		                	  $.post(baseUrl +'webim/group/save_apply', {personId:sid,groupId:uid,remark:remark}, function (addRes) {
+		                	  $.post(baseUrl +'webim/group/save_apply', {personId:sid,groupId:uid,remark:remark,type:type}, function (addRes) {
 		                		  var addData = eval('(' + addRes + ')');
 		                          if (addData.code == 0) {              
 		                        	  parent.layer.msg(addData.data);

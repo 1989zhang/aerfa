@@ -58,18 +58,8 @@ public class GroupServiceImpl implements IGroupService {
 
 	@Override
 	public AefwebimGroupVo getGroupWithExpandInfoById(Long id){
-		//头像前缀配置路径
-		AefsysConfigData picIpAddressConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_SYS_PIC_IP_ADDRESS);
 		AefwebimGroup group=getGroupById(id);
-		AefwebimGroupVo groupVo=new AefwebimGroupVo();
-		BeanUtils.copyProperties(group,groupVo);
-		//拓展头像地址处理
-		if(StringUtil.isNotEmpty(groupVo.getAvatar())) {
-			groupVo.setAvatar(picIpAddressConfigData.getDataValue()+groupVo.getAvatar());
-		}else{
-			groupVo.setAvatar(WebimDefineConstant.WEBIM_GROUP_DEFAULT_AVATAR);
-		}
-		return groupVo;
+		return changeGroupToGroupVo(group);
 	}
 
 	@Override
@@ -89,8 +79,13 @@ public class GroupServiceImpl implements IGroupService {
 	}
 
 	@Override
-	public List<AefwebimGroup> listGroup(AefwebimGroup group){
-		return groupDao.listGroup(group);
+	public List<AefwebimGroupVo> listGroup(AefwebimGroup searchGroup){
+    	List<AefwebimGroupVo> retGroupList=new ArrayList<AefwebimGroupVo>();
+		List<AefwebimGroup> groupList=groupDao.listGroup(searchGroup);
+		for(AefwebimGroup group:groupList){
+			retGroupList.add(changeGroupToGroupVo(group));
+		}
+		return retGroupList;
 	}
 
 	@Override
@@ -123,8 +118,8 @@ public class GroupServiceImpl implements IGroupService {
 		}else {//查询groupName匹配的群组
 			AefwebimGroup searchGroup=new AefwebimGroup();
 			searchGroup.setGroupName(searchDto.getValue());
-			List<AefwebimGroup> groupList=this.listGroup(searchGroup);
-			retPageMap.put(WebimDefineConstant.WEBIM_SEARCH_PAGE_COUNT, groupList.size());
+			List<AefwebimGroupVo> groupVoList=this.listGroup(searchGroup);
+			retPageMap.put(WebimDefineConstant.WEBIM_SEARCH_PAGE_COUNT, groupVoList.size());
 		}
 		retPageMap.put(WebimDefineConstant.WEBIM_SEARCH_PAGE_LIMIT, WebimDefineConstant.WEBIM_SEARCH_PAGE_LIMIT_NUMBER);
 		return retPageMap;
@@ -149,12 +144,8 @@ public class GroupServiceImpl implements IGroupService {
 			AefwebimGroup searchGroup=new AefwebimGroup();
 			searchGroup.setGroupName(searchDto.getValue());
 			searchGroup.setGroupType(WebimDefineConstant.WEBIM_GROUP_TYPE_GROUP);
-			List<AefwebimGroup> groupList=this.listGroup(searchGroup);
-			for(AefwebimGroup group:groupList) {
-				AefwebimGroupVo groupVo=new AefwebimGroupVo();
-				BeanUtils.copyProperties(group, groupVo);
-				retGroupVoList.add(groupVo);
-			}
+			List<AefwebimGroupVo> groupVoList=this.listGroup(searchGroup);
+			retGroupVoList=groupVoList;
 		}
 		return retGroupVoList;
 	}
@@ -184,7 +175,7 @@ public class GroupServiceImpl implements IGroupService {
 			tipsInfo.setFromId(apply.getPersonId());
 			tipsInfo.setToPersonId(webimGroup.getOwnerId());
 			tipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP); 
-			tipsInfo.setContent("申请加入群");
+			tipsInfo.setContent(WebimDefineConstant.WEBIM_APPLY_TIPS_GROUP_APPLY);
 			tipsInfo.setRemark(apply.getRemark());
 			tipsInfo.setStatus(WebimDefineConstant.WEBIM_TIPS_STATUS_UNHANDLE);
 			tipsInfo.setCreateTime(DateOperate.getCurrentUtilDate());
@@ -199,5 +190,26 @@ public class GroupServiceImpl implements IGroupService {
 			return JSON.toJSONString(ResultVo.error(CodeMsgConstant.SYS_DATA_OPERATE_ERROR.fillArgs(falseTrueStr)));
 		}
 		return JSON.toJSONString(ResultVo.success(retTrueStr));
+	}
+
+	/**
+	 * 把数据库查询到的AefwebimGroup对象转化为拓展页面展示对象AefwebimGroupVo
+	 *
+	 */
+	private AefwebimGroupVo changeGroupToGroupVo(AefwebimGroup group){
+		//头像前缀配置路径
+		AefsysConfigData picIpAddressConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_SYS_PIC_IP_ADDRESS);
+
+		AefwebimGroupVo groupVo=new AefwebimGroupVo();
+		BeanUtils.copyProperties(group,groupVo);
+		//单独处理群组名称
+		groupVo.setGroupname(groupVo.getGroupName());
+		//拓展头像地址处理
+		if(StringUtil.isNotEmpty(groupVo.getAvatar())) {
+			groupVo.setAvatar(picIpAddressConfigData.getDataValue()+groupVo.getAvatar());
+		}else{
+			groupVo.setAvatar(WebimDefineConstant.WEBIM_GROUP_DEFAULT_AVATAR);
+		}
+		return groupVo;
 	}
 }

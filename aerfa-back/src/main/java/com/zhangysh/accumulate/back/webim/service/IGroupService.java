@@ -57,7 +57,7 @@ public interface IGroupService {
      * @param group 条件群组对象
      * @return 群组条件下结果集合
      */
-	 List<AefwebimGroup> listGroup(AefwebimGroup group);
+	 List<AefwebimGroupVo> listGroup(AefwebimGroup group);
 	 
 	/**
      * 新增群组

@@ -16,6 +16,9 @@ public class AefwebimFriendVo extends AefwebimFriend{
     private String status;//在线状态:online在线,hide隐身,offline离线(layim要求字段不能修改字段)
     private String sign;//心情签名(layim要求字段不能修改字段)
     private String avatar;//个人头像全路径(layim要求字段不能修改字段)
+
+	private String type;//还有申请完成添加至面板，凭属性分类
+	private Long groupid;//群id(layim要求字段不能修改字段)
     
 	public String getUsername() {
 		return username;
@@ -41,5 +44,16 @@ public class AefwebimFriendVo extends AefwebimFriend{
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
 	}
-     
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public Long getGroupid() {
+		return groupid;
+	}
+	public void setGroupid(Long groupid) {
+		this.groupid = groupid;
+	}
 }

@@ -5,6 +5,7 @@ import com.zhangysh.accumulate.pojo.webim.dataobj.AefwebimTipsInfo;
 import com.zhangysh.accumulate.common.pojo.BsTableDataInfo;
 import com.zhangysh.accumulate.common.pojo.BsTablePageInfo;
 import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimTipsInfoDto;
+import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimTipsInfoInviteDto;
 
 /**
  * 提示消息相关服务层接口
@@ -21,16 +22,16 @@ public interface ITipsInfoService {
 	String getWebimMsgbox(AefwebimTipsInfoDto tipsInfoDto);
 
 	/**
-	 * 处理提示消息,接收邀请信息.接受逻辑很复杂,详见代码逻辑
-	 * @param tipsInfo 保存的对象
+	 * 处理提示消息,接收邀请信息并返回添加的对象信息.接受逻辑很复杂,详见代码逻辑
+	 * @param tipsInfoInviteDto 操作的对象
 	 ****/
-	boolean acceptInvite(AefwebimTipsInfo tipsInfo);
+	List<Object> acceptInvite(AefwebimTipsInfoInviteDto tipsInfoInviteDto);
 
 	/**
 	 * 处理提示消息,拒绝邀请信息.拒绝逻辑很复杂,详见代码逻辑
-	 * @param tipsInfo 保存的对象
+	 * @param tipsInfoInviteDto 操作的对象
 	 ****/
-	boolean refuseInvite(AefwebimTipsInfo tipsInfo);
+	boolean refuseInvite(AefwebimTipsInfoInviteDto tipsInfoInviteDto);
 
 	/**
      * 根据ID查询单个提示消息信息

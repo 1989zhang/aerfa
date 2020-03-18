@@ -1,6 +1,7 @@
 package com.zhangysh.accumulate.back.webim.controller;
 
 import com.zhangysh.accumulate.common.constant.CacheConstant;
+import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimTipsInfoInviteDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,8 @@ import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPerson;
 import com.zhangysh.accumulate.pojo.webim.dataobj.AefwebimTipsInfo;
 import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimTipsInfoDto;
 import com.zhangysh.accumulate.back.webim.service.ITipsInfoService;
+
+import java.util.List;
 
 /**
  * 提示消息调用相关方法
@@ -53,23 +56,27 @@ public class TipsInfoController extends BaseController{
 	/****
 	 * 处理提示消息,接收邀请信息
 	 * @param request 请求对象
-	 * @param tipsInfo 保存的对象
+	 * @param tipsInfoInviteDto 操作的对象
 	 ****/
 	@RequestMapping(value="/accept_invite",method = RequestMethod.POST)
 	@ResponseBody
-	public String acceptInvite(HttpServletRequest request,@RequestBody AefwebimTipsInfo tipsInfo) {
-		return toHandlerResultStr(tipsInfoService.acceptInvite(tipsInfo));
+	public String acceptInvite(HttpServletRequest request,@RequestBody AefwebimTipsInfoInviteDto tipsInfoInviteDto) {
+		List<Object> resultList=tipsInfoService.acceptInvite(tipsInfoInviteDto);
+		if(resultList.size()>0){
+			return toHandlerResultStr(true,resultList,null,null);
+		}
+		return toHandlerResultStr(resultList.size());
 	}
 
 	/****
 	 * 处理提示消息,拒绝邀请信息
 	 * @param request 请求对象
-	 * @param tipsInfo 保存的对象
+	 * @param tipsInfoInviteDto 操作的对象
 	 ****/
 	@RequestMapping(value="/refuse_invite",method = RequestMethod.POST)
 	@ResponseBody
-	public String refuseInvite(HttpServletRequest request,@RequestBody AefwebimTipsInfo tipsInfo) {
-		return toHandlerResultStr(tipsInfoService.refuseInvite(tipsInfo));
+	public String refuseInvite(HttpServletRequest request,@RequestBody AefwebimTipsInfoInviteDto tipsInfoInviteDto) {
+		return toHandlerResultStr(tipsInfoService.refuseInvite(tipsInfoInviteDto));
 	}
 
 

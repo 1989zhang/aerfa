@@ -56,7 +56,7 @@ public class GroupController extends BaseController{
 	/****
 	 * 获取展示群组信息列表
 	 * @param request 请求对象
-	 * @param AefwebimGroupDto 分页和查询对象
+	 * @param groupDto 分页和查询对象
 	 * @return 获取到的群组对象集合JSON
 	 ****/
 	@RequestMapping(value="/list",method = RequestMethod.POST)
@@ -66,7 +66,7 @@ public class GroupController extends BaseController{
 			BsTableDataInfo tableInfo=groupService.listPageGroup(groupDto.getPageInfo(),groupDto.getGroup());
 			return toHandlerResultStr(true,tableInfo,null,null);
 		}else {
-			List<AefwebimGroup> groupList=groupService.listGroup(groupDto.getGroup());
+			List<AefwebimGroupVo> groupList=groupService.listGroup(groupDto.getGroup());
 			return toHandlerResultStr(true,groupList,null,null); 
 		}
 	}

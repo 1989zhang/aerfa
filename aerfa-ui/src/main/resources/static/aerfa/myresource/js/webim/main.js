@@ -127,32 +127,17 @@ $(function(){
 		    
 		    layim.msgbox(5); //模拟消息盒子有新消息，实际使用时，一般是动态获得
 		  
-		    //添加好友（如果检测到该socket）
-		    layim.addList({
-		      type: 'group'
-		      ,avatar: "http://tva3.sinaimg.cn/crop.64.106.361.361.50/7181dbb3jw8evfbtem8edj20ci0dpq3a.jpg"
-		      ,groupname: 'Angular开发'
-		      ,id: "1233333"
-		      ,members: 0
-		    });
-		    layim.addList({
-		      type: 'friend'
-		      ,avatar: "http://tp2.sinaimg.cn/2386568184/180/40050524279/0"
-		      ,username: '冲田杏梨'
-		      ,groupid: 2
-		      ,id: "1233333312121212"
-		      ,remark: "本人冲田杏梨将结束AV女优的工作"
-		    });
+
 		    
 		    setTimeout(function(){
 		      //接受消息（如果检测到该socket）
-		      layim.getMessage({
+		      /*layim.getMessage({
 		        username: "Hi"
 		        ,avatar: "http://qzapp.qlogo.cn/qzapp/100280987/56ADC83E78CEC046F8DF2C5D0DD63CDE/100"
 		        ,id: "10000111"
 		        ,type: "friend"
 		        ,content: "临时："+ new Date().getTime()
-		      });
+		      });*/
 		      
 		      /*layim.getMessage({
 		        username: "贤心"

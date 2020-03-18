@@ -13,10 +13,12 @@ import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPerson;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysPersonVo;
 import com.zhangysh.accumulate.pojo.webim.dataobj.AefwebimFriend;
 import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimTipsInfoDto;
+import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimTipsInfoInviteDto;
 import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimFriendVo;
 import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimGroupVo;
 import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimMsgboxResultVo;
 import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimMsgboxVo;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.github.pagehelper.Page;
@@ -95,94 +97,51 @@ public class TipsInfoServiceImpl implements ITipsInfoService {
 			msgboxVoList.add(msgboxVo1);
 		}
 		return JSON.toJSONString(AefwebimMsgboxResultVo.success(msgboxVoList,page.getPages()));
-
-		/*List<AefwebimMsgboxVo> msgboxList=new ArrayList<AefwebimMsgboxVo>();
-		AefwebimMsgboxVo msgboxVo1=new AefwebimMsgboxVo();
-		msgboxVo1.setId(76L);
-		msgboxVo1.setContent("申请添加你为好友");
-		msgboxVo1.setUid(168L);
-		msgboxVo1.setFrom(166488L);
-		msgboxVo1.setFrom_group(0L);
-		msgboxVo1.setType(1L);
-		msgboxVo1.setRemark("有问题要问");
-		msgboxVo1.setRead(1L);
-		msgboxVo1.setTime("刚刚");
-		AefwebimFriendVo friendVo1=new AefwebimFriendVo();
-		friendVo1.setId(166488L);
-		friendVo1.setAvatar("http://q.qlogo.cn/qqapp/101235792/B704597964F9BD0DB648292D1B09F7E8/100");
-		friendVo1.setUsername("李彦宏");
-		msgboxVo1.setUser(friendVo1);
-
-		AefwebimMsgboxVo msgboxVo2=new AefwebimMsgboxVo();
-		msgboxVo2.setId(75L);
-		msgboxVo2.setContent("申请添加你为好友");
-		msgboxVo2.setUid(168L);
-		msgboxVo2.setFrom(347592L);
-		msgboxVo2.setFrom_group(10L);
-		msgboxVo2.setType(1L);
-		msgboxVo2.setRemark("你好啊!");
-		msgboxVo2.setRead(1L);
-		msgboxVo2.setTime("刚刚");
-		AefwebimFriendVo friendVo2=new AefwebimFriendVo();
-		friendVo2.setId(347592L);
-		friendVo2.setAvatar("http://q.qlogo.cn/qqapp/101235792/B78751375E0531675B1272AD994BA875/100");
-		friendVo2.setUsername("麻花疼");
-		msgboxVo2.setUser(friendVo2);
-
-
-		AefwebimMsgboxVo msgboxVo3=new AefwebimMsgboxVo();
-		msgboxVo3.setId(62L);
-		msgboxVo3.setContent("雷军 拒绝了你的好友申请");
-		msgboxVo3.setUid(168L);
-		msgboxVo3.setTime("10天前");
-
-		AefwebimMsgboxVo msgboxVo4=new AefwebimMsgboxVo();
-		msgboxVo4.setId(60L);
-		msgboxVo4.setContent("马小云 已经同意你的好友申请");
-		msgboxVo4.setUid(168L);
-		msgboxVo4.setTime("10天前");
-
-		AefwebimMsgboxVo msgboxVo5=new AefwebimMsgboxVo();
-		msgboxVo5.setId(61L);
-		msgboxVo5.setContent("贤心 已经同意你的好友申请");
-		msgboxVo5.setUid(168L);
-		msgboxVo5.setTime("10天前");
-
-		msgboxList.add(msgboxVo1);msgboxList.add(msgboxVo2);msgboxList.add(msgboxVo3);msgboxList.add(msgboxVo4);msgboxList.add(msgboxVo5);
-		return JSON.toJSONString(AefwebimMsgboxResultVo.success(msgboxList,2));*/
 	}
 
 	@Override
-	public boolean acceptInvite(AefwebimTipsInfo tipsInfo){
-
-    	return true;
-	}
-
-	@Override
-	public boolean refuseInvite(AefwebimTipsInfo tipsInfo){
-		List<AefwebimTipsInfo> searchTipsInfoList=listTipsInfo(tipsInfo);
+	public List<Object> acceptInvite(AefwebimTipsInfoInviteDto tipsInfoInviteDto){
+		List<AefwebimTipsInfo> searchTipsInfoList=listTipsInfo(tipsInfoInviteDto);
+		List<Object> resultList=new ArrayList();
+		//一般是一条一条处理
 		if(searchTipsInfoList.size()>0){
-			//首先改变已有提示信息状态
-			AefwebimTipsInfo refuseTipsInfo=searchTipsInfoList.get(0);
-			refuseTipsInfo.setHandleTime(DateOperate.getCurrentUtilDate());
-			refuseTipsInfo.setStatus(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_REFUSE);
-			updateTipsInfo(refuseTipsInfo);
-			//当是好友申请时再新增一条系统通知第一个人别人,已拒绝;群组先不考虑
-			if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND.equals(tipsInfo.getType())){
-				AefsysPerson person=personService.getPersonById(tipsInfo.getToPersonId());
-				AefwebimTipsInfo feedBackTipsInfo=new AefwebimTipsInfo();
-				feedBackTipsInfo.setToPersonId(tipsInfo.getFromId());
-				feedBackTipsInfo.setStatus(WebimDefineConstant.WEBIM_TIPS_STATUS_UNHANDLE);
-				feedBackTipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_SYSTEM);
-				feedBackTipsInfo.setContent(person.getNickName()+WebimDefineConstant.WEBIM_APPLY_TIPS_FRIEND_REFUSE);
-				insertTipsInfo(feedBackTipsInfo);
+			AefwebimTipsInfo acceptTipsInfo=searchTipsInfoList.get(0);
+			dealWithTipsInfoInvite(acceptTipsInfo,WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_ACCEPT,tipsInfoInviteDto.getGroupId());
+ 			//开始处理返回的添加对象
+			Long fromId=acceptTipsInfo.getFromId();
+			//返回添加的好友json
+			if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND.equals(acceptTipsInfo.getType())){
+				AefwebimFriendVo friendVo=new AefwebimFriendVo();
+				friendVo.setType(acceptTipsInfo.getType());
+				Long fromPersonId=tipsInfoInviteDto.getFromId();
+				AefsysPersonVo fromPersonVo=personService.getPersonWithExpandInfoById(fromPersonId);
+				friendVo.setId(fromPersonId);
+				friendVo.setAvatar(fromPersonVo.getHeadPic());
+				friendVo.setUsername(fromPersonVo.getNickName());
+				friendVo.setGroupid(tipsInfoInviteDto.getGroupId());
+				resultList.add(friendVo);
+			//返回添加的群组json
+			}else if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP.equals(acceptTipsInfo.getType())){
+				Long fromGroupId=acceptTipsInfo.getFromId();
+				AefwebimGroupVo fromGroupVo=groupService.getGroupWithExpandInfoById(fromGroupId);
+				AefwebimGroupVo groupVo=new AefwebimGroupVo();
+				groupVo.setType(acceptTipsInfo.getType());
+				groupVo.setId(fromGroupId);
+				groupVo.setGroupname(fromGroupVo.getGroupName());
+				groupVo.setAvatar(fromGroupVo.getAvatar());
+				resultList.add(groupVo);
 			}
-			//最后删除第一个人的好友申请
-			AefwebimFriend searchFriend=new AefwebimFriend();
-			searchFriend.setPersonId(refuseTipsInfo.getFromId());
-			searchFriend.setFriendId(refuseTipsInfo.getToPersonId());
-			searchFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_WAIT);
-			friendService.dealWithFriendByParam(searchFriend,WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_REFUSE);
+		}
+		return resultList;
+	}
+
+	@Override
+	public boolean refuseInvite(AefwebimTipsInfoInviteDto tipsInfoInviteDto){
+		List<AefwebimTipsInfo> searchTipsInfoList=listTipsInfo(tipsInfoInviteDto);
+		//一般是一条一条处理
+		if(searchTipsInfoList.size()>0){
+			AefwebimTipsInfo refuseTipsInfo=searchTipsInfoList.get(0);
+			dealWithTipsInfoInvite(refuseTipsInfo,WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_REFUSE,tipsInfoInviteDto.getGroupId());
 			return true;
 		}
 		return false;
@@ -229,5 +188,37 @@ public class TipsInfoServiceImpl implements ITipsInfoService {
 	public int deleteTipsInfoByIds(String ids){
 		return tipsInfoDao.deleteTipsInfoByIds(ConvertUtil.toStrArray(ids));
 	}
-	
+
+	/**
+	 * 处理消息提示的各种请求，包括好友或群组的通过和拒绝
+	 * @param dealWithTipsInfo 要处理的消息提示对象
+	 * @param mark 接受好友或拒绝好友申请标记，同消息提示状态
+	 * @param addOtherFriendGroupId 当接受好友时，添加互为好友的另一个所在的好友组ID
+	 */
+	private void dealWithTipsInfoInvite(AefwebimTipsInfo dealWithTipsInfo,Long mark,Long addOtherFriendGroupId){
+		//首先改变已有提示信息状态
+		dealWithTipsInfo.setHandleTime(DateOperate.getCurrentUtilDate());
+		dealWithTipsInfo.setStatus(mark);
+		updateTipsInfo(dealWithTipsInfo);
+		//当是好友申请时再新增一条系统通知第一个人别人,已同意;群组先不考虑
+		if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND.equals(dealWithTipsInfo.getType())){
+			AefsysPerson person=personService.getPersonById(dealWithTipsInfo.getToPersonId());
+			AefwebimTipsInfo feedBackTipsInfo=new AefwebimTipsInfo();
+			feedBackTipsInfo.setToPersonId(dealWithTipsInfo.getFromId());
+			feedBackTipsInfo.setStatus(WebimDefineConstant.WEBIM_TIPS_STATUS_UNHANDLE);
+			feedBackTipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_SYSTEM);
+			if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_ACCEPT.equals(mark)){
+				feedBackTipsInfo.setContent(person.getNickName()+WebimDefineConstant.WEBIM_APPLY_TIPS_FRIEND_ACCEPT);
+			}else if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_REFUSE.equals(mark)){
+				feedBackTipsInfo.setContent(person.getNickName()+WebimDefineConstant.WEBIM_APPLY_TIPS_FRIEND_REFUSE);
+			}
+			insertTipsInfo(feedBackTipsInfo);
+		}
+		//修改第一个人的好友申请状态
+		AefwebimFriend searchFriend=new AefwebimFriend();
+		searchFriend.setPersonId(dealWithTipsInfo.getFromId());
+		searchFriend.setFriendId(dealWithTipsInfo.getToPersonId());
+		searchFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_WAIT);
+		friendService.dealWithFriendByParam(searchFriend,mark,addOtherFriendGroupId);
+	}
 }

@@ -128,8 +128,9 @@ public interface IFriendService {
 	 *
 	 * @param friend 查询条件组装的参数
 	 * @param mark 接受好友或拒绝好友申请标记，同消息提示状态
+	 * @param addOtherFriendGroupId 当接受好友时，添加互为好友的另一个所在的好友组ID
 	 * @return 处理结果条数
 	 */
-	boolean dealWithFriendByParam(AefwebimFriend friend,Long mark);
+	boolean dealWithFriendByParam(AefwebimFriend friend,Long mark,Long addOtherFriendGroupId);
 	 
 }

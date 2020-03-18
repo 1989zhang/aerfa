@@ -13,6 +13,8 @@ public class AefwebimApplyDto extends AefwebimFriend{
 	
 	/** 请求备注 **/
 	private String remark;
+	/** 添加类型是friend还是group **/
+	private String type;
 
 	public String getRemark() {
 		return remark;
@@ -20,5 +22,12 @@ public class AefwebimApplyDto extends AefwebimFriend{
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 }

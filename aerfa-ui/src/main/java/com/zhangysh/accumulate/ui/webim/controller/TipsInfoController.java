@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.zhangysh.accumulate.common.constant.WebimDefineConstant;
+import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimTipsInfoInviteDto;
 import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimMsgboxResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -80,9 +81,9 @@ public class TipsInfoController {
 	 ****/
 	@RequestMapping(value="/accept_invite")
 	@ResponseBody
-	public String acceptInvite(HttpServletRequest request, ModelMap modelMap,AefwebimTipsInfo tipsInfo) {
+	public String acceptInvite(HttpServletRequest request, ModelMap modelMap, AefwebimTipsInfoInviteDto tipsInfoInviteDto) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
-		return tipsInfoService.acceptInvite(aerfatoken,tipsInfo);
+		return tipsInfoService.acceptInvite(aerfatoken,tipsInfoInviteDto);
 	}
 
 
@@ -93,8 +94,8 @@ public class TipsInfoController {
 	 ****/
 	@RequestMapping(value="/refuse_invite")
 	@ResponseBody
-	public String refuseInvite(HttpServletRequest request, ModelMap modelMap,AefwebimTipsInfo tipsInfo) {
+	public String refuseInvite(HttpServletRequest request, ModelMap modelMap,AefwebimTipsInfoInviteDto tipsInfoInviteDto) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
-		return tipsInfoService.refuseInvite(aerfatoken,tipsInfo);
+		return tipsInfoService.refuseInvite(aerfatoken,tipsInfoInviteDto);
 	}
 }

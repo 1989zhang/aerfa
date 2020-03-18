@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimGroupVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,7 +59,7 @@ public class InitServiceImpl implements IInitService{
 		AefwebimGroup searchFriendGroup=new AefwebimGroup();
 		searchFriendGroup.setOwnerId(sysPerson.getId());
 		searchFriendGroup.setGroupType(WebimDefineConstant.WEBIM_GROUP_TYPE_FRIEND);
-		List<AefwebimGroup> friendGroup=groupService.listGroup(searchFriendGroup);
+		List<AefwebimGroupVo> friendGroup=groupService.listGroup(searchFriendGroup);
 		//2.2查询出好友群组下的人并组装
 		List<Map<String,Object>> friendGroupList=new ArrayList<Map<String,Object>>();
 		for(int i=0;i<friendGroup.size();i++) {
@@ -84,26 +85,10 @@ public class InitServiceImpl implements IInitService{
 		retMap.put(WebimDefineConstant.WEBIM_INIT_USER_DATA_FRIEND, friendGroupList);
 		
 		//3查询出普通群组先不显示人,只要在群中就应显示普通群
-		String findNormalGroupSql ="select aefwebim_group.id,aefwebim_group.group_name,aefwebim_group.owner_id,aefwebim_group.avatar "
-				+"from aefwebim_friend,aefwebim_group where aefwebim_friend.group_id=aefwebim_group.id and aefwebim_group.group_type= #{groupType} and aefwebim_friend.person_id= #{personId}";
-		HashMap<String,Object> paramMap =new HashMap<String,Object>(4);
-		paramMap.put("groupType", WebimDefineConstant.WEBIM_GROUP_TYPE_GROUP);
-		paramMap.put("personId", personId);
-		List<LinkedHashMap<String, Object>>  retGroupListMap=baseMybatisDao.listBySqlWithParam(findNormalGroupSql, paramMap);
-		List<Map<String,Object>> normalGroupList=new ArrayList<Map<String,Object>>();
-		for(int i=0;i<retGroupListMap.size();i++) {
-			Map<String,Object> normalGroupMap=new HashMap<String,Object>();
-			normalGroupMap.put(WebimDefineConstant.WEBIM_INIT_DATA_ID, retGroupListMap.get(i).get("id"));
-			normalGroupMap.put(WebimDefineConstant.WEBIM_INIT_GROUP_DATA_GROUPNAME, retGroupListMap.get(i).get("group_name"));
-			normalGroupMap.put(WebimDefineConstant.WEBIM_INIT_GROUP_DATA_OWNER, retGroupListMap.get(i).get("owner_id"));
-			if(StringUtil.isNotNull(retGroupListMap.get(i).get("avatar"))) {
-				normalGroupMap.put(WebimDefineConstant.WEBIM_INIT_GROUP_DATA_AVATAR,picIpAddressConfigData.getDataValue()+retGroupListMap.get(i).get("avatar"));	
-			}else {
-				normalGroupMap.put(WebimDefineConstant.WEBIM_INIT_GROUP_DATA_AVATAR,WebimDefineConstant.WEBIM_GROUP_DEFAULT_AVATAR);
-			}
-			normalGroupList.add(normalGroupMap);
-		}
-
+		AefwebimGroup searchNormalGroup=new AefwebimGroup();
+		searchNormalGroup.setOwnerId(sysPerson.getId());
+		searchNormalGroup.setGroupType(WebimDefineConstant.WEBIM_GROUP_TYPE_GROUP);
+		List<AefwebimGroupVo> normalGroupList=groupService.listGroup(searchNormalGroup);
 		retMap.put(WebimDefineConstant.WEBIM_INIT_USER_DATA_GROUP, normalGroupList);
 		return retMap;
 	}

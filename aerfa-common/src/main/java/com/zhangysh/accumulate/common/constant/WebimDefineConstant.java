@@ -89,10 +89,16 @@ public class WebimDefineConstant {
 	public static final Long WEBIM_AIXF_PERSON_ID=10L;
 	
 	/**********提示信息数据常量**********/
-	/** 提示信息:好友申请被拒绝，填入名称参数 **/
-	public static final String WEBIM_APPLY_TIPS_FRIEND_REFUSE="拒绝了你的好友申请。";
-	/** 提示信息:好友申请被拒绝，填入名称参数 **/
-	public static final String WEBIM_APPLY_TIPS_FRIEND_ADD="申请添加你为好友。";
+
+	/** 提示信息:申请添加好友 **/
+	public static final String WEBIM_APPLY_TIPS_FRIEND_APPLY="申请添加你为好友。";
+	/** 提示信息:申请加入群组 **/
+	public static final String WEBIM_APPLY_TIPS_GROUP_APPLY="申请加入群组。";
+	/** 提示信息:好友申请被接受通过 **/
+	public static final String WEBIM_APPLY_TIPS_FRIEND_ACCEPT=" 已经同意你的好友申请。";
+	/** 提示信息:好友申请被拒绝 **/
+	public static final String WEBIM_APPLY_TIPS_FRIEND_REFUSE=" 拒绝了你的好友申请。";
+
 
 	/** 提示信息:申请已发送等待确认，填入名称参数 **/
 	public static final String WEBIM_APPLY_TIPS_CONFIRM="你添加{}的申请已发送,请等待确认";

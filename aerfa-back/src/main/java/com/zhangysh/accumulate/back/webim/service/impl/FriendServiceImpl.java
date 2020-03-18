@@ -118,7 +118,7 @@ public class FriendServiceImpl implements IFriendService {
 			tipsInfo.setFromId(apply.getPersonId());
 			tipsInfo.setToPersonId(apply.getFriendId());
 			tipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND); 
-			tipsInfo.setContent(WebimDefineConstant.WEBIM_APPLY_TIPS_FRIEND_ADD);
+			tipsInfo.setContent(WebimDefineConstant.WEBIM_APPLY_TIPS_FRIEND_APPLY);
 			tipsInfo.setRemark(apply.getRemark());
 			tipsInfo.setStatus(WebimDefineConstant.WEBIM_TIPS_STATUS_UNHANDLE);
 			tipsInfo.setCreateTime(DateOperate.getCurrentUtilDate());
@@ -210,15 +210,23 @@ public class FriendServiceImpl implements IFriendService {
 	}
 
 	@Override
-	public boolean dealWithFriendByParam(AefwebimFriend friend,Long mark){
+	public boolean dealWithFriendByParam(AefwebimFriend friend,Long mark,Long addOtherFriendGroupId){
 		List<AefwebimFriend> searchFriendList=listFriend(friend);
     	if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_ACCEPT.equals(mark)){
-			//同意的话修改好友
+			//同意的话修改好友,因为互为好友所以还要添加一个
 			for(int i=0;i<searchFriendList.size();i++){
 				AefwebimFriend updateFriend=searchFriendList.get(i);
 				updateFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_CONFIRM);
 				updateFriend.setUpdateTime(DateOperate.getCurrentUtilDate());
 				updateFriend(updateFriend);
+				//开始添加互为好友那个
+				AefwebimFriend addOtherFriend=new AefwebimFriend();
+				addOtherFriend.setPersonId(updateFriend.getFriendId());
+				addOtherFriend.setFriendId(updateFriend.getPersonId());
+				addOtherFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_CONFIRM);
+				addOtherFriend.setCreateTime(DateOperate.getCurrentUtilDate());
+				addOtherFriend.setGroupId(addOtherFriendGroupId);
+				insertFriend(addOtherFriend);
 			}
 		}else if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_REFUSE.equals(mark)){
 			//拒绝的话删除好友

@@ -139,14 +139,10 @@ layui.use(['layim', 'flow'], function(){
                       if(resJson.code != 0){
                           return layer.msg(resJson.msg);
                       }
-                      //将好友追加到主面板
-                      parent.layui.layim.addList({
-                        type: 'group'
-                        ,avatar: user.avatar //好友头像
-                        ,groupname: '小苹果开发' //群组名称
-                        ,id: "12333333" //群组id
-                      });
-
+                      //将群组追加到主面板
+                      for(var i=0;i<resJson.data.length;i++){
+                          parent.layui.layim.addList(resJson.data[i]);
+                      }
                       layer.close(index);
                       othis.parent().html('已同意');
                   });
@@ -163,21 +159,16 @@ layui.use(['layim', 'flow'], function(){
                            toPersonId:sid,
                            fromId: uid, //对方用户ID
                            type: type,
-                           group: group //我设定的好友分组
+                           groupId: group //我设定的好友分组
                       },function(res){
                           var resJson=$.common.parseJson(res);
                           if(resJson.code != 0){
                               return layer.msg(resJson.msg);
                           }
                           //将好友追加到主面板
-                          parent.layui.layim.addList({
-                              type: 'friend'
-                              ,avatar: user.avatar //好友头像
-                              ,username: user.username //好友昵称
-                              ,groupid: group //所在的分组id
-                              ,id: uid //好友ID
-                              ,sign: user.sign //好友签名
-                          });
+                          for(var i=0;i<resJson.data.length;i++){
+                              parent.layui.layim.addList(resJson.data[i]);
+                          }
                           parent.layer.close(index);
                           othis.parent().html('已同意');
                       });

@@ -1,5 +1,6 @@
 package com.zhangysh.accumulate.ui.webim.service;
 
+import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimTipsInfoInviteDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -30,17 +31,17 @@ public interface ITipsInfoService {
 	/****
 	 * 处理提示消息,接收邀请信息
 	 * @param aerfatoken token对象
-	 * @param tipsInfo 要保存的提示消息对象
+	 * @param tipsInfoInviteDto 要操作的提示消息对象
 	 ***/
 	@RequestMapping(value = "/webim/tips_info/accept_invite",method = RequestMethod.POST)
-	public String acceptInvite(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefwebimTipsInfo tipsInfo);
+	public String acceptInvite(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefwebimTipsInfoInviteDto tipsInfoInviteDto);
 
 	/****
 	 * 处理提示消息,拒绝邀请信息
 	 * @param aerfatoken token对象
-	 * @param tipsInfo 要保存的提示消息对象
+	 * @param tipsInfoInviteDto 要操作的提示消息对象
 	 ***/
 	@RequestMapping(value = "/webim/tips_info/refuse_invite",method = RequestMethod.POST)
-	public String refuseInvite(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefwebimTipsInfo tipsInfo);
+	public String refuseInvite(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefwebimTipsInfoInviteDto tipsInfoInviteDto);
 
 }

@@ -18,7 +18,7 @@ public interface IInitService {
 	
 	/**
 	 * 获取群组下面的人员列表信息,personid为所属成员
-	 * @param id 群组id
+	 * @param groupId 群组id
 	 * @return 返回信息json
 	 ****/
 	Map<String,Object> getGroupMembers(Long groupId);

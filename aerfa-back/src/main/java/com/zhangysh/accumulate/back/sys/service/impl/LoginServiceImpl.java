@@ -8,6 +8,7 @@ import com.zhangysh.accumulate.common.util.GeneralUtil;
 import com.zhangysh.accumulate.pojo.sys.dataobj.*;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysQuickVisitVo;
 import com.zhangysh.accumulate.pojo.sys.viewobj.AefsysResourceVo;
+import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimGroupVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -198,7 +199,7 @@ public class LoginServiceImpl implements ILoginService{
 		searchGroup.setGroupName(WebimDefineConstant.WEBIM_DEFAULT_FRIEND_GROUP_NAME);
 		searchGroup.setGroupType(WebimDefineConstant.WEBIM_GROUP_TYPE_FRIEND);
 		searchGroup.setOwnerId(personId);
-		List<AefwebimGroup> defaultGroupList=groupService.listGroup(searchGroup);
+		List<AefwebimGroupVo> defaultGroupList=groupService.listGroup(searchGroup);
 		if(defaultGroupList.size()>0) {
 			defaultGroupId=defaultGroupList.get(0).getId();//存在不需要新增
 		}else {
