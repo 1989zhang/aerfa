@@ -2,6 +2,7 @@ package com.zhangysh.accumulate.back.sys.base;
 
 import javax.servlet.ServletContext;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.zhangysh.accumulate.back.sys.util.SpringContextUtil;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -91,9 +92,12 @@ public class BaseController {
 	 * 把返回对象按日期格式化并返回正确对象
 	 * @param retObject 返回的对象
 	 * @param datePattern 对象日期格式
+	 * @param wirteNull 是否输出null字符
 	 * **/
-	protected String toHandlerResultStr(Object retObject,String datePattern) {
-		if(StringUtil.isNotEmpty(datePattern)) {
+	protected String toHandlerResultStr(Object retObject,String datePattern,boolean wirteNull) {
+		if( StringUtil.isNotEmpty(datePattern) && wirteNull ) {
+			return JSON.toJSONStringWithDateFormat(ResultVo.success(retObject),datePattern,SerializerFeature.WriteMapNullValue);
+		}else if( StringUtil.isNotEmpty(datePattern) ){
 			return JSON.toJSONStringWithDateFormat(ResultVo.success(retObject),datePattern);
 		}
 		return JSON.toJSONString(ResultVo.success(retObject));

@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.zhangysh.accumulate.common.constant.UtilConstant;
+import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimPersonVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +41,27 @@ public class GroupController extends BaseController{
 	private IGroupService groupService;
 	@Autowired
     private IRedisRelatedService redisRelatedService;
-	
+
+	/***
+	 * 获取普通群拓展信息
+	 * @param request 请求对象
+	 * @param searchDto 查询条件
+	 * @return 普通群拓展信息
+	 *****/
+	@RequestMapping(value="/get_information",method=RequestMethod.POST)
+	@ResponseBody
+	public String getInformation(HttpServletRequest request,@RequestBody AefwebimSearchDto searchDto) {
+		try {
+			String aerfatoken=HttpStorageUtil.getToken(request);
+			Long groupId =Long.valueOf(searchDto.getValue());
+			AefwebimGroupVo webimGroupVo=groupService.getGroupWithExpandInfoById(groupId);
+			return toHandlerResultStr(webimGroupVo, UtilConstant.NORMAL_MIDDLE_DATE,false);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return toHandlerResultStr(false, null, CodeMsgConstant.SYS_DATA_ACHIEVE_ERROR, e.getMessage());
+		}
+	}
+
 	/****
 	 * 保存新增的加群组申请 
 	 * @param request 请求对象

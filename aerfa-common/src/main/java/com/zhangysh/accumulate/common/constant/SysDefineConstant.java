@@ -26,10 +26,15 @@ public class SysDefineConstant {
 
 
 
-	/** 系统默认个人头像路径 **/
+	/********** 系统默认个人头像路径 **********/
 	public static final String SYS_PERSON_DEFAULT_HEAD_PIC="/aerfa/myresource/images/default_personal.jpg";
 
 
+	/********** 数据库默认字段常量 **********/
+	/** 数据库默认id字段 **/
+	public static final String DB_COLUMN_ID="id";
+	/** 数据库默认排序降序 **/
+	public static final String DB_ORDER_BY_DESC="desc";
 
 	/**********系统数据库参数配置常量**********/
 	/** 系统定时任务相关定义变量：job执行名称 **/

@@ -109,15 +109,15 @@ public class FriendServiceImpl implements IFriendService {
 		}
 		//首先查找是否有未处理的提示信息
 		AefwebimTipsInfo searchTipsInfo=new AefwebimTipsInfo();
-		searchTipsInfo.setFromId(apply.getPersonId());
+		searchTipsInfo.setFromPersonId(apply.getPersonId());
 		searchTipsInfo.setToPersonId(apply.getFriendId());
-		searchTipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND);
+		searchTipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND_APPLY);
 		List<AefwebimTipsInfo> searchTipsInfoList=tipsInfoService.listTipsInfo(searchTipsInfo);
 		if(searchTipsInfoList.size()==0) {
 			AefwebimTipsInfo tipsInfo=new AefwebimTipsInfo();
-			tipsInfo.setFromId(apply.getPersonId());
+			tipsInfo.setFromPersonId(apply.getPersonId());
 			tipsInfo.setToPersonId(apply.getFriendId());
-			tipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND); 
+			tipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND_APPLY);
 			tipsInfo.setContent(WebimDefineConstant.WEBIM_APPLY_TIPS_FRIEND_APPLY);
 			tipsInfo.setRemark(apply.getRemark());
 			tipsInfo.setStatus(WebimDefineConstant.WEBIM_TIPS_STATUS_UNHANDLE);
@@ -210,27 +210,53 @@ public class FriendServiceImpl implements IFriendService {
 	}
 
 	@Override
-	public boolean dealWithFriendByParam(AefwebimFriend friend,Long mark,Long addOtherFriendGroupId){
-		List<AefwebimFriend> searchFriendList=listFriend(friend);
+	public boolean dealWithFriendByParam(AefwebimTipsInfo dealWithTipsInfo,Long mark,Long addOtherFriendGroupId){
+		//修改双方的好友申请状态
+		AefwebimFriend searchFriend=new AefwebimFriend();
+		searchFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_WAIT);
+
+		String tipsInfoType=dealWithTipsInfo.getType();
+		if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND_APPLY.equals(tipsInfoType)){
+			searchFriend.setFriendId(dealWithTipsInfo.getToPersonId());
+		}else if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP_APPLY.equals(tipsInfoType)){
+			searchFriend.setPersonId(dealWithTipsInfo.getFromPersonId());
+			searchFriend.setGroupId(Long.valueOf(dealWithTipsInfo.getExpand()));
+		}else if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP_INVITE.equals(tipsInfoType)){
+			searchFriend.setPersonId(dealWithTipsInfo.getToPersonId());
+			searchFriend.setGroupId(Long.valueOf(dealWithTipsInfo.getExpand()));
+		}
+
+		List<AefwebimFriend> searchFriendList=listFriend(searchFriend);
     	if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_ACCEPT.equals(mark)){
-			//同意的话修改好友,因为互为好友所以还要添加一个
-			for(int i=0;i<searchFriendList.size();i++){
-				AefwebimFriend updateFriend=searchFriendList.get(i);
-				updateFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_CONFIRM);
-				updateFriend.setUpdateTime(DateOperate.getCurrentUtilDate());
-				updateFriend(updateFriend);
-				//开始添加互为好友那个
-				AefwebimFriend addOtherFriend=new AefwebimFriend();
-				addOtherFriend.setPersonId(updateFriend.getFriendId());
-				addOtherFriend.setFriendId(updateFriend.getPersonId());
-				addOtherFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_CONFIRM);
-				addOtherFriend.setCreateTime(DateOperate.getCurrentUtilDate());
-				addOtherFriend.setGroupId(addOtherFriendGroupId);
-				insertFriend(addOtherFriend);
+    		//好友申请
+			if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND_APPLY.equals(tipsInfoType)) {
+				//同意的话修改好友,因为互为好友所以还要添加一个
+				for (int i = 0; i < searchFriendList.size(); i++) {
+					AefwebimFriend updateFriend = searchFriendList.get(i);
+					updateFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_CONFIRM);
+					updateFriend.setUpdateTime(DateOperate.getCurrentUtilDate());
+					updateFriend(updateFriend);
+					//开始添加互为好友那个
+					AefwebimFriend addOtherFriend = new AefwebimFriend();
+					addOtherFriend.setPersonId(updateFriend.getFriendId());
+					addOtherFriend.setFriendId(updateFriend.getPersonId());
+					addOtherFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_CONFIRM);
+					addOtherFriend.setCreateTime(DateOperate.getCurrentUtilDate());
+					addOtherFriend.setGroupId(addOtherFriendGroupId);
+					insertFriend(addOtherFriend);
+				}
+			//申请加入群组
+			}else if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP_APPLY.equals(tipsInfoType)||WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP_INVITE.equals(tipsInfoType)){
+				for (int i = 0; i < searchFriendList.size(); i++) {
+					AefwebimFriend updateFriend = searchFriendList.get(i);
+					updateFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_CONFIRM);
+					updateFriend.setUpdateTime(DateOperate.getCurrentUtilDate());
+					updateFriend(updateFriend);
+				}
 			}
 		}else if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_REFUSE.equals(mark)){
-			//拒绝的话删除好友
-			for(int i=0;i<searchFriendList.size();i++){
+			//拒绝的话删除添加的好友信息
+			for (int i = 0; i < searchFriendList.size(); i++) {
 				deleteFriendById(searchFriendList.get(i).getId());
 			}
 		}

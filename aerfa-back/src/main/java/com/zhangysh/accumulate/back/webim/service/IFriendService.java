@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPerson;
 import com.zhangysh.accumulate.pojo.webim.dataobj.AefwebimFriend;
+import com.zhangysh.accumulate.pojo.webim.dataobj.AefwebimTipsInfo;
 import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimApplyDto;
 import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimSearchDto;
 import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimFriendVo;
@@ -126,11 +127,11 @@ public interface IFriendService {
 	 * 处理不带ID参数的好友信息，用于提示信息拓展处理好友申请：
 	 * 如果是同意则修改好友状态且新增一个好友，如果是拒绝则删除原来申请
 	 *
-	 * @param friend 查询条件组装的参数
+	 * @param dealWithTipsInfo 消息的参数
 	 * @param mark 接受好友或拒绝好友申请标记，同消息提示状态
 	 * @param addOtherFriendGroupId 当接受好友时，添加互为好友的另一个所在的好友组ID
 	 * @return 处理结果条数
 	 */
-	boolean dealWithFriendByParam(AefwebimFriend friend,Long mark,Long addOtherFriendGroupId);
+	boolean dealWithFriendByParam(AefwebimTipsInfo dealWithTipsInfo,Long mark, Long addOtherFriendGroupId);
 	 
 }

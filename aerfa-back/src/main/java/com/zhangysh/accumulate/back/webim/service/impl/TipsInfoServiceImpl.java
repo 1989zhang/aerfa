@@ -72,22 +72,24 @@ public class TipsInfoServiceImpl implements ITipsInfoService {
 			msgboxVo1.setId(tipsInfo.getId());
 			msgboxVo1.setContent(tipsInfo.getContent());
 			msgboxVo1.setUid(tipsInfo.getToPersonId());
-			msgboxVo1.setFrom(tipsInfo.getFromId());
+			msgboxVo1.setFrom(tipsInfo.getFromPersonId());
 			msgboxVo1.setType(tipsInfo.getType());
 			msgboxVo1.setRemark(tipsInfo.getRemark());
 			msgboxVo1.setStatus(tipsInfo.getStatus());
 			msgboxVo1.setTime(DateOperate.UtilDatetoString(tipsInfo.getCreateTime(),UtilConstant.MOST_MIDDLE_DATE));
-			if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND.equals(tipsInfo.getType())){
+			if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND_APPLY.equals(tipsInfo.getType())){
 				AefwebimFriendVo friendVo=new AefwebimFriendVo();
-				Long fromPersonId=tipsInfo.getFromId();
+				Long fromPersonId=tipsInfo.getFromPersonId();
 				AefsysPersonVo fromPersonVo=personService.getPersonWithExpandInfoById(fromPersonId);
 				friendVo.setId(fromPersonId);
 				friendVo.setAvatar(fromPersonVo.getHeadPic());
 				friendVo.setUsername(fromPersonVo.getNickName());
 				msgboxVo1.setUser(friendVo);
-			}else if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP.equals(tipsInfo.getType())){
+			//申请或邀请加入群聊查询群信息
+			}else if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP_APPLY.equals(tipsInfo.getType())
+			    || WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP_INVITE.equals(tipsInfo.getType()) ){
 				AefwebimFriendVo friendVo=new AefwebimFriendVo();
-				Long fromGroupId=tipsInfo.getFromId();
+				Long fromGroupId=Long.valueOf(tipsInfo.getExpand());
 				AefwebimGroupVo fromGroupVo=groupService.getGroupWithExpandInfoById(fromGroupId);
 				friendVo.setId(fromGroupId);
 				friendVo.setAvatar(fromGroupVo.getAvatar());
@@ -106,29 +108,31 @@ public class TipsInfoServiceImpl implements ITipsInfoService {
 		//一般是一条一条处理
 		if(searchTipsInfoList.size()>0){
 			AefwebimTipsInfo acceptTipsInfo=searchTipsInfoList.get(0);
-			dealWithTipsInfoInvite(acceptTipsInfo,WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_ACCEPT,tipsInfoInviteDto.getGroupId());
- 			//开始处理返回的添加对象
-			Long fromId=acceptTipsInfo.getFromId();
+			dealWithTipsInfoExtend(acceptTipsInfo,WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_ACCEPT,tipsInfoInviteDto.getGroupId());
 			//返回添加的好友json
-			if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND.equals(acceptTipsInfo.getType())){
+			if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND_APPLY.equals(acceptTipsInfo.getType())){
 				AefwebimFriendVo friendVo=new AefwebimFriendVo();
-				friendVo.setType(acceptTipsInfo.getType());
-				Long fromPersonId=tipsInfoInviteDto.getFromId();
+				friendVo.setType(WebimDefineConstant.WEBIM_INIT_USER_DATA_FRIEND);
+				Long fromPersonId=tipsInfoInviteDto.getFromPersonId();
 				AefsysPersonVo fromPersonVo=personService.getPersonWithExpandInfoById(fromPersonId);
 				friendVo.setId(fromPersonId);
 				friendVo.setAvatar(fromPersonVo.getHeadPic());
 				friendVo.setUsername(fromPersonVo.getNickName());
 				friendVo.setGroupid(tipsInfoInviteDto.getGroupId());
 				resultList.add(friendVo);
-			//返回添加的群组json
-			}else if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP.equals(acceptTipsInfo.getType())){
-				Long fromGroupId=acceptTipsInfo.getFromId();
-				AefwebimGroupVo fromGroupVo=groupService.getGroupWithExpandInfoById(fromGroupId);
-				AefwebimGroupVo groupVo=new AefwebimGroupVo();
-				groupVo.setType(acceptTipsInfo.getType());
+			//返回接受邀请添加的群组json
+			}else if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP_INVITE.equals(acceptTipsInfo.getType())) {
+				Long fromGroupId = Long.valueOf(acceptTipsInfo.getExpand());
+				AefwebimGroupVo fromGroupVo = groupService.getGroupWithExpandInfoById(fromGroupId);
+				AefwebimGroupVo groupVo = new AefwebimGroupVo();
+				groupVo.setType(WebimDefineConstant.WEBIM_INIT_USER_DATA_GROUP);
 				groupVo.setId(fromGroupId);
 				groupVo.setGroupname(fromGroupVo.getGroupName());
 				groupVo.setAvatar(fromGroupVo.getAvatar());
+				resultList.add(groupVo);
+			}else if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP_APPLY.equals(acceptTipsInfo.getType())) {
+				//返回个空的免得报错
+				AefwebimGroupVo groupVo = new AefwebimGroupVo();
 				resultList.add(groupVo);
 			}
 		}
@@ -141,7 +145,7 @@ public class TipsInfoServiceImpl implements ITipsInfoService {
 		//一般是一条一条处理
 		if(searchTipsInfoList.size()>0){
 			AefwebimTipsInfo refuseTipsInfo=searchTipsInfoList.get(0);
-			dealWithTipsInfoInvite(refuseTipsInfo,WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_REFUSE,tipsInfoInviteDto.getGroupId());
+			dealWithTipsInfoExtend(refuseTipsInfo,WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_REFUSE,tipsInfoInviteDto.getGroupId());
 			return true;
 		}
 		return false;
@@ -195,30 +199,51 @@ public class TipsInfoServiceImpl implements ITipsInfoService {
 	 * @param mark 接受好友或拒绝好友申请标记，同消息提示状态
 	 * @param addOtherFriendGroupId 当接受好友时，添加互为好友的另一个所在的好友组ID
 	 */
-	private void dealWithTipsInfoInvite(AefwebimTipsInfo dealWithTipsInfo,Long mark,Long addOtherFriendGroupId){
+	private void dealWithTipsInfoExtend(AefwebimTipsInfo dealWithTipsInfo,Long mark,Long addOtherFriendGroupId){
 		//首先改变已有提示信息状态
 		dealWithTipsInfo.setHandleTime(DateOperate.getCurrentUtilDate());
 		dealWithTipsInfo.setStatus(mark);
 		updateTipsInfo(dealWithTipsInfo);
-		//当是好友申请时再新增一条系统通知第一个人别人,已同意;群组先不考虑
-		if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND.equals(dealWithTipsInfo.getType())){
-			AefsysPerson person=personService.getPersonById(dealWithTipsInfo.getToPersonId());
-			AefwebimTipsInfo feedBackTipsInfo=new AefwebimTipsInfo();
-			feedBackTipsInfo.setToPersonId(dealWithTipsInfo.getFromId());
-			feedBackTipsInfo.setStatus(WebimDefineConstant.WEBIM_TIPS_STATUS_UNHANDLE);
-			feedBackTipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_SYSTEM);
+		//反馈信息的处理
+		dealWithFeedBackTipsInfo(dealWithTipsInfo,mark);
+		//好友关系的处理
+		friendService.dealWithFriendByParam(dealWithTipsInfo,mark,addOtherFriendGroupId);
+	}
+
+	/**
+	 * 接收人处理了提示信息后 ，需要新增系统提示信息，把处理结果反馈给发起人
+	 * @param dealWithTipsInfo 处理的消息对象，可取其中逻辑参数
+	 *
+	 ****/
+	private void dealWithFeedBackTipsInfo(AefwebimTipsInfo dealWithTipsInfo,Long mark){
+		String tipsInfoType=dealWithTipsInfo.getType();
+		AefsysPerson person=personService.getPersonById(dealWithTipsInfo.getToPersonId());
+		AefwebimTipsInfo feedBackTipsInfo=new AefwebimTipsInfo();
+		feedBackTipsInfo.setToPersonId(dealWithTipsInfo.getFromPersonId());
+		feedBackTipsInfo.setStatus(WebimDefineConstant.WEBIM_TIPS_STATUS_UNHANDLE);
+		feedBackTipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_SYSTEM_TIPS);
+		//当是好友申请时再新增一条系统通知发起人已同意或已拒绝
+		if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_FRIEND_APPLY.equals(tipsInfoType)){
 			if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_ACCEPT.equals(mark)){
 				feedBackTipsInfo.setContent(person.getNickName()+WebimDefineConstant.WEBIM_APPLY_TIPS_FRIEND_ACCEPT);
 			}else if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_REFUSE.equals(mark)){
 				feedBackTipsInfo.setContent(person.getNickName()+WebimDefineConstant.WEBIM_APPLY_TIPS_FRIEND_REFUSE);
 			}
-			insertTipsInfo(feedBackTipsInfo);
+		//当是群组申请时，反馈给发起人信息
+		}else if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP_APPLY.equals(tipsInfoType)){
+			if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_ACCEPT.equals(mark)){
+				feedBackTipsInfo.setContent(person.getNickName()+WebimDefineConstant.WEBIM_APPLY_TIPS_GROUP_APPLY_ACCEPT);
+			}else if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_REFUSE.equals(mark)){
+				feedBackTipsInfo.setContent(person.getNickName()+WebimDefineConstant.WEBIM_APPLY_TIPS_GROUP_APPLY_REFUSE);
+			}
+		//当是群组邀请时，反馈给发起人信息
+		}else if(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP_INVITE.equals(tipsInfoType)){
+			if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_ACCEPT.equals(mark)){
+				feedBackTipsInfo.setContent(person.getNickName()+WebimDefineConstant.WEBIM_APPLY_TIPS_GROUP_INVITE_ACCEPT);
+			}else if(WebimDefineConstant.WEBIM_TIPS_STATUS_HANDLE_REFUSE.equals(mark)){
+				feedBackTipsInfo.setContent(person.getNickName()+WebimDefineConstant.WEBIM_APPLY_TIPS_GROUP_INVITE_REFUSE);
+			}
 		}
-		//修改第一个人的好友申请状态
-		AefwebimFriend searchFriend=new AefwebimFriend();
-		searchFriend.setPersonId(dealWithTipsInfo.getFromId());
-		searchFriend.setFriendId(dealWithTipsInfo.getToPersonId());
-		searchFriend.setRelationStatus(WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_WAIT);
-		friendService.dealWithFriendByParam(searchFriend,mark,addOtherFriendGroupId);
+		insertTipsInfo(feedBackTipsInfo);
 	}
 }

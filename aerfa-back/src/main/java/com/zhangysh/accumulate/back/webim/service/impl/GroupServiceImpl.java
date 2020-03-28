@@ -1,10 +1,9 @@
 package com.zhangysh.accumulate.back.webim.service.impl;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.zhangysh.accumulate.back.sys.base.BaseMybatisDao;
 import com.zhangysh.accumulate.back.sys.service.IConfigDataService;
+import com.zhangysh.accumulate.back.sys.service.IPersonService;
 import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysConfigData;
 import org.springframework.stereotype.Service;
@@ -43,6 +42,8 @@ import com.zhangysh.accumulate.common.util.StringUtil;
 public class GroupServiceImpl implements IGroupService {
 
 	@Autowired
+	private BaseMybatisDao baseMybatisDao;
+	@Autowired
 	private GroupDao groupDao;
 	@Autowired
 	private IFriendService friendService;
@@ -50,6 +51,8 @@ public class GroupServiceImpl implements IGroupService {
 	private ITipsInfoService tipsInfoService;
 	@Autowired
 	private IConfigDataService configDataService;
+	@Autowired
+	private IPersonService personService;
 
     @Override
 	public AefwebimGroup getGroupById(Long id){
@@ -166,17 +169,19 @@ public class GroupServiceImpl implements IGroupService {
 		//首先查找是否有未处理的提示信息,发送到的消息为群创建者的id
 		AefwebimGroup webimGroup=getGroupById(apply.getGroupId());
 		AefwebimTipsInfo searchTipsInfo=new AefwebimTipsInfo();
-		searchTipsInfo.setFromId(apply.getPersonId());
+		searchTipsInfo.setFromPersonId(apply.getPersonId());
 		searchTipsInfo.setToPersonId(webimGroup.getOwnerId());
-		searchTipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP);
+		searchTipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP_APPLY);
 		List<AefwebimTipsInfo> searchTipsInfoList=tipsInfoService.listTipsInfo(searchTipsInfo);
 		if(searchTipsInfoList.size()==0) {
+			AefsysPerson fromPerson=personService.getPersonById(apply.getPersonId());
 			AefwebimTipsInfo tipsInfo=new AefwebimTipsInfo();
-			tipsInfo.setFromId(apply.getPersonId());
+			tipsInfo.setFromPersonId(apply.getPersonId());
 			tipsInfo.setToPersonId(webimGroup.getOwnerId());
-			tipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP); 
-			tipsInfo.setContent(WebimDefineConstant.WEBIM_APPLY_TIPS_GROUP_APPLY);
+			tipsInfo.setType(WebimDefineConstant.WEBIM_TIPS_INFO_TYPE_GROUP_APPLY);
+			tipsInfo.setContent(fromPerson.getNickName()+WebimDefineConstant.WEBIM_APPLY_TIPS_GROUP_APPLY);
 			tipsInfo.setRemark(apply.getRemark());
+			tipsInfo.setExpand(String.valueOf(apply.getGroupId()));
 			tipsInfo.setStatus(WebimDefineConstant.WEBIM_TIPS_STATUS_UNHANDLE);
 			tipsInfo.setCreateTime(DateOperate.getCurrentUtilDate());
 			tipsInfo.setCreateBy(operPerson.getPersonName());
@@ -190,6 +195,29 @@ public class GroupServiceImpl implements IGroupService {
 			return JSON.toJSONString(ResultVo.error(CodeMsgConstant.SYS_DATA_OPERATE_ERROR.fillArgs(falseTrueStr)));
 		}
 		return JSON.toJSONString(ResultVo.success(retTrueStr));
+	}
+
+	@Override
+	public List<AefwebimGroupVo> getNormalGroupByPerson(Long personId){
+    	//先找出自己拥有创建的群
+		List<AefwebimGroupVo> retList=new ArrayList<AefwebimGroupVo>();
+		AefwebimGroup searchOwnGroup=new AefwebimGroup();
+		searchOwnGroup.setOwnerId(personId);
+		searchOwnGroup.setGroupType(WebimDefineConstant.WEBIM_GROUP_TYPE_GROUP);
+		List<AefwebimGroupVo> normalGroupList=listGroup(searchOwnGroup);
+		retList.addAll(normalGroupList);
+		//再找出自己加入的群
+		String findJoinGroupSql="select group_id from aefwebim_friend where person_id=#{personId} and relation_status=#{relationStatus} and friend_id is null ";
+		Map<String,Object> paramMap=new HashMap<String,Object>(4);
+		paramMap.put("personId", personId);
+		paramMap.put("relationStatus", WebimDefineConstant.WEBIM_FRIEND_RELATION_STATUS_CONFIRM);
+		List<LinkedHashMap<String, Object>> retJoinGroupList=baseMybatisDao.listBySqlWithParam(findJoinGroupSql,paramMap);
+		for(int i=0;i<retJoinGroupList.size();i++){
+			LinkedHashMap<String, Object> groupIdMap=retJoinGroupList.get(i);
+			Long groupId=Long.valueOf(String.valueOf(groupIdMap.get("group_id")));
+			retList.add(getGroupWithExpandInfoById(groupId));
+		}
+		return retList;
 	}
 
 	/**

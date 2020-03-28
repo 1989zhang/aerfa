@@ -1,6 +1,7 @@
 package com.zhangysh.accumulate.back.webim.controller;
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,7 +41,7 @@ public class WebimPersonController extends BaseController{
 		try {
 			String aerfatoken=HttpStorageUtil.getToken(request); 
 			AefwebimPersonVo webimPersonVo=webimPersonService.getInformation(searchDto);
-			return toHandlerResultStr(webimPersonVo,UtilConstant.NORMAL_MIDDLE_DATE);
+			return toHandlerResultStr(webimPersonVo, UtilConstant.NORMAL_MIDDLE_DATE,false);
 		}catch(Exception e) {
 			e.printStackTrace();
 			return toHandlerResultStr(false, null, CodeMsgConstant.SYS_DATA_ACHIEVE_ERROR, e.getMessage());

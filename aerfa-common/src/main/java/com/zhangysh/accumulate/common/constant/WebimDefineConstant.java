@@ -69,12 +69,14 @@ public class WebimDefineConstant {
 	/** 好友状态2黑名单 **/
 	public static final Long WEBIM_FRIEND_RELATION_STATUS_BLACK=2L;
 	
-	/** 提示信息：申请添加好友 **/
-	public static final String WEBIM_TIPS_INFO_TYPE_FRIEND="friend";
-	/** 提示信息：申请加入普通群组 **/
-	public static final String WEBIM_TIPS_INFO_TYPE_GROUP="group";
+	/** 消息类型：申请添加好友 **/
+	public static final String WEBIM_TIPS_INFO_TYPE_FRIEND_APPLY="friendApply";
+	/** 消息类型：申请加入普通群组 **/
+	public static final String WEBIM_TIPS_INFO_TYPE_GROUP_APPLY="groupApply";
+	/** 消息类型：邀请加入普通群组 **/
+	public static final String WEBIM_TIPS_INFO_TYPE_GROUP_INVITE="groupInvite";
 	/** 提示信息：系统提示信息 **/
-	public static final String WEBIM_TIPS_INFO_TYPE_SYSTEM="system";
+	public static final String WEBIM_TIPS_INFO_TYPE_SYSTEM_TIPS="systemTips";
 
 	/** 提示信息:待处理 **/
 	public static final Long WEBIM_TIPS_STATUS_UNHANDLE=0L;
@@ -85,20 +87,27 @@ public class WebimDefineConstant {
 
 
 	/**********数据库定义数据常量**********/
-	/** 智能小法:personId **/
-	public static final Long WEBIM_AIXF_PERSON_ID=10L;
 	
 	/**********提示信息数据常量**********/
-
 	/** 提示信息:申请添加好友 **/
-	public static final String WEBIM_APPLY_TIPS_FRIEND_APPLY="申请添加你为好友。";
-	/** 提示信息:申请加入群组 **/
-	public static final String WEBIM_APPLY_TIPS_GROUP_APPLY="申请加入群组。";
+	public static final String WEBIM_APPLY_TIPS_FRIEND_APPLY=" 申请添加你为好友。";
 	/** 提示信息:好友申请被接受通过 **/
-	public static final String WEBIM_APPLY_TIPS_FRIEND_ACCEPT=" 已经同意你的好友申请。";
+	public static final String WEBIM_APPLY_TIPS_FRIEND_ACCEPT=" 同意了你的好友申请。";
 	/** 提示信息:好友申请被拒绝 **/
 	public static final String WEBIM_APPLY_TIPS_FRIEND_REFUSE=" 拒绝了你的好友申请。";
 
+	/** 提示信息:申请加入群组 **/
+	public static final String WEBIM_APPLY_TIPS_GROUP_APPLY=" 申请加入群组。";
+	/** 提示信息:申请加入群组被通过 **/
+	public static final String WEBIM_APPLY_TIPS_GROUP_APPLY_ACCEPT=" 同意了你的入群申请。";
+	/** 提示信息:申请加入群组被拒绝 **/
+	public static final String WEBIM_APPLY_TIPS_GROUP_APPLY_REFUSE=" 拒绝了你的入群申请。";
+	/** 提示信息:邀请直接加入群组 **/
+	public static final String WEBIM_APPLY_TIPS_GROUP_INVITE=" 邀请你加入群组。";
+	/** 提示信息:邀请加群被接受通过 **/
+	public static final String WEBIM_APPLY_TIPS_GROUP_INVITE_ACCEPT=" 同意了你的入群邀请。";
+	/** 提示信息:邀请加群被拒绝 **/
+	public static final String WEBIM_APPLY_TIPS_GROUP_INVITE_REFUSE=" 拒绝了你的入群邀请。";
 
 	/** 提示信息:申请已发送等待确认，填入名称参数 **/
 	public static final String WEBIM_APPLY_TIPS_CONFIRM="你添加{}的申请已发送,请等待确认";

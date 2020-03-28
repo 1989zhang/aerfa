@@ -23,7 +23,7 @@
 
 <textarea title="消息模版" id="LAY_tpl" style="display:none;">
 {{# layui.each(d.data, function(index, item){
-  if( item.type == 'friend' || item.type == 'group'){ }}
+  if( item.type == 'friendApply' || item.type == 'groupApply' || item.type == 'groupInvite'){ }}
     <li data-uid="{{ item.from }}" data-type="{{ item.type }}">
       <a href="/u/{{ item.from }}/" target="_blank">
         <img src="{{ item.user.avatar }}" class="layui-circle layim-msgbox-avatar">
@@ -128,26 +128,7 @@ layui.use(['layim', 'flow'], function(){
           console.log(user.username);
           console.log(user.id);
           console.log(type);
-          if(type=='group'){
-              layer.confirm('确定加入群聊吗？', function(index){
-                  $.post(  prefix + '/accept_invite', {
-                      toPersonId:sid,
-                      fromId: uid, //对方用户ID
-                      type: type //消息类型
-                  }, function(res){
-                      var resJson=$.common.parseJson(res);
-                      if(resJson.code != 0){
-                          return layer.msg(resJson.msg);
-                      }
-                      //将群组追加到主面板
-                      for(var i=0;i<resJson.data.length;i++){
-                          parent.layui.layim.addList(resJson.data[i]);
-                      }
-                      layer.close(index);
-                      othis.parent().html('已同意');
-                  });
-                });
-          }else if(type=='friend'){
+          if('friendApply'==type){
               //选择分组
               parent.layui.layim.setFriendGroup({
                   type: 'friend'
@@ -157,7 +138,7 @@ layui.use(['layim', 'flow'], function(){
                   ,submit: function(group, index){
                       $.post( prefix + '/accept_invite', {
                            toPersonId:sid,
-                           fromId: uid, //对方用户ID
+                           fromPersonId: uid, //对方用户ID
                            type: type,
                            groupId: group //我设定的好友分组
                       },function(res){
@@ -174,8 +155,42 @@ layui.use(['layim', 'flow'], function(){
                       });
                   }
               });
-            }
+          }else if( 'groupApply'==type ){
+              layer.confirm('确定同意申请吗？', function(index){
+                  $.post(  prefix + '/accept_invite', {
+                      toPersonId:sid,
+                      fromPersonId: uid, //对方用户ID
+                      type: type //消息类型
+                  }, function(res){
+                      var resJson=$.common.parseJson(res);
+                      if(resJson.code != 0){
+                          return layer.msg(resJson.msg);
+                      }
+                      layer.close(index);
+                      othis.parent().html('已同意');
+                  });
+              });
+          }else if( 'groupInvite'==type ){
+              layer.confirm('确定加入群聊吗？', function(index){
+                  $.post(  prefix + '/accept_invite', {
+                      toPersonId:sid,
+                      fromPersonId: uid, //对方用户ID
+                      type: type //消息类型
+                  }, function(res){
+                      var resJson=$.common.parseJson(res);
+                      if(resJson.code != 0){
+                          return layer.msg(resJson.msg);
+                      }
+                      //将群组追加到主面板
+                      for(var i=0;i<resJson.data.length;i++){
+                          parent.layui.layim.addList(resJson.data[i]);
+                      }
+                      layer.close(index);
+                      othis.parent().html('已同意');
+                  });
+              });
           }
+      }
       
 
       //拒绝

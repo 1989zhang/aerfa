@@ -114,4 +114,10 @@ public interface IGroupService {
      * @return 新增结果条数
      */
 	 String insertGroupFriendAndAddTipsInfo(AefwebimApplyDto apply,AefsysPerson operPerson);
+
+	 /**
+	  * 获取人员需要展示的普通群组包括自己创建的和加入的
+	  * @param personId 人员ID
+	  ***/
+	 List<AefwebimGroupVo> getNormalGroupByPerson(Long personId);
 }

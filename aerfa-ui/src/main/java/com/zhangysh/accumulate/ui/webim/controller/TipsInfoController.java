@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.zhangysh.accumulate.common.constant.SysDefineConstant;
 import com.zhangysh.accumulate.common.constant.WebimDefineConstant;
 import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimTipsInfoInviteDto;
 import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimMsgboxResultVo;
@@ -68,6 +69,8 @@ public class TipsInfoController {
 		BsTablePageInfo pageInfo=new BsTablePageInfo();
 		pageInfo.setPageNum(page);
 		pageInfo.setPageSize(WebimDefineConstant.WEBIM_MSGBOX_PAGE_LIMIT_NUMBER);
+		pageInfo.setOrderByColumn(SysDefineConstant.DB_COLUMN_ID);
+		pageInfo.setIsAsc(SysDefineConstant.DB_ORDER_BY_DESC);
 		AefwebimTipsInfoDto tipsInfoDto=new AefwebimTipsInfoDto();
 		tipsInfoDto.setTipsInfo(tipsInfo);
 		tipsInfoDto.setPageInfo(pageInfo);

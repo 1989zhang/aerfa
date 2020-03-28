@@ -3,6 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zhangysh.accumulate.common.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,6 +101,10 @@ public class WebimPersonServiceImpl implements IWebimPersonService {
 		BeanUtils.copyProperties(webimFriendVo, webimPersonVo);
 		BeanUtils.copyProperties(webimPerson, webimPersonVo);
 		BeanUtils.copyProperties(sysPerson, webimPersonVo);
+		//出生日期null不好处理
+		if(StringUtil.isNull(webimPersonVo.getBirthday())){
+			webimPersonVo.setBirthday(webimPersonVo.getCreateTime());
+		}
 		return webimPersonVo;
 	}
 }

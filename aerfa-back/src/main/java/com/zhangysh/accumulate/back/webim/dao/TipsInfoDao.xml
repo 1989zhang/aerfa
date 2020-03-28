@@ -7,11 +7,12 @@
     <!--返回对象映射-->
     <resultMap id="tipsInfoResult" type="AefwebimTipsInfo" >
         <result property="id"    column="id"    />
-        <result property="fromId"    column="from_id"    />
+        <result property="fromPersonId"    column="from_person_id"    />
         <result property="toPersonId"    column="to_person_id"    />
         <result property="type"    column="type"    />
         <result property="content"    column="content"    />
         <result property="remark"    column="remark"    />
+        <result property="expand"    column="expand"    />
         <result property="status"    column="status"    />
         <result property="sendTime"    column="send_time"    />
         <result property="handleTime"    column="handle_time"    />
@@ -23,7 +24,7 @@
 	
 	<!--查询对象语句拼装-->
 	<sql id="selectTipsInfo">
-        select id, from_id, to_person_id, type, content, remark, status, send_time, handle_time, create_by, create_time, update_by, update_time from aefwebim_tips_info
+        select id, from_person_id, to_person_id, type, content, remark, expand, status, send_time, handle_time, create_by, create_time, update_by, update_time from aefwebim_tips_info
     </sql>
 
     <!--根据ID查询单个对象-->
@@ -37,11 +38,12 @@
         <include refid="selectTipsInfo"/>
         <where>  
             <if test="id != null  "> and id = #{id}</if>
-            <if test="fromId != null  "> and from_id = #{fromId}</if>
+            <if test="fromPersonId != null  "> and from_person_id = #{fromPersonId}</if>
             <if test="toPersonId != null  "> and to_person_id = #{toPersonId}</if>
             <if test="type != null  and type != ''  "> and type = #{type}</if>
             <if test="content != null  and content != ''  "> and content = #{content}</if>
             <if test="remark != null  and remark != ''  "> and remark = #{remark}</if>
+            <if test="expand != null  and expand != ''  "> and remark = #{expand}</if>
             <if test="status != null  "> and status = #{status}</if>
             <if test="sendTime != null  "> and send_time = #{sendTime}</if>
             <if test="handleTime != null  "> and handle_time = #{handleTime}</if>
@@ -66,11 +68,12 @@
     <insert id="insertTipsInfo" parameterType="AefwebimTipsInfo" useGeneratedKeys="true" keyProperty="id">
         insert into aefwebim_tips_info
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="fromId != null  ">from_id,</if>
+			<if test="fromPersonId != null  ">from_person_id,</if>
 			<if test="toPersonId != null  ">to_person_id,</if>
 			<if test="type != null  and type != ''  ">type,</if>
 			<if test="content != null  and content != ''  ">content,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
+            <if test="expand != null  and expand != ''  ">expand,</if>
 			<if test="status != null  ">status,</if>
 			<if test="sendTime != null  ">send_time,</if>
 			<if test="handleTime != null  ">handle_time,</if>
@@ -80,11 +83,12 @@
 			<if test="updateTime != null  ">update_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="fromId != null  ">#{fromId},</if>
+			<if test="fromPersonId != null  ">#{fromPersonId},</if>
 			<if test="toPersonId != null  ">#{toPersonId},</if>
 			<if test="type != null  and type != ''  ">#{type},</if>
 			<if test="content != null  and content != ''  ">#{content},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
+            <if test="expand != null  and expand != ''  ">#{expand},</if>
 			<if test="status != null  ">#{status},</if>
 			<if test="sendTime != null  ">#{sendTime},</if>
 			<if test="handleTime != null  ">#{handleTime},</if>
@@ -99,11 +103,12 @@
     <update id="updateTipsInfo" parameterType="AefwebimTipsInfo">
         update aefwebim_tips_info
         <trim prefix="SET" suffixOverrides=",">
-            <if test="fromId != null  ">from_id = #{fromId},</if>
+            <if test="fromPersonId != null  ">from_person_id = #{fromPersonId},</if>
             <if test="toPersonId != null  ">to_person_id = #{toPersonId},</if>
             <if test="type != null  and type != ''  ">type = #{type},</if>
             <if test="content != null  and content != ''  ">content = #{content},</if>
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="expand != null  and expand != ''  ">expand = #{expand},</if>
             <if test="status != null  ">status = #{status},</if>
             <if test="sendTime != null  ">send_time = #{sendTime},</if>
             <if test="handleTime != null  ">handle_time = #{handleTime},</if>

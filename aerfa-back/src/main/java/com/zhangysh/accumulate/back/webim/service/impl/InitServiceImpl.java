@@ -41,8 +41,6 @@ public class InitServiceImpl implements IInitService{
     private IGroupService groupService;
     @Autowired
     private IFriendService friendService;
-    @Autowired
-    private BaseMybatisDao baseMybatisDao;
     
 	@Override
 	public Map<String,Object> getUserData(Long personId) {
@@ -85,10 +83,7 @@ public class InitServiceImpl implements IInitService{
 		retMap.put(WebimDefineConstant.WEBIM_INIT_USER_DATA_FRIEND, friendGroupList);
 		
 		//3查询出普通群组先不显示人,只要在群中就应显示普通群
-		AefwebimGroup searchNormalGroup=new AefwebimGroup();
-		searchNormalGroup.setOwnerId(sysPerson.getId());
-		searchNormalGroup.setGroupType(WebimDefineConstant.WEBIM_GROUP_TYPE_GROUP);
-		List<AefwebimGroupVo> normalGroupList=groupService.listGroup(searchNormalGroup);
+		List<AefwebimGroupVo> normalGroupList=groupService.getNormalGroupByPerson(sysPerson.getId());
 		retMap.put(WebimDefineConstant.WEBIM_INIT_USER_DATA_GROUP, normalGroupList);
 		return retMap;
 	}
