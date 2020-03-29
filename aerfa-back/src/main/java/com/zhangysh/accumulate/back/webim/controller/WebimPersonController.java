@@ -2,6 +2,8 @@ package com.zhangysh.accumulate.back.webim.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.zhangysh.accumulate.back.support.service.IRedisRelatedService;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPerson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +28,9 @@ import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimPersonVo;
 @Controller
 @RequestMapping("/webim/person")
 public class WebimPersonController extends BaseController{
+
+	@Autowired
+	private IRedisRelatedService redisRelatedService;
 	@Autowired
 	private IWebimPersonService webimPersonService;
 	
@@ -45,6 +50,25 @@ public class WebimPersonController extends BaseController{
 		}catch(Exception e) {
 			e.printStackTrace();
 			return toHandlerResultStr(false, null, CodeMsgConstant.SYS_DATA_ACHIEVE_ERROR, e.getMessage());
+		}
+	}
+
+	/***
+	 * 保存修改的我的个人信息,包括webim人员信息和sys人员信息
+	 * @param request 请求对象
+	 * @param webimPersonVo 保存的我的个人信息
+	 *****/
+	@RequestMapping(value="/save_my_information",method=RequestMethod.POST)
+	@ResponseBody
+	public String saveMyInformation(HttpServletRequest request,@RequestBody AefwebimPersonVo webimPersonVo) {
+		try {
+			String aerfatoken=HttpStorageUtil.getToken(request);
+			AefsysPerson operPerson=redisRelatedService.getRedisSessionPersonByToken(aerfatoken);
+			boolean retTar=webimPersonService.saveMyInformation(operPerson,webimPersonVo);
+			return toHandlerResultStr(retTar);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return toHandlerResultStr(false, null, CodeMsgConstant.SYS_DATA_HANDLER_ERROR, e.getMessage());
 		}
 	}
 }

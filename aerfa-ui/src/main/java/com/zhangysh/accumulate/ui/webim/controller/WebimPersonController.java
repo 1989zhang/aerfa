@@ -93,8 +93,7 @@ public class WebimPersonController {
 	@ResponseBody
 	public String saveMyInformation(HttpServletRequest request,AefwebimPersonVo webimPersonVo) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
-		//return webimPersonService.saveMyInformation(aerfatoken, AefwebimPersonVo webimPersonVo);
-		return JSON.toJSONString(ResultVo.success(""));
+		return webimPersonService.saveMyInformation(aerfatoken,webimPersonVo);
 	}
 	
 }

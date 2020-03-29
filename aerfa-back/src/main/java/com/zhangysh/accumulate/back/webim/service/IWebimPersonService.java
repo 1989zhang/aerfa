@@ -1,5 +1,7 @@
 package com.zhangysh.accumulate.back.webim.service;
 import java.util.List;
+
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysPerson;
 import com.zhangysh.accumulate.pojo.webim.dataobj.AefwebimPerson;
 import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimSearchDto;
 import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimPersonVo;
@@ -91,4 +93,11 @@ public interface IWebimPersonService {
 	  * @param searchDto 查询条件，value为查询id
 	  ***/
 	 AefwebimPersonVo getInformation(AefwebimSearchDto searchDto);
+
+	/***
+	 * 保存修改的我的个人信息
+	 * @param operPerson 操作者
+	 * @param webimPersonVo 保存的对象
+	 **/
+    boolean saveMyInformation(AefsysPerson operPerson,AefwebimPersonVo webimPersonVo);
 }

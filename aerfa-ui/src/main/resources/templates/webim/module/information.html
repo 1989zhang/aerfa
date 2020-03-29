@@ -78,7 +78,9 @@
         <div class="layui-col-xs6 ">
           <label class="label">昵&nbsp;&nbsp;称</label>
           <div class="block">
-            <input type="text" class="layui-input" name="username" id="username" lay-verify="required" autocomplete="off" value="{{d.data.username}}">
+              <input type="hidden" name="personId" id="personId" value="{{d.data.personId}}">
+              <input type="hidden" name="id" id="id" value="{{d.data.id}}">
+              <input type="text" class="layui-input" name="username" id="username" lay-verify="required" autocomplete="off" value="{{d.data.username}}">
           </div>
         </div>        
         <div class="layui-col-xs6">
@@ -284,19 +286,19 @@
 	            chat.call(this, othis);
 	        });
 	        
-	      form.on('submit(subMyInfo)', function(submitData){
-	        var save_url = prefix + "/save_my_information";  //获得URL参数。
-	        var key_value = submitData.field;
-	        $.post(save_url, key_value, function(resp){
-	          var res = eval('(' + resp + ')');
-	          if(res.code == 0){
-	              layer.msg('保存成功,可关闭当前窗口！', {icon: 1,time: 2000});
-	          }else{
-	              layer.msg(res.msg, {icon: 2,time: 2000});
-	          }
-	        });   
-	        return false;
-	      });
+	        form.on('submit(subMyInfo)', function(submitData){
+                var save_url = prefix + "/save_my_information";  //获得URL参数。
+                var key_value = submitData.field;
+                $.post(save_url, key_value, function(resp){
+                  var res = eval('(' + resp + ')');
+                  if(res.code == 0){
+                      layer.msg('保存成功,可关闭当前窗口！', {icon: 1,time: 2000});
+                  }else{
+                      layer.msg(res.msg, {icon: 2,time: 2000});
+                  }
+                });
+	            return false;
+	        });
               
 	      function chat(othis){//发起好友聊天
 	        var  uid = othis.data('uid'), avatar = othis.data('avatar');            

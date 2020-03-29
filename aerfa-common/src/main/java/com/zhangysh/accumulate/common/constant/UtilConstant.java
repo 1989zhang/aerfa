@@ -67,6 +67,8 @@ public class UtilConstant {
     public static final String FILE_TYPE_HTML_SUFFIX=".html";
 	
     /**********日期相关常量**********/
+    /** yyyy-MM-dd 默认日期字符串 */
+    public static final String DEFAULT_MIDDLE_DATE="1900-01-01";
 	/** yyyy-MM-dd 格式普通日期字符串 */
     public static final String NORMAL_MIDDLE_DATE="yyyy-MM-dd";
     /** yyyy-MM-dd HH:mm:ss 格式普通日期字符串 */

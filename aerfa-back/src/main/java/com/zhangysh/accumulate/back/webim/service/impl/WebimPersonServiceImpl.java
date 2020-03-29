@@ -3,6 +3,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.zhangysh.accumulate.common.constant.UtilConstant;
+import com.zhangysh.accumulate.common.util.DateOperate;
 import com.zhangysh.accumulate.common.util.StringUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
@@ -99,12 +101,32 @@ public class WebimPersonServiceImpl implements IWebimPersonService {
 		//待优化，字段重复null要覆盖
 		AefwebimPersonVo webimPersonVo=new AefwebimPersonVo();
 		BeanUtils.copyProperties(webimFriendVo, webimPersonVo);
-		BeanUtils.copyProperties(webimPerson, webimPersonVo);
 		BeanUtils.copyProperties(sysPerson, webimPersonVo);
+		BeanUtils.copyProperties(webimPerson, webimPersonVo);
+		//重复字段取值变为正确的
+		webimPersonVo.setId(webimPerson.getId());
+
 		//出生日期null不好处理
 		if(StringUtil.isNull(webimPersonVo.getBirthday())){
-			webimPersonVo.setBirthday(webimPersonVo.getCreateTime());
+			webimPersonVo.setBirthday(DateOperate.StringtoUtilDate(UtilConstant.DEFAULT_MIDDLE_DATE,UtilConstant.NORMAL_MIDDLE_DATE));
 		}
 		return webimPersonVo;
+	}
+
+	@Override
+	public boolean saveMyInformation(AefsysPerson operPerson,AefwebimPersonVo webimPersonVo){
+		AefwebimPerson webimPerson=new AefwebimPerson();
+		AefsysPerson sysPerson=new AefsysPerson();
+		BeanUtils.copyProperties(webimPersonVo, webimPerson);
+		BeanUtils.copyProperties(webimPersonVo, sysPerson);
+
+		webimPerson.setUpdateBy(operPerson.getPersonName());
+		webimPerson.setBirthday(DateOperate.StringtoUtilDate(DateOperate.UtilDatetoString(webimPerson.getBirthday(),UtilConstant.NORMAL_MIDDLE_DATE),UtilConstant.NORMAL_MIDDLE_DATE));
+
+		sysPerson.setId(webimPersonVo.getPersonId());
+
+		updatePerson(webimPerson);
+		personService.updatePerson(sysPerson);
+		return true;
 	}
 }
