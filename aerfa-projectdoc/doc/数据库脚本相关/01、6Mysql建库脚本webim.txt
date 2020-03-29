@@ -47,6 +47,8 @@ create table aefwebim_group (
   order_no       int(11)                               comment '排序号',
   avatar         varchar(128)                          comment '群组头像路径',
   approval       int(11)                               comment '批准加群',
+  limit_number   int(11)                               comment '上限人数',
+  introduction   varchar(256)                          comment '简介',
   create_by      varchar(64)                           comment '创建人员名称',
   create_time    timestamp                             comment '创建时间',
   update_by      varchar(64)                           comment '更新人员名称',

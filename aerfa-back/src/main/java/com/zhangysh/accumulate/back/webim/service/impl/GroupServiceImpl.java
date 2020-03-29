@@ -92,8 +92,10 @@ public class GroupServiceImpl implements IGroupService {
 	}
 
 	@Override
-	public int insertGroup(AefwebimGroup group){
-	    return groupDao.insertGroup(group);
+	public AefwebimGroupVo insertGroup(AefwebimGroup group){
+		groupDao.insertGroup(group);
+		AefwebimGroupVo webimGroupVo=getGroupWithExpandInfoById(group.getId());
+	    return webimGroupVo;
 	}
 	
 	@Override

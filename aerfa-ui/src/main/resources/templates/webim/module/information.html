@@ -290,7 +290,7 @@
 	        $.post(save_url, key_value, function(resp){
 	          var res = eval('(' + resp + ')');
 	          if(res.code == 0){
-	              layer.msg('保存成功,请返回!', {icon: 1,time: 2000});
+	              layer.msg('保存成功,可关闭当前窗口！', {icon: 1,time: 2000});
 	          }else{
 	              layer.msg(res.msg, {icon: 2,time: 2000});
 	          }

@@ -13,6 +13,8 @@
         <result property="orderNo"    column="order_no"    />
         <result property="avatar"    column="avatar"    />
         <result property="approval"  column="approval"    />
+        <result property="limitNumber"    column="limit_number"    />
+        <result property="introduction"    column="introduction"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -21,7 +23,7 @@
 	
 	<!--查询对象语句拼装-->
 	<sql id="selectGroup">
-        select id, group_name, group_type, owner_id, order_no, avatar, approval, create_by, create_time, update_by, update_time from aefwebim_group
+        select id, group_name, group_type, owner_id, order_no, avatar, approval, limit_number, introduction, create_by, create_time, update_by, update_time from aefwebim_group
     </sql>
 
     <!--根据ID查询单个对象-->
@@ -41,6 +43,8 @@
             <if test="orderNo != null  "> and order_no = #{orderNo}</if>
             <if test="avatar != null  and avatar != ''  "> and avatar = #{avatar}</if>
             <if test="approval != null  "> and approval = #{approval}</if>
+            <if test="limitNumber != null  "> and limit_number = #{limitNumber}</if>
+            <if test="introduction != null  and introduction != ''  "> and introduction = #{introduction}</if>
             <if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
             <if test="createTime != null  "> and create_time = #{createTime}</if>
             <if test="updateBy != null  and updateBy != ''  "> and update_by = #{updateBy}</if>
@@ -68,6 +72,8 @@
 			<if test="orderNo != null  ">order_no,</if>
 			<if test="avatar != null  and avatar != ''  ">avatar,</if>
 			<if test="approval != null  ">approval,</if>
+            <if test="limitNumber != null  ">limit_number,</if>
+            <if test="introduction != null  and introduction != ''  ">introduction,</if>
 			<if test="createBy != null  and createBy != ''  ">create_by,</if>
 			<if test="createTime != null  ">create_time,</if>
 			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
@@ -80,6 +86,8 @@
 			<if test="orderNo != null  ">#{orderNo},</if>
 			<if test="avatar != null  and avatar != ''  ">#{avatar},</if>
 			<if test="approval != null  ">#{approval},</if>
+            <if test="limitNumber != null  ">#{limitNumber},</if>
+            <if test="introduction != null  and introduction != ''  ">#{introduction},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
 			<if test="createTime != null  ">#{createTime},</if>
 			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
@@ -97,6 +105,8 @@
             <if test="orderNo != null  ">order_no = #{orderNo},</if>
             <if test="avatar != null  and avatar != ''  ">avatar = #{avatar},</if>
             <if test="approval != null  ">approval = #{approval},</if>
+            <if test="limitNumber != null  ">limit_number = #{limitNumber},</if>
+            <if test="introduction != null  and introduction != ''  ">introduction = #{introduction},</if>
             <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
             <if test="createTime != null  ">create_time = #{createTime},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>

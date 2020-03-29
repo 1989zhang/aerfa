@@ -22,8 +22,13 @@ public class AefwebimGroup extends BaseDataObj{
 	private Long orderNo;
 	/** 群组头像路径 **/
 	private String avatar;
-	/** 批准加群:1需要批准0无需批准 **/
+	/** 批准加群:1需要验证0无需验证 **/
 	private Long approval;
+	/** 上限人数 **/
+	private Long limitNumber;
+	/** 简介 **/
+	private String introduction;
+
 
 	
 	public String getGroupName() {
@@ -62,9 +67,21 @@ public class AefwebimGroup extends BaseDataObj{
 	public void setApproval(Long approval) {
 		this.approval = approval;
 	}
+	public String getIntroduction() {
+		return introduction;
+	}
+	public void setIntroduction(String introduction) {
+		this.introduction = introduction;
+	}
+	public Long getLimitNumber() {
+		return limitNumber;
+	}
+	public void setLimitNumber(Long limitNumber) {
+		this.limitNumber = limitNumber;
+	}
 
 	@Override
 	public String toString() {
-		return "AefwebimGroup [id=" + id + ",groupName=" + groupName + ",groupType=" + groupType + ",ownerId=" + ownerId + ",orderNo=" + orderNo+ ",avatar=" + avatar + ",createBy=" + createBy + ",createTime=" + createTime + ",updateBy=" + updateBy + ",updateTime=" + updateTime + ",]";
-    }
+		return "AefwebimGroup [id=" + id + ",groupName=" + groupName + ",groupType=" + groupType + ",ownerId=" + ownerId + ",orderNo=" + orderNo + ",avatar=" + avatar + ",approval=" + approval + ",introduction=" + introduction + ",limitNumber=" + limitNumber + ",createBy=" + createBy + ",createTime=" + createTime + ",updateBy=" + updateBy + ",updateTime=" + updateTime + ",]";
+	}
 }

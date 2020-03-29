@@ -7,6 +7,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.zhangysh.accumulate.common.constant.UtilConstant;
+import com.zhangysh.accumulate.common.util.DateOperate;
+import com.zhangysh.accumulate.common.util.StringUtil;
 import com.zhangysh.accumulate.pojo.webim.viewobj.AefwebimPersonVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,7 +76,32 @@ public class GroupController extends BaseController{
 		AefsysPerson operPerson=redisRelatedService.getRedisSessionPersonByToken(aerfatoken);
 		return groupService.insertGroupFriendAndAddTipsInfo(apply,operPerson);
 	}
-	
+
+	/****
+	 * 保存新增和修改的群组信息
+	 * @param request 请求对象
+	 * @param group 保存的对象
+	 ****/
+	@RequestMapping(value="/save",method = RequestMethod.POST)
+	@ResponseBody
+	public String saveGroup(HttpServletRequest request,@RequestBody AefwebimGroup group) {
+		String aerfatoken=HttpStorageUtil.getToken(request);
+		AefsysPerson operPerson=redisRelatedService.getRedisSessionPersonByToken(aerfatoken);
+		if ( group.getId()!=null ) {//修改方法
+			group.setUpdateTime(DateOperate.getCurrentUtilDate());
+			group.setUpdateBy(operPerson.getPersonName());
+			return toHandlerResultStr(groupService.updateGroup(group));
+		} else {//新增方法
+			if(StringUtil.isNull(group.getOwnerId())){
+				group.setOwnerId(operPerson.getId());
+			}
+			group.setCreateTime(DateOperate.getCurrentUtilDate());
+			group.setCreateBy(operPerson.getPersonName());
+			AefwebimGroup dbWebimGroup=groupService.insertGroup(group);
+			return toHandlerResultStr(true,dbWebimGroup,null,null);
+		}
+	}
+
 	/****
 	 * 获取展示群组信息列表
 	 * @param request 请求对象

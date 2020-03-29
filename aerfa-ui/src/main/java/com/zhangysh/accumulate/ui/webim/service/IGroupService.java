@@ -1,5 +1,6 @@
 package com.zhangysh.accumulate.ui.webim.service;
 
+import com.zhangysh.accumulate.pojo.webim.dataobj.AefwebimGroup;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -20,13 +21,21 @@ import com.zhangysh.accumulate.pojo.webim.transobj.AefwebimSearchDto;
 public interface IGroupService {
 
 	/****
-	 * 保存新增的群组申请
+	 * 保存新增的加入群组申请
 	 * @param aerfatoken token对象
-	 * @param Friend 要保存的好友对象
+	 * @param apply 要保存的加群申请
 	 ***/
 	@RequestMapping(value = "/webim/group/save_apply",method = RequestMethod.POST)
 	public String saveApply(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefwebimApplyDto apply);
-	
+
+	/****
+	 * 保存新增的群组信息
+	 * @param aerfatoken token对象
+	 * @param group 要保存的群组对象
+	 ***/
+	@RequestMapping(value = "/webim/group/save",method = RequestMethod.POST)
+	public String saveAdd(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefwebimGroup group);
+
 	/****
 	 * 分页显示群组信息
 	 * @param aerfatoken token对象

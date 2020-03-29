@@ -3,6 +3,7 @@ package com.zhangysh.accumulate.ui.webim.controller;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.zhangysh.accumulate.common.constant.CodeMsgConstant;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,7 +69,7 @@ public class GroupController {
 	/****
 	 * 跳转到webim创建普通群页面
 	 * @param request 请求对象
-	 * @param model spring的mvc返回对象
+	 * @param modelMap spring的mvc返回对象
 	 * @return thymeleaf在templates下的页面名称创建普通群界面 
 	 ****/
 	@RequestMapping(value="/to_create_group/{sid}")
@@ -77,20 +78,20 @@ public class GroupController {
 		modelMap.addAttribute("prefix",prefix);
 		return "webim/module/group";
 	}
-	
+
 	/**
-	 * 验证用户已创建普通群组个数，看是否可以继续创建普通群
+	 * 验证用户已创建普通群组个数等信息，看是否可以继续创建普通群，为以后拓展做准备
 	 * @param request 请求对象
 	 * @param  sid 用户id取session的id
 	 * @return 返回操作结果信息json
 	 ****/
-	@RequestMapping(value="/validate_total/{sid}")
+	@RequestMapping(value="/validate_info/{sid}")
 	@ResponseBody
-	public String validateTotal(HttpServletRequest request,@PathVariable("sid") Long sid) {
+	public String validateInfo(HttpServletRequest request,@PathVariable("sid") Long sid) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
 		return JSON.toJSONString(ResultVo.success(""));
 	}
-	
+
 	/**
 	 * 保存提交新增的普通群组
 	 * @param request 请求对象
@@ -101,14 +102,13 @@ public class GroupController {
 	@ResponseBody
 	public String saveAdd(HttpServletRequest request,AefwebimGroup group) {
 		String aerfatoken=HttpStorageUtil.getToken(request);
-		group.setId(110L);
-		return JSON.toJSONString(ResultVo.success(group));
+		return groupService.saveAdd(aerfatoken, group);
 	}
 	
 	/***
 	 * 点击查看群组基本信息
 	 * @param request 请求对象
-	 * @param model spring的mvc返回对象
+	 * @param modelMap spring的mvc返回对象
 	 * @param id 普通群ID
 	 * @param type 查看对象类型应为group
 	 ***/

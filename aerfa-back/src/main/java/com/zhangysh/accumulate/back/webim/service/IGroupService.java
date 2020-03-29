@@ -60,12 +60,12 @@ public interface IGroupService {
 	 List<AefwebimGroupVo> listGroup(AefwebimGroup group);
 	 
 	/**
-     * 新增群组
+     * 新增群组,并返回新增对象和拓展属性
      * 
      * @param group 群组对象信息
      * @return 新增结果条数
      */
-	 int insertGroup(AefwebimGroup group);
+	AefwebimGroupVo insertGroup(AefwebimGroup group);
 	
 	/**
      * 修改群组

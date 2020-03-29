@@ -3,136 +3,193 @@
 <head th:include="sys/include :: header"></head>
 
 <style type="text/css">
-	.mt15 {
-	    padding-top: 15px;
-	}
-	.layui-form-label {
-	    float: left;
-	    display: block;
-	    width: 100px;
-	    font-weight: 400;
-	    line-height: 20px;
-	    text-align: right;
-	    padding: 9px 15px;
-	}
+    .mt15 {
+        padding-top: 15px;
+    }
+    .layui-form-label {
+        float: left;
+        display: block;
+        width: 100px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: right;
+        padding: 9px 15px;
+    }
 </style>
 
-<body>	    
-<form class="layui-form layui-row mt15" action="">
-  <div class="layui-form-item layui-col-xs11">
-    <label class="layui-form-label">群名称</label>
-    <div class="layui-input-block">
-      <input type="text" name="groupName" id="groupName" lay-verify="required" autocomplete="off" placeholder="为你们的群取个给力的名字吧！" class="layui-input">
-    </div>
-  </div>
-  <div class="layui-form-item layui-col-xs11">
-    <label class="layui-form-label">群简介</label>
-    <div class="layui-input-block">
-      <input type="text" name="des" id="des" lay-verify="required" autocomplete="off" placeholder="简单介绍一下吧！" class="layui-input">
-    </div>
-  </div>
-  <div class="layui-form-item layui-col-xs11">
-    <label class="layui-form-label">群规模</label>
-    <div class="layui-input-block">
-		<input type="radio" name="number" value="200" title="200人" >
-		<input type="radio" name="number" value="500" title="500人" checked="">    	
-		<input type="radio" name="number" value="1000" title="1000人">    	
-    </div>
-  </div>  
-  <div class="layui-form-item layui-col-xs11">
-    <label class="layui-form-label">加群验证</label>
-    <div class="layui-input-block">
-		<input type="radio" name="approval" value="1" title="需要验证">
-		<input type="radio" name="approval" value="-1" title="无需验证" checked="">    	
-    </div>
-  </div>    
-  <div class="layui-form-item layui-col-xs10 layui-col-xs-offset1 pt30">
-    <div class="layui-input-block">
-      <a lay-submit class="layui-btn btncolor sure" >确认创建</a>
-      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-    </div>
-  </div>    
-</form>
+<body>
 
-	<div th:include="sys/include :: footer"></div>
-	<script th:inline="javascript">
-		var sid=[[${sid}]];
-	</script>
-	
+<div class="layui-form" id="LAY_view">
+</div>
+
+<div th:include="sys/include :: footer"></div>
+
+<script type="text/html" title="资料模版" id="LAY_tpl" style="display:none;">
+    {{# if(d.data.type == "add"){ }}
+    <form class="layui-form layui-row mt15" action="">
+        <div class="layui-form-item layui-col-xs11">
+            <label class="layui-form-label">群名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="groupName" id="groupName" lay-verify="required" autocomplete="off" placeholder="为你们的群取个给力的名字吧！" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-col-xs11">
+            <label class="layui-form-label">群简介</label>
+            <div class="layui-input-block">
+                <textarea name="introduction" id="introduction" lay-verify="required"  placeholder="简单介绍一下吧！" class="layui-textarea noresize"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-col-xs11">
+            <label class="layui-form-label">群规模</label>
+            <div class="layui-input-block">
+                <input type="radio" name="limitNumber" value="200" title="200人" checked="">
+                <input type="radio" name="limitNumber" value="500" title="500人">
+                <input type="radio" name="limitNumber" value="1000" title="1000人">
+            </div>
+        </div>
+        <div class="layui-form-item layui-col-xs11">
+            <label class="layui-form-label">加群验证</label>
+            <div class="layui-input-block">
+                <input type="radio" name="approval" value="1" title="需要验证" checked="">
+                <input type="radio" name="approval" value="0" title="无需验证">
+            </div>
+        </div>
+        <div class="layui-form-item layui-col-xs10 layui-col-xs-offset1 pt30">
+            <div class="layui-input-block">
+                <!--from中不要用button-->
+                <a class="layui-btn btncolor sure" >确认创建</a>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+    {{# }else{ }}
+    <form class="layui-form layui-row mt15">
+        <div class="layui-form-item layui-col-xs11">
+            <label class="layui-form-label">群名称</label>
+            <div class="layui-input-block">
+                <input type="text" value="{{d.data.groupName}}" lay-verify="required" autocomplete="off" placeholder="为你们的群取个给力的名字吧！" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-col-xs11">
+            <label class="layui-form-label">群简介</label>
+            <div class="layui-input-block">
+                <textarea value="{{d.data.groupName}}" lay-verify="required"  placeholder="简单介绍一下吧！" class="layui-textarea noresize"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-col-xs11">
+            <label class="layui-form-label">群规模</label>
+            <div class="layui-input-block">
+                {{# if(d.data.limitNumber == '200'){ }}
+                    <input type="radio" value="200" title="200人" checked="">
+                {{# } }}
+                {{# if(d.data.limitNumber == '500'){ }}
+                <input type="radio" value="500" title="500人" checked="">
+                {{# } }}
+                {{# if(d.data.limitNumber == '1000'){ }}
+                <input type="radio" value="1000" title="1000人" checked="">
+                {{# } }}
+            </div>
+        </div>
+        <div class="layui-form-item layui-col-xs11">
+            <label class="layui-form-label">加群验证</label>
+            <div class="layui-input-block">
+                {{# if(d.data.approval == '1'){ }}
+                    <input type="radio"  value="1" title="需要验证" checked="">
+                {{# } }}
+                {{# if(d.data.approval == '0'){ }}
+                    <input type="radio"  value="0" title="无需验证" checked="">
+                {{# } }}
+            </div>
+        </div>
+    </form>
+    {{# } }}
+</script>
 <script th:inline="javascript">
-layui.use(['form','layim','laypage'], function(socket){
-  var layim = layui.layim
-  , layer = layui.layer
-  ,laytpl = layui.laytpl
-  ,form = layui.form
-  ,$ = layui.jquery
-  ,laypage = layui.laypage
-  ,param =  location.search;
-  
-  var url = prefix + "/get_information?id="+[[${id}]]+"&type="+[[${type}]];  //获得URL参数。
-  $.get(url, {}, function(data){
-    var res = eval('(' + data + ')');
-    if(res.code != 0){
-        return layer.msg(res.msg);
-    } 
-    var html = laytpl(LAY_tpl.innerHTML).render({
-      data: res.data,
-      mine: 100
+    var sid=[[${sid}]];
+    var id=[[${id}]];
+    var type=[[${type}]];
+</script>
+
+<script th:inline="javascript">
+    layui.use(['form','layim','laytpl'], function(socket){
+        var layim = layui.layim
+            , layer = layui.layer
+            ,laytpl = layui.laytpl
+            ,form = layui.form
+            ,$ = layui.jquery
+        //新建群组渲染页面
+        if(id ==null||type==null){
+            var data={};
+            data.type="add";
+            var html = laytpl(LAY_tpl.innerHTML).render({
+                data: data
+            });
+            $('#LAY_view').html(html);
+            form.render();
+            $('body').on('click', '.sure', function () {//创建群组组装参数
+                var othis = $(this);
+                var data = {
+                    groupName:$("#groupName").val(),
+                    groupType:'2',
+                    introduction:$("#introduction").val(),
+                    limitNumber:$("input[name='limitNumber']:checked").val(),
+                    approval:$("input[name='approval']:checked").val(),
+                };
+                commitGroupInfo(othis,data);
+            });
+        }else{
+            var imCacheData = parent.layui.layim.cache();//im各种缓存信息
+            var url = prefix + "/get_information?id="+id+"&type="+type;  //获得URL参数。
+            $.get(url, {}, function(data){
+                var res = eval('(' + data + ')');
+                if(res.code != 0){
+                    return layer.msg(res.msg);
+                }
+                var html = laytpl(LAY_tpl.innerHTML).render({
+                    data: res.data,
+                    mine: imCacheData.mine.id
+                });
+                $('#LAY_view').html(html);
+                form.render();
+            });
+        }
     });
-    $('#LAY_view').html(html);
-    
-    $('body').on('click', '.sure', function () {//添加好友
-        var othis = $(this);
-		var data = {
-			des:$("#des").val(),
-			groupName:$("#groupName").val(),
-			number:$("input[name='number']:checked").val(),
-			approval:$("input[name='approval']:checked").val(),
-		};         
-        commitGroupInfo(othis,data);       
-    });
-  });
-});
 
-
-
-function commitGroupInfo(othis,data){
-    if (!data.groupName) {
-        return false;
-    }
-    var validateTotalUrl= prefix +'/validate_total/'+sid;
-    $.post( validateTotalUrl , {}, function(res){
-        var resData = eval('(' + res + ')');
-        if(resData.code == 0){
-        	var saveAddUrl= prefix +'/save_add';
-            $.post(saveAddUrl, {groupName: data.groupName}, function(respSaveData){
-                var respData = eval('(' + respSaveData + ')');
-                if(respData.code == 0){
-                	layer.confirm('建群成功成功！', {icon: 3, title:'提示'}, function(index){
-                		//将群 追加到主面板
-                        var avatar = './uploads/person/'+respData.data.groupid+'.jpg'; 
-                        var default_avatar = '/aerfa/myresource/images/default_group.jpg';
+    /** 提交新建的群组信息 */
+    function commitGroupInfo(othis,data){
+        if (!data.groupName) {
+            parent.layer.msg("群名称不能为空", {icon: 2,time: 3000});
+            return false;
+        }
+        var validateTotalUrl= prefix +'/validate_info/'+sid;
+        $.post( validateTotalUrl , {}, function(res){
+            var resData = eval('(' + res + ')');
+            if(resData.code == 0){
+                // 提交新建的群组信息
+                var saveAddUrl= prefix +'/save_add';
+                $.post(saveAddUrl,data,function(res){
+                    var respData = eval('(' + res + ')');
+                    if(respData.code == 0){
+                        parent.layer.msg('建群成功,可在群组查看！', {icon: 1,time: 3000});
+                        //将群 追加到主面板
                         parent.parent.layui.layim.addList({
                             type: 'group'
-                            , avatar:default_avatar //好友头像
-                            , groupname: data.groupName //群名称
-                            , id: respData.data.groupid //群id
+                            , avatar:respData.data.avatar //群头像
+                            , groupname: respData.data.groupname //群名称
+                            , id: respData.data.id //群id
                         });
-                        parent.layer.close(layer.index);
-                	});
-                }else{
-                    return layer.msg(resData.msg);
-                }
-            });
-            //conn.createGroupNew(options);
-        }else{
-            return layer.msg(resData.msg);
-        }
-        layer.close(layer.index);
-    });
-}
-
-
+                        //关闭填写信息窗口
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    }else{
+                        parent.layer.msg(respData.msg, {icon: 2,time: 3000});
+                    }
+                });
+            }else{
+                parent.layer.msg(resData.msg, {icon: 2,time: 3000});
+            }
+        });
+    }
 </script>
 
 </body>
