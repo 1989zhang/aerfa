@@ -21,11 +21,12 @@
 		}
 
 		.navigation {
+			margin-bottom: 12px;
 			margin-left: 3px;
-			height: 10px;
+			height: 20px;
 			color: #a5a5a5;
 			font-size: 14px;
-			line-height: 10px
+			line-height: 20px
 		}
 		.newsinfo {
 
