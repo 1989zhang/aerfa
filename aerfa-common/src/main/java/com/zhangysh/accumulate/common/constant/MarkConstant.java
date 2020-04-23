@@ -18,8 +18,12 @@ public class MarkConstant {
 	public static final String MARK_RESULT_VO_CODE="code";
 	public static final String MARK_RESULT_VO_MSG="msg";
 	public static final String MARK_RESULT_VO_DATA="data";
-	//ResultVo返回成功常量标志
+	//ResultVo返回成功常量标志，前10为保留值
 	public static final Integer MARK_RESULT_VO_SUCESS=0;
+	//ResultVo返回提示常量标志，前10为保留值
+	public static final Integer MARK_RESULT_VO_INFO=1;
+	//ResultVo返回警告常量标志，前10为保留值
+	public static final Integer MARK_RESULT_VO_WARN=2;
 	
 	/**********其他标记**********/
 	/**字符常量：英文$号**/

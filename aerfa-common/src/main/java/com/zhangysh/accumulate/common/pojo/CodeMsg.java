@@ -2,7 +2,7 @@ package com.zhangysh.accumulate.common.pojo;
 
 /*****
  * 封装错误信息对象
- * ResultVo的error配合使用返回错误信息，code建议大于1000开始
+ * ResultVo的error配合使用返回错误信息，code建议大于10000开始，前10为保留值
  * @author zhangysh
  * @date 2018年7月7日
  *****/

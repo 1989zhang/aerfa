@@ -4,7 +4,7 @@ import com.zhangysh.accumulate.common.constant.MarkConstant;
 
 /*****
  * controller返回给调用方对象
- * 只要code不为0都是错误，和CodeMsg配合使用
+ * 只要code不为0都是不成功，和CodeMsg配合使用，code建议大于10000开始，前10为保留值
  * @author zhangysh
  * @date 2018年7月7日
  *****/
@@ -25,8 +25,15 @@ public class ResultVo<T> {
 	 * 提示信息时候的调用,code为1
 	 * @param data 提示信息对象
 	 * */
+	public static  <T> ResultVo<T> info(T data){
+		return new ResultVo<T>(MarkConstant.MARK_RESULT_VO_INFO,data);//默认提示是1
+	}
+	/**
+	 * 警告信息时候的调用,code为2
+	 * @param data 警告信息对象
+	 * */
 	public static  <T> ResultVo<T> warn(T data){
-		return new ResultVo<T>(1,data);//默认提示是1
+		return new ResultVo<T>(MarkConstant.MARK_RESULT_VO_WARN,data);//默认警告是2
 	}
 	/**
 	 * 失败时候的调用，传入CodeMsg对象
