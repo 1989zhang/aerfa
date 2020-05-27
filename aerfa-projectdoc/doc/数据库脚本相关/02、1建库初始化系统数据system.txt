@@ -86,7 +86,7 @@ insert into aefsys_resource values (80, 75, '功能展示', 'module', 1, null, n
 insert into aefsys_resource values (81, 80, '智能问答', 'menu', 1, 0, 'comm:iqaAutomatic:view', '/comm/example/to_iqa_automatic', null, 1, null, null, null, null, null);
 insert into aefsys_resource values (82, 80, '人工客服', 'menu', 1, 0, 'comm:iqaManual:view', '/comm/example/to_iqa_manual', null, 2, null, null, null, null, null);
 insert into aefsys_resource values (85, 75, '工具示例', 'module', 1, null, null, '#', null, 3, null, null, null, null, null);
-insert into aefsys_resource values (86, 76, '背景水印', 'menu', 1, 0, 'comm:waterMark:view', '/comm/example/to_water_mark', null, 1, null, null, null, null, null);
+insert into aefsys_resource values (86, 85, '背景水印', 'menu', 1, 0, 'comm:waterMark:view', '/comm/example/to_water_mark', null, 1, null, null, null, null, null);
 
 
 /*==========初始化系统管理员角色和资源菜单按钮对应aefsys_role_resource数据==========*/

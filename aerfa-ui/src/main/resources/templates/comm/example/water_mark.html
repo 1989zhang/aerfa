@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:include="sys/include :: header"></head>
+
+<style type="text/css">
+
+</style>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+		<div th:include="sys/include :: footer"></div>
+		<script th:inline="javascript">
+			$(function(){
+				waterMark();
+			});
+		</script>
+
+		<script th:inline="javascript">
+			function waterMark(){
+				var currentFullDate =$.common.currentFullDate();
+				//默认设置
+				var defaultSettings={
+					watermark_txt:"登录人名称"+"  "+"（"+currentFullDate+")",
+					watermark_x:50,//水印起始位置x轴坐标
+					watermark_y:50,//水印起始位置Y轴坐标
+					watermark_rows:8,//水印行数
+					watermark_cols:10,//水印列数
+					watermark_x_space:100,//水印x轴间隔
+					watermark_y_space:20,//水印y轴间隔
+					watermark_color:'#000000',//水印字体颜色
+					watermark_alpha:0.1,//水印透明度
+					watermark_fontsize:'15px',//水印字体大小
+					watermark_font:'微软雅黑',//水印字体
+					watermark_width:150,//水印宽度
+					watermark_height:100,//水印长度
+					watermark_angle:15//水印倾斜度数
+				};
+				var oTemp = document.createDocumentFragment();
+				var page_width = Math.max(document.body.scrollWidth,document.body.clientWidth);
+				//获取页面最大长度
+				var page_height = Math.max(document.body.scrollHeight,document.body.clientHeight);
+				var x;
+				var y;
+				for (var i = 0; i < defaultSettings.watermark_rows; i++) {
+					y = defaultSettings.watermark_y + (defaultSettings.watermark_y_space + defaultSettings.watermark_height) * i;
+					for (var j = 0; j < defaultSettings.watermark_cols; j++) {
+						x = defaultSettings.watermark_x + (defaultSettings.watermark_width + defaultSettings.watermark_x_space) * j;
+
+						var mask_div = document.createElement('div');
+						mask_div.id = 'mask_div' + i + j;
+						mask_div.appendChild(document.createTextNode(defaultSettings.watermark_txt));
+						//设置水印div倾斜显示
+						mask_div.style.webkitTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
+						mask_div.style.MozTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
+						mask_div.style.msTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
+						mask_div.style.OTransform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
+						mask_div.style.transform = "rotate(-" + defaultSettings.watermark_angle + "deg)";
+						mask_div.style.visibility = "";
+						mask_div.style.position = "absolute";
+						mask_div.style.left = x + 'px';
+						mask_div.style.top = y + 'px';
+						mask_div.style.overflow = "hidden";
+						mask_div.style.zIndex = "9999";
+						//mask_div.style.border="solid #eee 1px";
+						mask_div.style.opacity = defaultSettings.watermark_alpha;
+						mask_div.style.fontSize = defaultSettings.watermark_fontsize;
+						mask_div.style.fontFamily = defaultSettings.watermark_font;
+						mask_div.style.color = defaultSettings.watermark_color;
+						mask_div.style.textAlign = "center";
+						mask_div.style.width = defaultSettings.watermark_width + 'px';
+						mask_div.style.height = defaultSettings.watermark_height + 'px';
+						mask_div.style.display = "block";
+						//穿透属性
+						mask_div.style.pointerEvents="none";
+
+						oTemp.appendChild(mask_div);
+					};
+				};
+				document.body.appendChild(oTemp);
+			}
+		</script>
+	</div>
+</body>
+</html>

@@ -26,6 +26,15 @@ public class ExampleController {
 		modelMap.addAttribute("prefix",prefix);
 		return prefix+"/jquery_signature";
 	}
+
+	/**
+	 *跳转到common下例子watermark背景水印页面
+	 ****/
+	@RequestMapping(value="/to_water_mark")
+	public String toExampleWaterMark(HttpServletRequest request, ModelMap modelMap) {
+		modelMap.addAttribute("prefix",prefix);
+		return prefix+"/water_mark";
+	}
 	
 	/**
 	 *跳转到common下例子智能问答机器人页面
