@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
+import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsOutFileDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import com.zhangysh.accumulate.back.ufs.config.UfsConfig;
@@ -51,4 +53,12 @@ public class DbFileServiceImpl implements IUploadFileService{
 		return retUploadFile;
 	}
 
+	@Override
+	public AefufsOutFileDto downloadFile(Long id, UfsConfig ufsConfig){
+		AefufsUploadFileBlob ufsUploadFileBlob = uploadFileBlobToDbService.getUploadFileBlobById(id);
+		AefufsOutFileDto ufsOutFileDto=new AefufsOutFileDto();
+		BeanUtils.copyProperties(ufsUploadFileBlob,ufsOutFileDto);
+		ufsOutFileDto.setFileBase64Data(InputStreamUtil.ByteToBase64(ufsUploadFileBlob.getFileBlob()));
+		return ufsOutFileDto;
+	}
 }

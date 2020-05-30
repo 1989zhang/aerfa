@@ -1,14 +1,12 @@
 package com.zhangysh.accumulate.back.sys.controller;
 
+import com.zhangysh.accumulate.common.constant.CacheConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.alibaba.fastjson.JSON;
 
 import com.zhangysh.accumulate.common.constant.UtilConstant;
@@ -44,7 +42,7 @@ public class ConfigDataController extends BaseController{
 	/****
 	 * 获取展示配置信息列表
 	 * @param request 请求对象
-	 * @param AefsysConfigDataDto 分页和查询对象
+	 * @param configDataDto 分页和查询对象
 	 * @return 获取到的配置对象集合JSON
 	 ****/
 	@RequestMapping(value="/list",method = RequestMethod.POST)
@@ -75,6 +73,19 @@ public class ConfigDataController extends BaseController{
 	public String getSingle(HttpServletRequest request,@RequestBody Long id) {
 		logger.info("getSingle配置主键信息:{}",id);
 		return JSON.toJSONStringWithDateFormat(configDataService.getConfigDataById(id),UtilConstant.NORMAL_MIDDLE_DATE);
+	}
+
+	/****
+	 * 根据配置的code获取展示单个配置
+	 * @param request 请求对象
+	 * @param dataCode 配置的dataCode
+	 * @return 配置信息
+	 ****/
+	@RequestMapping(value="/by_code",method = RequestMethod.POST)
+	@ResponseBody
+	public String getSingleByCode(HttpServletRequest request,@RequestBody  String dataCode) {
+		logger.info("getSingleByCode配置参数信息:{}",dataCode);
+		return JSON.toJSONStringWithDateFormat(configDataService.getConfigDataFromRedisByCode(dataCode),UtilConstant.NORMAL_MIDDLE_DATE);
 	}
 
 	/****

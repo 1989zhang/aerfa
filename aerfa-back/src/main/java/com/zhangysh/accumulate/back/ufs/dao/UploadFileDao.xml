@@ -5,6 +5,58 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.zhangysh.accumulate.back.ufs.dao.UploadFileDao">
+
+	<!--返回对象映射-->
+	<resultMap id="uploadFileResult" type="AefufsUploadFile" >
+		<result property="id"    column="id"    />
+		<result property="fileName"    column="file_name"    />
+		<result property="saveName"    column="save_name"    />
+		<result property="fileType"    column="file_type"    />
+		<result property="fileLink"    column="file_link"    />
+		<result property="implName"    column="impl_name"    />
+		<result property="createBy"    column="create_by"    />
+		<result property="createUserId"    column="create_user_id"    />
+		<result property="createOrgId"    column="create_org_id"    />
+		<result property="createTime"    column="create_time"    />
+	</resultMap>
+
+	<!--查询对象语句拼装-->
+	<sql id="selectUploadFile">
+        select id, file_name, save_name, file_type, file_link, impl_name, create_by, create_user_id, create_org_id, create_time from aefufs_upload_file
+    </sql>
+
+	<!--根据ID查询单个对象-->
+	<select id="getUploadFileById" parameterType="Long" resultMap="uploadFileResult">
+		<include refid="selectUploadFile"/>
+		where id = #{id}
+	</select>
+
+	<!--根据条件查询多个对象-->
+	<select id="listUploadFile" parameterType="AefufsUploadFile" resultMap="uploadFileResult">
+		<include refid="selectUploadFile"/>
+		<where>
+			<if test="id != null  "> and id = #{id}</if>
+			<if test="fileName != null  and fileName != ''  "> and file_name = #{fileName}</if>
+			<if test="saveName != null  and saveName != ''  "> and save_name = #{saveName}</if>
+			<if test="fileType != null  and fileType != ''  "> and file_type = #{fileType}</if>
+			<if test="fileLink != null  and fileLink != ''  "> and file_link = #{fileLink}</if>
+			<if test="implName != null  and implName != ''  "> and impl_name = #{implName}</if>
+			<if test="createBy != null  and createBy != ''  "> and create_by = #{createBy}</if>
+			<if test="createUserId != null  "> and create_user_id = #{createUserId}</if>
+			<if test="createOrgId != null  "> and create_org_id = #{createOrgId}</if>
+			<if test="createTime != null  "> and create_time = #{createTime}</if>
+		</where>
+	</select>
+
+	<!--根据主键查询多个对象-->
+	<select id="listBypksUploadFile" parameterType="String" resultMap="uploadFileResult">
+		<include refid="selectUploadFile"/>
+		where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+
 	<!--要返回对象带id必须配置useGeneratedKeys="true" keyProperty="id"-->
 	<insert id="insertUploadFile" parameterType="AefufsUploadFile"  useGeneratedKeys="true" keyProperty="id">
  		insert into aefufs_upload_file
@@ -15,6 +67,8 @@
  			<if test="fileLink != null and fileLink != ''">file_link,</if>
  			<if test="implName != null and implName != ''">impl_name,</if>
  			<if test="createBy != null and createBy != ''">create_by,</if>
+			<if test="createUserId != null  ">create_user_id,</if>
+			<if test="createOrgId != null  ">create_org_id,</if>
  			<if test="createTime != null">create_time</if>
  		</trim>
  		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -24,9 +78,42 @@
  			<if test="fileLink != null and fileLink != ''">#{fileLink},</if>
  			<if test="implName != null and implName != ''">#{implName},</if>
  			<if test="createBy != null and createBy != ''">#{createBy},</if>
+			<if test="createUserId != null  ">#{createUserId},</if>
+			<if test="createOrgId != null  ">#{createOrgId},</if>
  			<if test="createTime != null">#{createTime}</if>
  		</trim>
 	</insert>
+
+	<!--根据对象和对象包含的id属性，修改对象-->
+	<update id="updateUploadFile" parameterType="AefufsUploadFile">
+		update aefufs_upload_file
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="fileName != null  and fileName != ''  ">file_name = #{fileName},</if>
+			<if test="saveName != null  and saveName != ''  ">save_name = #{saveName},</if>
+			<if test="fileType != null  and fileType != ''  ">file_type = #{fileType},</if>
+			<if test="fileLink != null  and fileLink != ''  ">file_link = #{fileLink},</if>
+			<if test="implName != null  and implName != ''  ">impl_name = #{implName},</if>
+			<if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+			<if test="createUserId != null  ">create_user_id = #{createUserId},</if>
+			<if test="createOrgId != null  ">create_org_id = #{createOrgId},</if>
+			<if test="createTime != null  ">create_time = #{createTime},</if>
+		</trim>
+		where id = #{id}
+	</update>
+
+	<!--根据ID删除单个对象-->
+	<delete id="deleteUploadFileById" parameterType="Long">
+        delete from aefufs_upload_file where id = #{id}
+    </delete>
+
+	<!--根据ID以,拼接的字符串删除多个对象-->
+	<delete id="deleteUploadFileByIds" parameterType="String">
+		delete from aefufs_upload_file where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
 </mapper>
 
 	

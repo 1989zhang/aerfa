@@ -3,11 +3,18 @@ package com.zhangysh.accumulate.back.ufs.service.impl;
 import java.io.IOException;
 import java.util.Date;
 import javax.annotation.Resource;
+
+import com.zhangysh.accumulate.back.sys.service.IConfigDataService;
+import com.zhangysh.accumulate.common.constant.SysDefineConstant;
+import com.zhangysh.accumulate.pojo.sys.dataobj.AefsysConfigData;
+import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsOutFileDto;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.zhangysh.accumulate.back.ufs.config.UfsConfig;
 import com.zhangysh.accumulate.back.ufs.service.IUploadFileService;
@@ -30,7 +37,9 @@ public class FtpFileServiceImpl implements IUploadFileService{
 
 	@Resource
 	private IUploadFileToDbService uploadFileToDbService;
-	
+	@Autowired
+	private IConfigDataService configDataService;
+
 	@Override
     public AefufsUploadFile saveFile(AefufsUploadFileDto uploadFileDto,UfsConfig ufsConfig) throws IOException{
     	//以日期作为路径拼装
@@ -129,5 +138,16 @@ public class FtpFileServiceImpl implements IUploadFileService{
 			}
 		}
 		return success;
+	}
+
+	@Override
+	public AefufsOutFileDto downloadFile(Long id, UfsConfig ufsConfig) throws IOException{
+		AefufsUploadFile ufsUploadFile=uploadFileToDbService.getUploadFileById(id);
+		AefufsOutFileDto ufsOutFileDto=new AefufsOutFileDto();
+		BeanUtils.copyProperties(ufsUploadFile,ufsOutFileDto);
+		AefsysConfigData picIpAddressConfigData=configDataService.getConfigDataFromRedisByCode(SysDefineConstant.CONFIG_DATA_SYS_PIC_IP_ADDRESS);
+		ufsOutFileDto.setNginxPrefixPath(picIpAddressConfigData.getDataValue());
+		ufsOutFileDto.setFileFullLink(picIpAddressConfigData.getDataValue()+ufsOutFileDto.getFileLink());
+		return ufsOutFileDto;
 	}
 }

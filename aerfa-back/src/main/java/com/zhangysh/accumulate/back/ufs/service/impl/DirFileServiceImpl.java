@@ -2,6 +2,10 @@ package com.zhangysh.accumulate.back.ufs.service.impl;
 import java.io.IOException;
 import java.util.Date;
 import javax.annotation.Resource;
+
+import com.zhangysh.accumulate.common.util.InputStreamUtil;
+import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsOutFileDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.zhangysh.accumulate.back.ufs.config.UfsConfig;
 import com.zhangysh.accumulate.back.ufs.service.IUploadFileService;
@@ -47,4 +51,14 @@ public class DirFileServiceImpl implements IUploadFileService{
 		uploadFile.setCreateTime(new Date());
 		return uploadFileToDbService.insertUploadFileToDb(uploadFile);
     }
+
+	@Override
+	public AefufsOutFileDto downloadFile(Long id, UfsConfig ufsConfig) throws IOException{
+		AefufsUploadFile ufsUploadFile=uploadFileToDbService.getUploadFileById(id);
+		AefufsOutFileDto ufsOutFileDto=new AefufsOutFileDto();
+		BeanUtils.copyProperties(ufsUploadFile,ufsOutFileDto);
+		String fileDirFullPath=ufsConfig.getUfsDirBasedir()+ufsOutFileDto.getFileLink();
+		ufsOutFileDto.setFileBase64Data(InputStreamUtil.ByteToBase64(FileUtil.fileToByte(fileDirFullPath)));
+		return ufsOutFileDto;
+	}
 }

@@ -18,11 +18,16 @@ public class UploadFileBlobToDbServiceImpl implements IUploadFileBlobToDbService
 
 	@Resource
 	private UploadFileBlobDao uploadFileBlobDao;
-	
+
+	@Override
+	public AefufsUploadFileBlob getUploadFileBlobById(Long id){
+		return uploadFileBlobDao.getUploadFileBlobById(id);
+	}
+
 	@Override
 	@Transactional
 	public AefufsUploadFileBlob insertUploadFileBlobToDb(AefufsUploadFileBlob uploadFileBlob) {
-		System.out.println(uploadFileBlobDao.insertUploadFileBlob(uploadFileBlob));
+		uploadFileBlobDao.insertUploadFileBlob(uploadFileBlob);
 		return uploadFileBlob;
 	}
 }

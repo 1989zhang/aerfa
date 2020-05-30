@@ -37,7 +37,7 @@ import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsUploadFileDto;
 import com.zhangysh.accumulate.ui.sys.service.ILoginService;
 import com.zhangysh.accumulate.ui.sys.service.IOrgService;
 import com.zhangysh.accumulate.ui.sys.service.IPersonService;
-import com.zhangysh.accumulate.ui.sys.service.IUploadFileService;
+import com.zhangysh.accumulate.ui.ufs.IUploadFileService;
 
 /*****
  * 人员相关方法
@@ -294,7 +294,7 @@ public class PersonController {
 				uploadFileDto.setFileName("avatar"+id+".jpg");
 				uploadFileDto.setFileBase64Data(InputStreamUtil.ByteToBase64(file.getBytes()));
 				uploadFileDto.setCreateBy("userid"+id);
-				String ufsRetStr=uploadFileService.uploadFile(uploadFileDto);
+				String ufsRetStr=uploadFileService.uploadFile(aerfatoken,uploadFileDto);
 				JSONObject ufsJson =JSON.parseObject(ufsRetStr);
 				Integer code=ufsJson.getInteger(MarkConstant.MARK_RESULT_VO_CODE);
 				if( code > MarkConstant.MARK_RESULT_VO_SUCESS ) { return ufsRetStr; }

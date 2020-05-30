@@ -9,7 +9,15 @@ import com.zhangysh.accumulate.pojo.ufs.dataobj.AefufsUploadFileBlob;
  * @date 2019年5月14日
  *****/
 public interface IUploadFileBlobToDbService {
-	
+
+	/**
+	 * 根据ID查询单个二进制内容文件上传信息
+	 *
+	 * @param id 二进制内容文件上传主键ID
+	 * @return 二进制内容文件上传信息
+	 */
+	AefufsUploadFileBlob getUploadFileBlobById(Long id);
+
 	/**
 	 * 保存二进制内容对象AefufsUploadFileBlob到数据库，并返回带id的对象 
 	 * @param uploadFileBlob 保存对象

@@ -42,6 +42,14 @@ public interface IConfigDataService {
 	public String getSingle(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody Long id);
 
 	/****
+	 *根据配置文件的code获取单个配置信息
+	 *@param aerfatoken token对象
+	 *@param dataCode 配置的dataCode
+	 ***/
+	@RequestMapping(value = "/sys/config_data/by_code",method = RequestMethod.POST)
+	public String getSingleByCode(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody String dataCode);
+
+	/****
 	 *验证配置参数编码唯一性 
 	 *@param aerfatoken token对象
 	 *@param configData 要验证的对象内含参数编码属性和id,id为了排除自己
@@ -51,7 +59,7 @@ public interface IConfigDataService {
 	/****
 	 *保存新增的配置信息 
 	 *@param aerfatoken token对象
-	 *@param ConfigData 要保存的配置对象
+	 *@param configData 要保存的配置对象
 	 ***/
 	@RequestMapping(value = "/sys/config_data/save",method = RequestMethod.POST)
 	public String saveAdd(@RequestHeader(CacheConstant.COOKIE_NAME_AERFATOKEN) String aerfatoken,@RequestBody AefsysConfigData configData);

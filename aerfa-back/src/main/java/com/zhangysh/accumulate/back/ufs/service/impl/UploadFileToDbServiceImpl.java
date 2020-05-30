@@ -19,7 +19,12 @@ public class UploadFileToDbServiceImpl implements IUploadFileToDbService{
 
 	@Resource
 	private UploadFileDao uploadFileDao;
-	
+
+	@Override
+	public AefufsUploadFile getUploadFileById(Long id){
+		return uploadFileDao.getUploadFileById(id);
+	}
+
 	@Override
 	@Transactional
 	public AefufsUploadFile insertUploadFileToDb(AefufsUploadFile uploadFile) {

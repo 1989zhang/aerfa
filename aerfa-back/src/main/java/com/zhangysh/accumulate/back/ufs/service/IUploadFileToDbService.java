@@ -10,9 +10,18 @@ import com.zhangysh.accumulate.pojo.ufs.dataobj.AefufsUploadFile;
 public interface IUploadFileToDbService {
 
 	/**
+	 * 根据ID查询单个文件上传信息
+	 *
+	 * @param id 主键ID
+	 * @return 文件上传信息
+	 */
+	AefufsUploadFile getUploadFileById(Long id);
+
+	/**
 	 * 保存AefufsUploadFile对象到数据库，并返回带id的对象 
 	 * @param uploadFile 保存对象 
 	 * @return 带id的对象
 	 *****/
 	 AefufsUploadFile insertUploadFileToDb(AefufsUploadFile uploadFile);
+
 }

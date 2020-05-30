@@ -40,10 +40,8 @@ See https://github.com/adobe-type-tools/cmap-resources
          var baseUrl=Scheme+"://"+snip+":"+port+projname+"/"
     </script>
     <script th:inline="javascript">
-    	var templateId = [[${templateId}]];
-    	var requireParm = [[${requireParm}]];
-		var TDM_PDF_DATAURL = "/tdm/template/view_data/"+templateId+"/"+requireParm;//"http://localhost:8080/ntt/gr/getCertifyFileContent?ywbh=201804010000000120"
-	</script>
+    	var TDM_PDF_DATAURL = [[${tdmPdfDataUrl}]];
+    </script>
 	<script th:src="@{/aerfa/myplugins/pdf-show/build/pdf.js}" type="text/javascript"></script>
 	<script th:src="@{/aerfa/myplugins/pdf-show/web/viewer.js}" type="text/javascript"></script>
 

@@ -3,6 +3,7 @@ import java.io.IOException;
 
 import com.zhangysh.accumulate.back.ufs.config.UfsConfig;
 import com.zhangysh.accumulate.pojo.ufs.dataobj.AefufsUploadFile;
+import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsOutFileDto;
 import com.zhangysh.accumulate.pojo.ufs.transobj.AefufsUploadFileDto;
 
 /**
@@ -18,4 +19,13 @@ public interface IUploadFileService {
 	 * @return 文件存储对象
 	 */
 	AefufsUploadFile saveFile(AefufsUploadFileDto uploadFileDto,UfsConfig ufsConfig) throws IOException;
+
+	/***
+	 * 下载保存的文件对象，ftp就不下载base64了，直接返回nginx路径
+	 * @param id 文件id
+	 * @param ufsConfig 配置文件
+	 */
+	AefufsOutFileDto downloadFile(Long id, UfsConfig ufsConfig) throws IOException;
+
+
 }
