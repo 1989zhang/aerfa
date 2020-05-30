@@ -197,11 +197,11 @@ public class TemplateController {
 	@RequestMapping(value={"/to_view_data/{templateId}/{requireParm}","/to_view_data/{templateId}/"})
 	public String toViewData(HttpServletRequest request, ModelMap modelMap,@PathVariable("templateId") Long templateId,@PathVariable(value = "requireParm",required = false) String requireParm) {
 		modelMap.addAttribute("prefix",prefix);
-		modelMap.addAttribute("templateId",templateId);
-		modelMap.addAttribute("requireParm",requireParm);
+		//例如"http://localhost:8080/ntt/gr/getCertifyFileContent?ywbh=201804010000000120"
+		modelMap.addAttribute("tdmPdfDataUrl","/tdm/template/view_data/"+templateId+"/"+requireParm);
 		return prefix + "/viewer_data";
 	}
-	
+
 	/**
 	 *获取pdf展示文件内容 
 	 ***/
