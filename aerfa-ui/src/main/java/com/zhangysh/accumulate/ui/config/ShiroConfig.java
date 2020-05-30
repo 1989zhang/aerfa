@@ -57,6 +57,9 @@ public class ShiroConfig {
         filterDefinitionMap.put("/login/*", "anon");//登录
         filterDefinitionMap.put("/sys/login/check", "anon");//账号密码校验
 
+        filterDefinitionMap.put("/tdm/view_ftp_pdf/**", "anon");//手机查看ftp上的pdf文件
+
+
         //开启权限控制的连接在controller更加直观，所以不在此处添加
         //filterDefinitionMap.put("/comm/info_publish/save_add", "perms[comm:infoPublish:add]");
 
