@@ -46,7 +46,7 @@
         <!-- 定时任务版本号 -->
         <org.quartz.version>2.3.0</org.quartz.version>
         <!-- Apache的权限认证shiro组件版本号 -->
-        <apache.shiro.version>1.4.0</apache.shiro.version>
+        <apache.shiro.version>1.7.0</apache.shiro.version>
         <!-- Apache的权限认证shiro和thymeleaf整合插件版本号 -->
         <thymeleaf.shiro.version>2.0.0</thymeleaf.shiro.version>
 
