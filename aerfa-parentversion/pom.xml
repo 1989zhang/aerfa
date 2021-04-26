@@ -57,7 +57,7 @@
         <!--Apache的velocity模板生成工具版本号-->
         <apache.velocity.version>1.7</apache.velocity.version>
         <!--Apache的io常用工具类,生成代码相关输出流版本号-->
-        <apache.commons-io.version>2.5</apache.commons-io.version>
+        <apache.commons-io.version>2.7</apache.commons-io.version>
         <!--apache的commons常用工具类 -->
         <apache.commons-lang3.version>3.7</apache.commons-lang3.version>
 
