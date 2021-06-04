@@ -51,7 +51,7 @@
         <thymeleaf.shiro.version>2.0.0</thymeleaf.shiro.version>
 
         <!--httpclient本地调用http版本号-->
-        <apache.httpclient.version>4.5.6</apache.httpclient.version>
+        <apache.httpclient.version>4.5.13</apache.httpclient.version>
         <!--Apache的FTP工具组件-->
         <apache.commons-net.version>3.6</apache.commons-net.version>
         <!--Apache的velocity模板生成工具版本号-->
