@@ -64,7 +64,7 @@
         <!-- excel和word读取操作包版本号，最好要相同 -->
         <apache.poi.poi.version>4.1.2</apache.poi.poi.version>
         <apache.poi.ooxml.version>4.1.2</apache.poi.ooxml.version>
-        <apache.poi.scratchpad.version>4.1.2</apache.poi.scratchpad.version>
+        <apache.poi.scratchpad.version>5.2.1</apache.poi.scratchpad.version>
         <!-- wordx格式转换html需要的包-->
         <apache.poi.fr.xdocreport.version>2.0.2</apache.poi.fr.xdocreport.version>
 
