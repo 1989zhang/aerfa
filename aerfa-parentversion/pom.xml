@@ -42,7 +42,7 @@
         <!--HttpServlet版本号-->
         <servlet-api.version>4.0.1</servlet-api.version>
         <!--alibaba的fastjson转换工具版本号-->
-        <alibaba.fastjson.version>1.2.49</alibaba.fastjson.version>
+        <alibaba.fastjson.version>1.2.83</alibaba.fastjson.version>
         <!-- 定时任务版本号 -->
         <org.quartz.version>2.3.0</org.quartz.version>
         <!-- Apache的权限认证shiro组件版本号 -->
