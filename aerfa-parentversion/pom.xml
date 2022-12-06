@@ -53,7 +53,7 @@
         <!--httpclient本地调用http版本号-->
         <apache.httpclient.version>4.5.6</apache.httpclient.version>
         <!--Apache的FTP工具组件-->
-        <apache.commons-net.version>3.6</apache.commons-net.version>
+        <apache.commons-net.version>3.9.0</apache.commons-net.version>
         <!--Apache的velocity模板生成工具版本号-->
         <apache.velocity.version>1.7</apache.velocity.version>
         <!--Apache的io常用工具类,生成代码相关输出流版本号-->
